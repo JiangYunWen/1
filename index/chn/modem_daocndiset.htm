@@ -87,7 +87,7 @@ function FormDaocndi_Submit()
 	/*
 	if("2"==document.all.FormDaocndi.FormDaocndi_Param_Band.value)
 	{
-		alert("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ");
+		alert("è¯·é€‰æ‹©æ“ä½œç±»å‹");
 		document.all.FormDaocndi.FormDaocndi_Param_Band.focus();
 		return false;
 	}*/
@@ -96,9 +96,9 @@ function FormDaocndi_Submit()
 	if(0 == band)
 	{
     	if(zh_Lang_now == 't'){	    
-    	    showdiv("Õˆßx“ñÖ§³ÖµÄîl¶Î(ÖÁÉÙÒ»‚€)",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ”¯æŒçš„é »æ®µ(è‡³å°‘ä¸€å€‹)",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("ÇëÑ¡ÔñÖ§³ÖµÄÆµ¶Î(ÖÁÉÙÒ»¸ö)",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ”¯æŒçš„é¢‘æ®µ(è‡³å°‘ä¸€ä¸ª)",DivCloseMode_Alert);
     	}
 			
 //		document.all.FormDaocndi.FormDaocndi_Param_Band.focus();
@@ -115,9 +115,9 @@ function FormDaocndi_Submit()
 	send_FormDaocndi(param);
 
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -128,9 +128,9 @@ function send_FormDaocndi_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	//alert("send_FormDaocndi_result_get");
 	$.ajax({
@@ -148,23 +148,23 @@ function send_FormDaocndi_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
         	if(zh_Lang_now == 't'){	    
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}			
 		}
 		else
 		{
 		    if(zh_Lang_now == 't'){	    
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}				
 			openIntervals_Daocndi();
 		}
@@ -203,7 +203,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -215,7 +215,7 @@ return true;
 } 
 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -262,7 +262,7 @@ function init()
 	var TmpString="";
 	var id = document.getElementsByName('FormDaocndi_Param_Band');
 	
-	/*Æµ¶ÎÉèÖÃ at^daocndi*/
+	/*é¢‘æ®µè®¾ç½® at^daocndi*/
 	WebModemGetInfoDaocndiParamBandBitmap=<%getInfo("ModemGetInfoDaocndiParamBandBitmap");%>; 	
 	TmpString ="";
 	
@@ -270,7 +270,7 @@ function init()
     if(zh_Lang_now == 't'){
     	if(0!=(WebModemGetInfoDaocndiParamBandBitmap&(~13)))
     	{
-    		TmpString ="²»ÄÜ×R„e WebModemGetInfoDaocndiParamBandBitmap = "+WebModemGetInfoDaocndiParamBandBitmap;
+    		TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDaocndiParamBandBitmap = "+WebModemGetInfoDaocndiParamBandBitmap;
     		SetLabelText("LB_FormDaocndi_Param_Band",TmpString);		
     	}
     	else
@@ -278,18 +278,18 @@ function init()
     		TmpString ="{"
     		if(1 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"800Mîl¶Î;";
+    			TmpString=TmpString+"800Mé »æ®µ;";
     			//id[0].checked="checked";
     		}
     		if(4 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"1.4Gîl¶Î;";
+    			TmpString=TmpString+"1.4Gé »æ®µ;";
     			//id[1].checked="checked";			
     		}
     		
     		if(8 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"2.4Gîl¶Î;";
+    			TmpString=TmpString+"2.4Gé »æ®µ;";
     			//id[2].checked="checked";
     		}
     		TmpString=TmpString+"}";
@@ -298,7 +298,7 @@ function init()
 	}else{	
     	if(0!=(WebModemGetInfoDaocndiParamBandBitmap&(~13)))
     	{
-    		TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDaocndiParamBandBitmap = "+WebModemGetInfoDaocndiParamBandBitmap;
+    		TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDaocndiParamBandBitmap = "+WebModemGetInfoDaocndiParamBandBitmap;
     		SetLabelText("LB_FormDaocndi_Param_Band",TmpString);		
     	}
     	else
@@ -306,18 +306,18 @@ function init()
     		TmpString ="{"
     		if(1 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"800MÆµ¶Î;";
+    			TmpString=TmpString+"800Mé¢‘æ®µ;";
     			//id[0].checked="checked";
     		}
     		if(4 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"1.4GÆµ¶Î;";
+    			TmpString=TmpString+"1.4Gé¢‘æ®µ;";
     			//id[1].checked="checked";			
     		}
     		
     		if(8 & WebModemGetInfoDaocndiParamBandBitmap)
     		{
-    			TmpString=TmpString+"2.4GÆµ¶Î;";
+    			TmpString=TmpString+"2.4Gé¢‘æ®µ;";
     			//id[2].checked="checked";
     		}
     		TmpString=TmpString+"}";
@@ -329,8 +329,8 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">Æµ¶ÎÉèÖÃ¹ÜÀí</font></h3>
-<h5><font color="red" >Note:ÉèÖÃÍê³ÉºóĞèÒªÖØÆôModemÉúĞ§</font><h5>
+<h3><font color="#0000FF">é¢‘æ®µè®¾ç½®ç®¡ç†</font></h3>
+<h5><font color="red" >Note:è®¾ç½®å®Œæˆåéœ€è¦é‡å¯Modemç”Ÿæ•ˆ</font><h5>
 
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
@@ -348,23 +348,23 @@ function init()
 <form id="FormDaocndi" name="FormDaocndi">
   <table>
   	<tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>Æµ¶ÎÉèÖÃ:</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>é¢‘æ®µè®¾ç½®:</b></font></td>
     </tr>   
     <tr> 
-    	<td colspan=3 ><font size="2" >µ±Ç°ÅäÖÃ:<label id="LB_FormDaocndi_Param_Band">LB_FormDaocndi_Param_Band</label></font></td>      
+    	<td colspan=3 ><font size="2" >å½“å‰é…ç½®:<label id="LB_FormDaocndi_Param_Band">LB_FormDaocndi_Param_Band</label></font></td>      
     </tr>   
     <tr> 
       <td ><font size="2" >
-      ÉèÖÃÖµ:
+      è®¾ç½®å€¼:
       
-    	 <input type="checkbox" name="FormDaocndi_Param_Band"   value='1' >800MÆµ¶Î  
-		<input type="checkbox" name="FormDaocndi_Param_Band"  value='4'>1.4GÆµ¶Î 
-		<input type="checkbox" name="FormDaocndi_Param_Band" value='8'>2.4GÆµ¶Î  
+    	 <input type="checkbox" name="FormDaocndi_Param_Band"   value='1' >800Mé¢‘æ®µ  
+		<input type="checkbox" name="FormDaocndi_Param_Band"  value='4'>1.4Gé¢‘æ®µ 
+		<input type="checkbox" name="FormDaocndi_Param_Band" value='8'>2.4Gé¢‘æ®µ  
 		</font>
 		</td>
-        <td><input type="button" value="ÖØÖÃÅäÖÃÖµ" id="FormDaocndi_Button_Reset"  onClick="band_check_init();"> 
+        <td><input type="button" value="é‡ç½®é…ç½®å€¼" id="FormDaocndi_Button_Reset"  onClick="band_check_init();"> 
 		</td>
-        <td><input type="button" value="Ìá½»ĞŞ¸Ä" id="FormDaocndi_Button_Submit"  onClick="FormDaocndi_Submit();"> </td>
+        <td><input type="button" value="æäº¤ä¿®æ”¹" id="FormDaocndi_Button_Submit"  onClick="FormDaocndi_Submit();"> </td>
     </tr>
   </table>
 

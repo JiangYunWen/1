@@ -75,7 +75,7 @@ return parm2;
 var objTimeOut = "";
 
 
-/*ÊÇ·ñÊÇ16½øÖÆÊı*/
+/*æ˜¯å¦æ˜¯16è¿›åˆ¶æ•°*/
 function    isHexNumber(strValue )  {  
    var  objRegExp= /^[0-9a-fA-F]{2,64}$/;
    return  objRegExp.test(strValue);  
@@ -110,12 +110,12 @@ function AjaxTest1(param)
 		closediv(DivCloseMode_None);
 		var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){	    
-    	    showdiv("ˆÌĞĞ³¬•r£¬ĞèÒªÖØĞÂ‡LÔ‡Ë¢ĞÂí“Ãæ£¬™zœyWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("åŸ·è¡Œè¶…æ™‚ï¼Œéœ€è¦é‡æ–°å˜—è©¦åˆ·æ–°é é¢ï¼Œæª¢æ¸¬WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}else{	
-    	    showdiv("Ö´ĞĞ³¬Ê±£¬ĞèÒªÖØĞÂ³¢ÊÔË¢ĞÂÒ³Ãæ£¬¼ì²âWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("æ‰§è¡Œè¶…æ—¶ï¼Œéœ€è¦é‡æ–°å°è¯•åˆ·æ–°é¡µé¢ï¼Œæ£€æµ‹WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}
-//		showdiv("Ö´ĞĞ³¬Ê±£¬ĞèÒªÖØĞÂ³¢ÊÔË¢ĞÂÒ³Ãæ£¬¼ì²âWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
-//		showdiv("Ö´ĞĞ³¬Ê±£¬³¢ÊÔË¢ĞÂÒ³Ãæ",DivCloseMode_None);
+//		showdiv("æ‰§è¡Œè¶…æ—¶ï¼Œéœ€è¦é‡æ–°å°è¯•åˆ·æ–°é¡µé¢ï¼Œæ£€æµ‹WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
+//		showdiv("æ‰§è¡Œè¶…æ—¶ï¼Œå°è¯•åˆ·æ–°é¡µé¢",DivCloseMode_None);
 //		top.location.reload();
 	};
     xhr.onreadystatechange = function () 
@@ -136,11 +136,11 @@ function AjaxTest1(param)
 					closediv(DivCloseMode_None);
             		var zh_str = zh_Lang_ex();
                     if(zh_Lang_now == 't'){	    
-                    	alert("ÕˆÇóÊ§”¡:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÕˆÇóÊ§”¡:" + xhr.status;
+                    	alert("è«‹æ±‚å¤±æ•—:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è«‹æ±‚å¤±æ•—:" + xhr.status;
                 	}else{	
-                    	alert("ÇëÇóÊ§°Ü:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÇëÇóÊ§°Ü:" + xhr.status;
+                    	alert("è¯·æ±‚å¤±è´¥:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è¯·æ±‚å¤±è´¥:" + xhr.status;
                 	}
 	            }
 			}
@@ -149,7 +149,7 @@ function AjaxTest1(param)
 			}
         }
     };
-    //±ØĞëÔÚµ÷ÓÃopen()Ö®Ç°Ö¸¶¨onreadystatechangeÊÂ¼ş´¦Àí³ÌĞò,²ÅÄÜÈ·±£¿çä¯ÀÀÆ÷¼æÈİĞÔ.
+    //å¿…é¡»åœ¨è°ƒç”¨open()ä¹‹å‰æŒ‡å®šonreadystatechangeäº‹ä»¶å¤„ç†ç¨‹åº,æ‰èƒ½ç¡®ä¿è·¨æµè§ˆå™¨å…¼å®¹æ€§.
 //    xhr.open("get", "test.txt", true);
 //    xhr.send(null);
 	xhr.open("POST", "/boafrm/formAtcmdProcess", true);
@@ -190,11 +190,11 @@ function FormAtcmd_Submit()
 //	disableTextField(document.getElementById("FormAtcmd_Button_Submit"));
 //	send_FormAtcmd(param);
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚˆÌĞĞ£¬ÕˆµÈ´ı!Íê³ÉÖ®Ç°²»ÒªßMĞĞÆäËû²Ù×÷",DivCloseMode_None);
+	    showdiv("æ­£åœ¨åŸ·è¡Œï¼Œè«‹ç­‰å¾…!å®Œæˆä¹‹å‰ä¸è¦é€²è¡Œå…¶ä»–æ“ä½œ",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚÖ´ĞĞ£¬ÇëµÈ´ı!Íê³ÉÖ®Ç°²»ÒªÖ´ĞĞÆäËû²Ù×÷",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ‰§è¡Œï¼Œè¯·ç­‰å¾…!å®Œæˆä¹‹å‰ä¸è¦æ‰§è¡Œå…¶ä»–æ“ä½œ",DivCloseMode_None);
 	}
-	//showdiv("ÕıÔÚÖ´ĞĞ£¬ÇëµÈ´ı!Íê³ÉÖ®Ç°²»ÒªÖ´ĞĞÆäËû²Ù×÷",DivCloseMode_None);
+	//showdiv("æ­£åœ¨æ‰§è¡Œï¼Œè¯·ç­‰å¾…!å®Œæˆä¹‹å‰ä¸è¦æ‰§è¡Œå…¶ä»–æ“ä½œ",DivCloseMode_None);
 	AjaxTest1(param);
 //	enableTextField(document.getElementById("FormAtcmd_Button_Submit"));	
 }
@@ -209,7 +209,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">ATÃüÁîµ÷ÊÔ</font></h3>
+<h3><font color="#0000FF">ATå‘½ä»¤è°ƒè¯•</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -226,13 +226,13 @@ function init()
   <table>
   	<tr> 
       <td width ="75%"><font size="2" weight="bold" >
-      ÇëÊäÈëAT ÃüÁî:</font>
+      è¯·è¾“å…¥AT å‘½ä»¤:</font>
     	</td> 
     </tr>
   	<tr> 
       <td >      
       	<input type="text" class="txt1"  name="FormAtcmdCmd" maxlength="256" size="60" id="FormAtcmdCmd">
-      	<input type="button" value="È·¶¨" id="FormAtcmd_Button_Submit"  onClick="FormAtcmd_Submit();"> 
+      	<input type="button" value="ç¡®å®š" id="FormAtcmd_Button_Submit"  onClick="FormAtcmd_Submit();"> 
       	</td> 
     </tr>
   	<tr> 
@@ -242,7 +242,7 @@ function init()
   </table>
 	<input id="hiddenText" type="text" style="display:none" />
 </form>
-<font size="2" weight="bold" >Ö´ĞĞ½á¹û:</font>
+<font size="2" weight="bold" >æ‰§è¡Œç»“æœ:</font>
 <div style="width:550px;overflow:auto;word-break:break-all;word-wrap:break-word;background:gray">
 <pre id='out'><br><br><br></pre>
 </div>

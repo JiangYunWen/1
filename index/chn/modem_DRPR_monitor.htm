@@ -60,9 +60,9 @@ function AjaxTest1(param)
 		TimeOut=null;
     	var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    showdiv("ˆÌĞĞ³¬•r£¬ĞèÒªÖØĞÂ‡LÔ‡Ë¢ĞÂí“Ãæ£¬™zœyWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("åŸ·è¡Œè¶…æ™‚ï¼Œéœ€è¦é‡æ–°å˜—è©¦åˆ·æ–°é é¢ï¼Œæª¢æ¸¬WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}else{	
-    	    showdiv("Ö´ĞĞ³¬Ê±£¬ĞèÒªÖØĞÂ³¢ÊÔË¢ĞÂÒ³Ãæ£¬¼ì²âWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("æ‰§è¡Œè¶…æ—¶ï¼Œéœ€è¦é‡æ–°å°è¯•åˆ·æ–°é¡µé¢ï¼Œæ£€æµ‹WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}
 	};
     xhr.onreadystatechange = function () 
@@ -81,16 +81,16 @@ function AjaxTest1(param)
 					{
                 		var zh_str = zh_Lang_ex();
                         if(zh_Lang_now == 't'){
-                    	    alert("¹ücîĞÍé0£¬Õˆ™z²éÊÇ·ñÈë¾W");
+                    	    alert("ç¯€é»é¡å‹ç‚º0ï¼Œè«‹æª¢æŸ¥æ˜¯å¦å…¥ç¶²");
                     	}else{	
-                    	    alert("½ÚµãÀàĞÍÎª0£¬Çë¼ì²éÊÇ·ñÈëÍø");
+                    	    alert("èŠ‚ç‚¹ç±»å‹ä¸º0ï¼Œè¯·æ£€æŸ¥æ˜¯å¦å…¥ç½‘");
                     	}
 					}
-					if(response_temp.indexOf("DAPR") != -1)//Ö÷½Úµã
+					if(response_temp.indexOf("DAPR") != -1)//ä¸»èŠ‚ç‚¹
 					{
 					    //alert("response_temp:" + response_temp);
     					response_split = response_temp.replace(/[" "]/g,"").split("^DAPR:");
-    					//alert("response_split:" + response_split[1]);//1µ½response_split.length-1
+    					//alert("response_split:" + response_split[1]);//1åˆ°response_split.length-1
     					for(var i = 1; i < response_split.length; i++)
     					{
     					    var temparray = new Array();
@@ -101,7 +101,7 @@ function AjaxTest1(param)
     					    //per.push({ip:temparray[0],rsrp:temparray[4],snr:temparray[6],dis:temparray[7]});
     					}
 					}
-					if(response_temp.indexOf("DRPR") != -1)//´Ó½Úµã
+					if(response_temp.indexOf("DRPR") != -1)//ä»èŠ‚ç‚¹
 					{
     					response_split = response_temp.replace(/[" "]/g,"").split("^DRPR:");
     					for(var i = 1; i < response_split.length; i++)
@@ -112,16 +112,16 @@ function AjaxTest1(param)
     					}
 					}
                     var tbody = document.getElementById('tbMain');
-                    for(var i = 0;i < per.length; i++){ //±éÀúÒ»ÏÂjsonÊı¾İ
-                        var trow = getDataRow(per[i]); //¶¨ÒåÒ»¸ö·½·¨,·µ»ØtrÊı¾İ
+                    for(var i = 0;i < per.length; i++){ //éå†ä¸€ä¸‹jsonæ•°æ®
+                        var trow = getDataRow(per[i]); //å®šä¹‰ä¸€ä¸ªæ–¹æ³•,è¿”å›træ•°æ®
                         tbody.appendChild(trow);
                         $(tbody).attr("align","center");
-                        //tbody.style.setProperty('text-align', 'center', 'important');//DOM¶ÔÏó
-                        //$("#tbMain td").attr("align","center"); //Jquery¶ÔÏó
+                        //tbody.style.setProperty('text-align', 'center', 'important');//DOMå¯¹è±¡
+                        //$("#tbMain td").attr("align","center"); //Jqueryå¯¹è±¡
                     } 
                     var rows = tbody.rows.length;
                     var index = 0;
-                    //Êı¾İ·Åµ½Êı×éÀï
+                    //æ•°æ®æ”¾åˆ°æ•°ç»„é‡Œ
                     //var eararray=new Array(rows);
                     var rsrparray=new Array(rows);
                     var snrarray=new Array(rows);
@@ -136,7 +136,7 @@ function AjaxTest1(param)
                         snrarray[index] = $("tbody").find("tr").eq(index).find("td").eq(2).text();
                         disarray[index] = $("tbody").find("tr").eq(index).find("td").eq(3).text();
                     }
-                    //Çø¼ä¸³É«
+                    //åŒºé—´èµ‹è‰²
                     arrSetRSRPColor(rsrparray,1);
                     arrSetSNRColor(snrarray,2);
 	            }
@@ -146,13 +146,13 @@ function AjaxTest1(param)
 					objTimeOut=null;				
             		var zh_str = zh_Lang_ex();
                     if(zh_Lang_now == 't'){
-                        alert("ÕˆÇó³¬•r£¬ÕˆË¢ĞÂÖØÔ‡");
-                    	//alert("ÕˆÇóÊ§”¡:" + xhr.status);
-    					//document.getElementById('out').innerHTML ="ÕˆÇóÊ§”¡:" + xhr.status;
+                        alert("è«‹æ±‚è¶…æ™‚ï¼Œè«‹åˆ·æ–°é‡è©¦");
+                    	//alert("è«‹æ±‚å¤±æ•—:" + xhr.status);
+    					//document.getElementById('out').innerHTML ="è«‹æ±‚å¤±æ•—:" + xhr.status;
                 	}else{
-                	    alert("ÇëÇó³¬Ê±£¬ÇëË¢ĞÂÖØÊÔ");
-                    	//alert("ÇëÇóÊ§°Ü:" + xhr.status);
-    					//document.getElementById('out').innerHTML ="ÇëÇóÊ§°Ü:" + xhr.status;
+                	    alert("è¯·æ±‚è¶…æ—¶ï¼Œè¯·åˆ·æ–°é‡è¯•");
+                    	//alert("è¯·æ±‚å¤±è´¥:" + xhr.status);
+    					//document.getElementById('out').innerHTML ="è¯·æ±‚å¤±è´¥:" + xhr.status;
                 	}
 	            }
 			}
@@ -185,7 +185,7 @@ function FormAtcmd_Submit()
     //alert("clearData");
 	AjaxTest1(param);
 }
-//¸³É«
+//èµ‹è‰²
 function arrSetRSRPColor(arr,p){
 
     for(var i = 0; i < arr.length; i++){
@@ -231,30 +231,30 @@ function arrSetSNRColor(arr,p){
 }
 
 function getDataRow(h){
-    var row = document.createElement('tr'); //´´½¨ĞĞ  
+    var row = document.createElement('tr'); //åˆ›å»ºè¡Œ  
     
-    var ipCell = document.createElement('td'); //´´½¨µÚÒ»ÁĞip    
-    ipCell.innerHTML = h.ip; //Ìî³äÊı¾İ     
-    row.appendChild(ipCell); //¼ÓÈëĞĞ  £¬ÏÂÃæÀàËÆ 
+    var ipCell = document.createElement('td'); //åˆ›å»ºç¬¬ä¸€åˆ—ip    
+    ipCell.innerHTML = h.ip; //å¡«å……æ•°æ®     
+    row.appendChild(ipCell); //åŠ å…¥è¡Œ  ï¼Œä¸‹é¢ç±»ä¼¼ 
     
     
-    //var earCell = document.createElement('td'); //´´½¨µÚÒ»ÁĞear  
-    //earCell.innerHTML = h.ear; //Ìî³äÊı¾İ        
-    //row.appendChild(earCell); //¼ÓÈëĞĞ  £¬ÏÂÃæÀàËÆ  
+    //var earCell = document.createElement('td'); //åˆ›å»ºç¬¬ä¸€åˆ—ear  
+    //earCell.innerHTML = h.ear; //å¡«å……æ•°æ®        
+    //row.appendChild(earCell); //åŠ å…¥è¡Œ  ï¼Œä¸‹é¢ç±»ä¼¼  
     
-    var rsrpCell = document.createElement('td');//´´½¨µÚ¶şÁĞrsrp 
+    var rsrpCell = document.createElement('td');//åˆ›å»ºç¬¬äºŒåˆ—rsrp 
     rsrpCell.innerHTML = h.rsrp;  
     row.appendChild(rsrpCell);  
     
-    var snrCell = document.createElement('td');//´´½¨µÚÈıÁĞsnr 
+    var snrCell = document.createElement('td');//åˆ›å»ºç¬¬ä¸‰åˆ—snr 
     snrCell.innerHTML = h.snr;  
     row.appendChild(snrCell);  
     
-    var disCell = document.createElement('td');//´´½¨µÚËÄÁĞdis
+    var disCell = document.createElement('td');//åˆ›å»ºç¬¬å››åˆ—dis
     disCell.innerHTML = h.dis;
     row.appendChild(disCell);
     
-    return row; //·µ»ØtrÊı¾İ      
+    return row; //è¿”å›træ•°æ®      
 }
 
 </script>
@@ -291,27 +291,27 @@ width: 90px;
 <body onLoad="setCodeValue();">
     <div class="item1">
     <td>
-    <input type="button" value="Æô¶¯" id="FormReport_Button_Open"   onClick="start_reportmonitor();">
+    <input type="button" value="å¯åŠ¨" id="FormReport_Button_Open"   onClick="start_reportmonitor();">
     <br></br>
-    <input type="button" value="ÔİÍ£" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
+    <input type="button" value="æš‚åœ" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
     </td>
     </div>
     <div class="item2">
     <ul id="menursrp">
-    <li style="background-color:#CD3000; ">RSRP¼«²î <-124</li>
-    <li style="background-color:#FF3400; ">RSRP²î -124~-104</li>
-    <li style="background-color:#FFA500; ">RSRPµÍ -103~-85</li>
-    <li style="background-color:#FFF68F; ">RSRPÖĞ -84~-65</li>
-    <li style="background-color:#F0F0F0; ">RSRP¸ß >-64</li>
+    <li style="background-color:#CD3000; ">RSRPæå·® <-124</li>
+    <li style="background-color:#FF3400; ">RSRPå·® -124~-104</li>
+    <li style="background-color:#FFA500; ">RSRPä½ -103~-85</li>
+    <li style="background-color:#FFF68F; ">RSRPä¸­ -84~-65</li>
+    <li style="background-color:#F0F0F0; ">RSRPé«˜ >-64</li>
     </ul>
     </div>
     <div class="item2">
     <ul id="menusnr">
-    <li style="background-color:#CD3000; ">SNR¼«²î <0</li>
-    <li style="background-color:#FF3400; ">SNR²î 0~6</li>
-    <li style="background-color:#FFA500; ">SNRµÍ 7~12</li>
-    <li style="background-color:#FFF68F; ">SNRÖĞ 13~18</li>
-    <li style="background-color:#F0F0F0; ">SNR¸ß >19</li>
+    <li style="background-color:#CD3000; ">SNRæå·® <0</li>
+    <li style="background-color:#FF3400; ">SNRå·® 0~6</li>
+    <li style="background-color:#FFA500; ">SNRä½ 7~12</li>
+    <li style="background-color:#FFF68F; ">SNRä¸­ 13~18</li>
+    <li style="background-color:#F0F0F0; ">SNRé«˜ >19</li>
     </ul>
     </div>
     </div>

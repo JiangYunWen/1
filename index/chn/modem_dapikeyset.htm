@@ -74,18 +74,18 @@ return parm2;
 var objTimeOut = "";
 var WebModemGetInfoDapiParamPasswordId;
 
-//ÆÁ±ÎF5   
+//å±è”½F5   
 document.onkeydown = mykeydown;  
 
 function mykeydown() {  
-    if (event.keyCode == 116) //ÆÁ±ÎF5Ë¢ĞÂ¼ü      
+    if (event.keyCode == 116) //å±è”½F5åˆ·æ–°é”®      
     {  
         window.event.keyCode = 0;  
         return false;  
     }  
 }   
 
-/*ÊÇ·ñÊÇ16½øÖÆÊı*/
+/*æ˜¯å¦æ˜¯16è¿›åˆ¶æ•°*/
 function    isHexNumber(strValue )  {  
    var  objRegExp= /^[0-9a-fA-F]{2,64}$/;
    return  objRegExp.test(strValue);  
@@ -107,7 +107,7 @@ function send_FormDapi( param)
 		type: "POST",
 		url: temp,
 		cache: false,
-		timeout : 4000, //³¬Ê±Ê±¼äÉèÖÃ£¬µ¥Î»ºÁÃë		
+		timeout : 4000, //è¶…æ—¶æ—¶é—´è®¾ç½®ï¼Œå•ä½æ¯«ç§’		
 		data:param,
 		success: function(result) 
 		{
@@ -119,16 +119,16 @@ function send_FormDapi( param)
 		complete: function(xmlHttpHeader, textStatus) 
 		{
 			xmlHttpHeader = null;
-	¡¡¡¡¡¡¡¡if(textStatus=='timeout'){//³¬Ê±,status»¹ÓĞsuccess,errorµÈÖµµÄÇé¿ö
-	 ¡¡¡¡¡¡¡¡¡¡ varajax.abort();
+	ã€€ã€€ã€€ã€€if(textStatus=='timeout'){//è¶…æ—¶,statusè¿˜æœ‰success,errorç­‰å€¼çš„æƒ…å†µ
+	 ã€€ã€€ã€€ã€€ã€€ varajax.abort();
 				closediv(DivCloseMode_None);
             	var zh_str = zh_Lang_ex();
                 if(zh_Lang_now == 't'){	    
-            	    showdiv("ˆÌĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ½›Ÿo·¨ÔL†–:"+location.hostname+";Õˆ±£×CæœÂ·Â“Í¨ºóÔÙÔL†–",DivCloseMode_TopReload);
+            	    showdiv("åŸ·è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç¶“ç„¡æ³•è¨ªå•:"+location.hostname+";è«‹ä¿è­‰éˆè·¯è¯é€šåå†è¨ªå•",DivCloseMode_TopReload);
             	}else{	
-            	    showdiv("Ö´ĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ¾­ÎŞ·¨·ÃÎÊ:"+location.hostname+";Çë±£Ö¤Á´Â·ÁªÍ¨ºóÔÙ·ÃÎÊ",DivCloseMode_TopReload);
+            	    showdiv("æ‰§è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç»æ— æ³•è®¿é—®:"+location.hostname+";è¯·ä¿è¯é“¾è·¯è”é€šåå†è®¿é—®",DivCloseMode_TopReload);
             	}
-	¡¡¡¡¡¡¡¡}			
+	ã€€ã€€ã€€ã€€}			
 		}
 	});
 }
@@ -161,18 +161,18 @@ temp ="submit"+getparm2();
 	if(true!=isHexNumber(document.getElementById("FormDapiKey").value))
 	{    	
         if(zh_Lang_now == 't'){	    
-    	    showdiv("KEYİ”Èë²»ºÏ·¨",DivCloseMode_Alert);
+    	    showdiv("KEYè¼¸å…¥ä¸åˆæ³•",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("KEYÊäÈë²»ºÏ·¨",DivCloseMode_Alert);
+    	    showdiv("KEYè¾“å…¥ä¸åˆæ³•",DivCloseMode_Alert);
     	}
 		return false;
 	}
 	if(0!=(document.getElementById("FormDapiKey").value.length %2))
 	{
         if(zh_Lang_now == 't'){	    
-    	    showdiv("KEYİ”Èë²»ºÏ·¨",DivCloseMode_Alert);
+    	    showdiv("KEYè¼¸å…¥ä¸åˆæ³•",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("KEYÊäÈë²»ºÏ·¨",DivCloseMode_Alert);
+    	    showdiv("KEYè¾“å…¥ä¸åˆæ³•",DivCloseMode_Alert);
     	}
 		return false;
 	}
@@ -182,9 +182,9 @@ temp ="submit"+getparm2();
 		if (document.getElementById("FormDapiKey").value.length < 2  ||  document.getElementById("FormDapiKey").value.length > 64)
 		{			
     		if(zh_Lang_now == 't'){	    
-        	    showdiv("Õˆİ”Èë2µ½64Î»(Å¼”µ)µÄKey£¡",DivCloseMode_Alert);
+        	    showdiv("è«‹è¼¸å…¥2åˆ°64ä½(å¶æ•¸)çš„Keyï¼",DivCloseMode_Alert);
         	}else{	
-        	    showdiv("ÇëÊäÈë2µ½64Î»(Å¼Êı)µÄKey£¡",DivCloseMode_Alert);
+        	    showdiv("è¯·è¾“å…¥2åˆ°64ä½(å¶æ•°)çš„Keyï¼",DivCloseMode_Alert);
         	}		
 			document.all.FormDapi.FormDapiKey.focus();
 			return false;
@@ -193,9 +193,9 @@ temp ="submit"+getparm2();
 	else
 	{
         if(zh_Lang_now == 't'){	    
-    	    showdiv("KEY²»ÄÜé¿Õ",DivCloseMode_Alert);
+    	    showdiv("KEYä¸èƒ½ç‚ºç©º",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("KEY²»ÄÜÎª¿Õ",DivCloseMode_Alert);
+    	    showdiv("KEYä¸èƒ½ä¸ºç©º",DivCloseMode_Alert);
     	}	
 		document.all.FormDapi.FormDapiKey.focus();
 		return false;
@@ -208,9 +208,9 @@ temp ="submit"+getparm2();
 	disableTextField(document.getElementById("FormDapi_Button_Submit"));
 	send_FormDapi(param);
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 }
 
@@ -220,9 +220,9 @@ function send_FormDapi_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	$.ajax({
 	url: "../lcModemManageDapiProcess.asp",
@@ -239,23 +239,23 @@ function send_FormDapi_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){	    
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){	    
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}
 			openIntervals_Dapi();
 		}
@@ -293,7 +293,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -305,7 +305,7 @@ return true;
 } 
 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -315,7 +315,7 @@ function closeIntervals()
 function init()
 {
 	var TmpString="";
-	/*ÃÜÔ¿ÉèÖÃat^dapi*/
+	/*å¯†é’¥è®¾ç½®at^dapi*/
 	WebModemGetInfoDapiParamPasswordId =""
 	WebModemGetInfoDapiParamPasswordId +=<%getInfo("ModemGetInfoDapiParamPasswordId");%>; 
 	SetLabelText("LB_FormDapiKeyOld",WebModemGetInfoDapiParamPasswordId);
@@ -324,8 +324,8 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">ÃØÔ¿ÅäÖÃ¹ÜÀí</font></h3>
-<h5><font color="red" >Note:ÉèÖÃÍê³Éºó»á×Ô¶¯ÖØÆôModem</font><h5>
+<h3><font color="#0000FF">ç§˜é’¥é…ç½®ç®¡ç†</font></h3>
+<h5><font color="red" >Note:è®¾ç½®å®Œæˆåä¼šè‡ªåŠ¨é‡å¯Modem</font><h5>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -341,17 +341,17 @@ function init()
 <form id="FormDapi" name="FormDapi" >
   <table>
   	<tr> 
-      <td ><font size="2" weight="bold" ><b>ÃÜÔ¿ÉèÖÃ(±ØĞëÊÇ16½øÖÆÊı£¬¼´0~9£¬A~F»òa~f£¬×î³¤²»ÄÜ³¬¹ı64¸ö×Ö·û£¬¼´32¸ö×Ö½Ú¡£±ØĞëÅ¼Êı):</b></font></td>
+      <td ><font size="2" weight="bold" ><b>å¯†é’¥è®¾ç½®(å¿…é¡»æ˜¯16è¿›åˆ¶æ•°ï¼Œå³0~9ï¼ŒA~Fæˆ–a~fï¼Œæœ€é•¿ä¸èƒ½è¶…è¿‡64ä¸ªå­—ç¬¦ï¼Œå³32ä¸ªå­—èŠ‚ã€‚å¿…é¡»å¶æ•°):</b></font></td>
     </tr>  
 	 <tr>
-    	<td ><font size="2">µ±Ç°Key:[<label id="LB_FormDapiKeyOld">LB_FormDapiKeyOld</label>]</font></td>     	 
+    	<td ><font size="2">å½“å‰Key:[<label id="LB_FormDapiKeyOld">LB_FormDapiKeyOld</label>]</font></td>     	 
 	 <tr>
       <td width ="75%"><font size="2" weight="bold" >
-      <font size="2">ĞÂKey:</font>
+      <font size="2">æ–°Key:</font>
       	<input type="text" class="txt1"  name="FormDapiKey" maxlength="64" size="64" id="FormDapiKey"></font></td> 
     </tr>
   	<tr> 
-      <td ><input type="button" value="È·¶¨" id="FormDapi_Button_Submit"  onClick="FormDapi_Submit();">  </td>
+      <td ><input type="button" value="ç¡®å®š" id="FormDapi_Button_Submit"  onClick="FormDapi_Submit();">  </td>
     </tr>  
     
   </table>

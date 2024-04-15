@@ -75,7 +75,7 @@ return parm2;
 var objTimeOut = "";
 
 
-/*ÊÇ·ñÊÇ16½øÖÆÊı*/
+/*æ˜¯å¦æ˜¯16è¿›åˆ¶æ•°*/
 function    isHexNumber(strValue )  {  
    var  objRegExp= /^[0-9a-fA-F]{2,64}$/;
    return  objRegExp.test(strValue);  
@@ -110,9 +110,9 @@ function AjaxTest1(param)
 		closediv(DivCloseMode_None);
     	var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){	    
-    	    showdiv("ˆÌĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ½›Ÿo·¨ÔL†–:"+location.hostname+";Õˆ±£×CæœÂ·Â“Í¨ºóÔÙÔL†–",DivCloseMode_TopReload);
+    	    showdiv("åŸ·è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç¶“ç„¡æ³•è¨ªå•:"+location.hostname+";è«‹ä¿è­‰éˆè·¯è¯é€šåå†è¨ªå•",DivCloseMode_TopReload);
     	}else{	
-    	    showdiv("Ö´ĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ¾­ÎŞ·¨·ÃÎÊ:"+location.hostname+";Çë±£Ö¤Á´Â·ÁªÍ¨ºóÔÙ·ÃÎÊ",DivCloseMode_TopReload);
+    	    showdiv("æ‰§è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç»æ— æ³•è®¿é—®:"+location.hostname+";è¯·ä¿è¯é“¾è·¯è”é€šåå†è®¿é—®",DivCloseMode_TopReload);
     	}
 	};
     xhr.onreadystatechange = function () 
@@ -135,11 +135,11 @@ function AjaxTest1(param)
 					//document.getElementById('out').innerHTML ="Request was unsuccessful:" + xhr.status;
 					var zh_str = zh_Lang_ex();
                     if(zh_Lang_now == 't'){	    
-                    	alert("ÕˆÇóÊ§”¡:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÕˆÇóÊ§”¡:" + xhr.status;
+                    	alert("è«‹æ±‚å¤±æ•—:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è«‹æ±‚å¤±æ•—:" + xhr.status;
                 	}else{	
-                    	alert("ÇëÇóÊ§°Ü:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÇëÇóÊ§°Ü:" + xhr.status;
+                    	alert("è¯·æ±‚å¤±è´¥:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è¯·æ±‚å¤±è´¥:" + xhr.status;
                 	}
 	            }
 			}
@@ -148,7 +148,7 @@ function AjaxTest1(param)
 			}
         }
     };
-    //±ØĞëÔÚµ÷ÓÃopen()Ö®Ç°Ö¸¶¨onreadystatechangeÊÂ¼ş´¦Àí³ÌĞò,²ÅÄÜÈ·±£¿çä¯ÀÀÆ÷¼æÈİĞÔ.
+    //å¿…é¡»åœ¨è°ƒç”¨open()ä¹‹å‰æŒ‡å®šonreadystatechangeäº‹ä»¶å¤„ç†ç¨‹åº,æ‰èƒ½ç¡®ä¿è·¨æµè§ˆå™¨å…¼å®¹æ€§.
 //    xhr.open("get", "test.txt", true);
 //    xhr.send(null);
 	xhr.open("POST", "/boafrm/formShellCmdProcess", true);
@@ -167,9 +167,9 @@ function FormShellcmd_Submit()
 //	send_FormAtcmd(param);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚˆÌĞĞ£¬ÕˆµÈ´ı<br>Íê³ÉÖ®Ç°²»ÒªßMĞĞÆäËû²Ù×÷",DivCloseMode_None);
+	    showdiv("æ­£åœ¨åŸ·è¡Œï¼Œè«‹ç­‰å¾…<br>å®Œæˆä¹‹å‰ä¸è¦é€²è¡Œå…¶ä»–æ“ä½œ",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚÖ´ĞĞ£¬ÇëµÈ´ı<br>Íê³ÉÖ®Ç°²»ÒªÖ´ĞĞÆäËû²Ù×÷",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ‰§è¡Œï¼Œè¯·ç­‰å¾…<br>å®Œæˆä¹‹å‰ä¸è¦æ‰§è¡Œå…¶ä»–æ“ä½œ",DivCloseMode_None);
 	}
 	AjaxTest1(param);
 //	enableTextField(document.getElementById("FormShellcmd_Button_Submit"));	
@@ -184,7 +184,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">ShellÃüÁîµ÷ÊÔ</font></h3>
+<h3><font color="#0000FF">Shellå‘½ä»¤è°ƒè¯•</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -203,9 +203,9 @@ function init()
     	<td ></td>     	 
 	 <tr>
       <td width ="75%"><font size="2" weight="bold" >
-      ÇëÊäÈëShell ÃüÁî:</font>
+      è¯·è¾“å…¥Shell å‘½ä»¤:</font>
       	<input type="text" class="txt1"  name="FormShellcmdCmd" maxlength="256" size="64" id="FormShellcmdCmd">
-      	<input type="button" value="È·¶¨" id="FormShellcmd_Button_Submit"  onClick="FormShellcmd_Submit();"></td> 
+      	<input type="button" value="ç¡®å®š" id="FormShellcmd_Button_Submit"  onClick="FormShellcmd_Submit();"></td> 
     </tr>
   	<tr> 
       <td >  </td>
@@ -214,7 +214,7 @@ function init()
   </table>
 	<input id="hiddenText" type="text" style="display:none" />
 </form>
-<font size="2" weight="bold" >Êä³ö½á¹û:</font>
+<font size="2" weight="bold" >è¾“å‡ºç»“æœ:</font>
 <div style="width:550px;overflow:auto;word-break:break-all;word-wrap:break-word;background:gray">
 <pre id='out'><br><br><br></pre>
 </div>

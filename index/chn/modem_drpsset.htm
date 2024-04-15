@@ -77,9 +77,9 @@ function FormDrps_Submit()
 	if("255"==document.all.FormDrps.FormDrps_Param_Bandwidth.value)
 	{
         if(zh_Lang_now == 't'){
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}		
 		document.all.FormDrps.FormDrps_Param_Bandwidth.focus();
 		return false;
@@ -92,9 +92,9 @@ function FormDrps_Submit()
 	//alert("FormDrps_Submit:" + param);	
 	send_FormDrps(param);
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -105,9 +105,9 @@ function send_FormDrps_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	$.ajax({
 	url: "../lcModemManageDrpsProcess.asp",
@@ -124,23 +124,23 @@ function send_FormDrps_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}
 			openIntervals_Drps();
 		}
@@ -176,7 +176,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -187,7 +187,7 @@ return false;
 return true; 
 } 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -200,7 +200,7 @@ function init()
 
 	/*Radio Parameter Store in NVRAM at^drps*/
 	WebModemGetInfoDrpsParamBandwidth=<%getInfo("ModemGetInfoDrpsParamBandwidth");%>; 
-		/*ÔİÊ±²»ÓÃ WebModemGetInfoDrpsParamPower=<%getInfo("ModemGetInfoDrpsParamPower");%>; */
+		/*æš‚æ—¶ä¸ç”¨ WebModemGetInfoDrpsParamPower=<%getInfo("ModemGetInfoDrpsParamPower");%>; */
 	TmpString ="";
 	if(0 == WebModemGetInfoDrpsParamBandwidth)
 	{
@@ -230,9 +230,9 @@ function init()
 	{
     	var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    TmpString ="²»ÄÜ×R„e WebModemGetInfoDrpsParamBandwidth= "+WebModemGetInfoDrpsParamBandwidth;
+    	    TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDrpsParamBandwidth= "+WebModemGetInfoDrpsParamBandwidth;
     	}else{	
-    	    TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDrpsParamBandwidth= "+WebModemGetInfoDrpsParamBandwidth;
+    	    TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDrpsParamBandwidth= "+WebModemGetInfoDrpsParamBandwidth;
     	}		
 	}
 	SetLabelText("LB_FormDrps_Param_Bandwidth",TmpString);
@@ -240,7 +240,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">´ø¿íÅäÖÃ¹ÜÀí</font></h3>
+<h3><font color="#0000FF">å¸¦å®½é…ç½®ç®¡ç†</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -255,10 +255,10 @@ function init()
 <form id="FormDrps" name="FormDrps">
   <table>
       <tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>´ø¿íÉèÖÃ:</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>å¸¦å®½è®¾ç½®:</b></font></td>
     </tr>
     <tr> 
-	<td ><font size="2">µ±Ç°Öµ:[<label id="LB_FormDrps_Param_Bandwidth">LB_FormDrps_Param_Bandwidth</label>]</font></td>    
+	<td ><font size="2">å½“å‰å€¼:[<label id="LB_FormDrps_Param_Bandwidth">LB_FormDrps_Param_Bandwidth</label>]</font></td>    
       <td ><font size="2" weight="bold" >
 	    <select name="FormDrps_Param_Bandwidth" id="FormDrps_Param_Bandwidth">
           <option value='0'>1.4M</option>
@@ -266,9 +266,9 @@ function init()
           <option value='2'>5M</option>
           <option value='3'>10M</option>    
           <option value='5'>20M</option>             
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>          
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>          
         </select> </font></td>
-	<td ><input type="button" value="È·¶¨" id="FormDrps_Button_Submit"  onClick="FormDrps_Submit();"> </td>         
+	<td ><input type="button" value="ç¡®å®š" id="FormDrps_Button_Submit"  onClick="FormDrps_Submit();"> </td>         
     </tr>
   </table>
 </form>

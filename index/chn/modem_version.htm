@@ -50,7 +50,7 @@ document.getElementById(Labelid).innerHTML=(Text);
 function init()
 {
 	var TmpString="";
-	/*ȫϵͳ�汾*/
+	/*全系统版本*/
 	TmpString =<%getInfo("AllSystemVersion");%>;
 	WebModemGetInfoAllSystemVersion =<%getInfo("AllSystemVersion");%>;
 //	SetLabelText("LB_FormVersion_Param_AllSystemVersion",WebModemGetInfoAllSystemVersion);	
@@ -66,7 +66,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">�汾��Ϣ��ѯ</font></h3>
+<h3><font color="#0000FF">版本信息查询</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -80,7 +80,7 @@ function init()
 
 <form id="FormVersion" name="FormCfun" >
   <table>
-	<td ><font size="2" weight="bold" ><b>ȫϵͳ�汾:</b></font>
+	<td ><font size="2" weight="bold" ><b>全系统版本:</b></font>
 	<div >
 	<pre  id='outAllSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
 	</div>
@@ -90,7 +90,7 @@ function init()
 	</td>        
     </tr>
     <tr> 
-	<td ><font size="2" weight="bold" ><b>�߲�汾:</b></font>
+	<td ><font size="2" weight="bold" ><b>高层版本:</b></font>
 	<div >
 	<pre id='outHLSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
 	</div>	
@@ -99,7 +99,7 @@ function init()
 	</script>
 	</td>        
     </tr>
-	<td ><font size="2" weight="bold" ><b>������汾:</b></font>
+	<td ><font size="2" weight="bold" ><b>物理层版本:</b></font>
 	<div >
 	<pre id='outPHYSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
 	</div>	

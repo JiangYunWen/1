@@ -41,11 +41,11 @@ var objTimeOut = "";
 var WebModemGetInfoCfunParamFun;
 
 
-//ÆÁ±ÎF5   
+//å±è”½F5   
 document.onkeydown = mykeydown;  
 
 function mykeydown() {  
-    if (event.keyCode == 116) //ÆÁ±ÎF5Ë¢ĞÂ¼ü      
+    if (event.keyCode == 116) //å±è”½F5åˆ·æ–°é”®      
     {  
         window.event.keyCode = 0;  
         return false;  
@@ -67,7 +67,7 @@ function send_FormCfun( param)
 		type: "POST",
 		url: temp,
 		cache: false,
-		timeout : 10000, //³¬Ê±Ê±¼äÉèÖÃ£¬µ¥Î»ºÁÃë		
+		timeout : 10000, //è¶…æ—¶æ—¶é—´è®¾ç½®ï¼Œå•ä½æ¯«ç§’		
 		data:param,
 		success: function(result) 
 		{
@@ -79,16 +79,16 @@ function send_FormCfun( param)
 		complete: function(xmlHttpHeader, textStatus) 
 		{
 			xmlHttpHeader = null;
-	¡¡¡¡¡¡¡¡if(textStatus=='timeout'){//³¬Ê±,status»¹ÓĞsuccess,errorµÈÖµµÄÇé¿ö
-	 ¡¡¡¡¡¡¡¡¡¡ varajax.abort();
+	ã€€ã€€ã€€ã€€if(textStatus=='timeout'){//è¶…æ—¶,statusè¿˜æœ‰success,errorç­‰å€¼çš„æƒ…å†µ
+	 ã€€ã€€ã€€ã€€ã€€ varajax.abort();
 				closediv(DivCloseMode_None);
             	var zh_str = zh_Lang_ex();
                 if(zh_Lang_now == 't'){	    
-            	    showdiv("ˆÌĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ½›Ÿo·¨ÔL†–:"+location.hostname+";Õˆ±£×CæœÂ·Â“Í¨ºóÔÙÔL†–",DivCloseMode_TopReload);
+            	    showdiv("åŸ·è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç¶“ç„¡æ³•è¨ªå•:"+location.hostname+";è«‹ä¿è­‰éˆè·¯è¯é€šåå†è¨ªå•",DivCloseMode_TopReload);
             	}else{	
-            	    showdiv("Ö´ĞĞ²Ù×÷ºó£¬¿ÉÄÜÒÑ¾­ÎŞ·¨·ÃÎÊ:"+location.hostname+";Çë±£Ö¤Á´Â·ÁªÍ¨ºóÔÙ·ÃÎÊ",DivCloseMode_TopReload);
+            	    showdiv("æ‰§è¡Œæ“ä½œåï¼Œå¯èƒ½å·²ç»æ— æ³•è®¿é—®:"+location.hostname+";è¯·ä¿è¯é“¾è·¯è”é€šåå†è®¿é—®",DivCloseMode_TopReload);
             	}
-	¡¡¡¡¡¡¡¡}				
+	ã€€ã€€ã€€ã€€}				
 		}
 	});
 }
@@ -98,9 +98,9 @@ function FormCfun_Submit()
 	if("255"==document.all.FormCfun.FormCfun_Param_DebugSwitch.value)
 	{
         if(zh_Lang_now == 't'){
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}
 		document.all.FormCfun.FormCfun_Param_DebugSwitch.focus();
 		return false;
@@ -108,12 +108,12 @@ function FormCfun_Submit()
 	if("0"==document.all.FormCfun.FormCfun_Param_DebugSwitch.value)
 	{
 	    if(zh_Lang_now == 't'){
-        	if(false ==confirm("´_ÕJêPé]²Ù×÷´a?"))
+        	if(false ==confirm("ç¢ºèªé—œé–‰æ“ä½œç¢¼?"))
     		{
     			return false;
     		}
     	}else{	
-    		if(false ==confirm("È·ÈÏ¹Ø±Õ²Ù×÷Âğ?"))
+    		if(false ==confirm("ç¡®è®¤å…³é—­æ“ä½œå—?"))
     		{
     			return false;
     		}
@@ -126,9 +126,9 @@ function FormCfun_Submit()
 //	alert("FormCfun_Submit:" + param);	
 	send_FormCfun(param);
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -139,9 +139,9 @@ function send_FormCfun_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	var varajax= $.ajax({
 	url: "../lcModemManageCfunProcess.asp",
@@ -157,41 +157,41 @@ function send_FormCfun_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}		
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}		
-			/*TODO:´ò¿ªµÃÁËÂğ*/
+			/*TODO:æ‰“å¼€å¾—äº†å—*/
 			openIntervals_Cfun();
 		}
 	},	 
 
 	complete: function(xmlHttpHeader, textStatus) {
 	 	xmlHttpHeader = null;
-¡¡¡¡¡¡¡¡if(textStatus=='timeout'){//³¬Ê±,status»¹ÓĞsuccess,errorµÈÖµµÄÇé¿ö
- ¡¡¡¡¡¡¡¡¡¡ varajax.abort();
+ã€€ã€€ã€€ã€€if(textStatus=='timeout'){//è¶…æ—¶,statusè¿˜æœ‰success,errorç­‰å€¼çš„æƒ…å†µ
+ ã€€ã€€ã€€ã€€ã€€ varajax.abort();
 			closediv(DivCloseMode_None);
         	if(zh_Lang_now == 't'){
-        	    showdiv("‡LÔ‡ÖØ†¢ºóË¢ĞÂ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("å˜—è©¦é‡å•Ÿååˆ·æ–°ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("³¢ÊÔÖØÆôºóË¢ĞÂ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("å°è¯•é‡å¯ååˆ·æ–°ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}			
 			top.location.reload();
-¡¡¡¡¡¡¡¡}		
+ã€€ã€€ã€€ã€€}		
 	}
 	});
 }
@@ -217,9 +217,9 @@ function selectonchange(obj)
 	{
 		var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    showdiv("ˆÌĞĞêPé]²Ù×÷£¬¿ÉÄÜŒ§ÖÂŸo·¨Í¨ß^¾W½jÔL†–Ô“ÔO‚ä",DivCloseMode_Alert);
+    	    showdiv("åŸ·è¡Œé—œé–‰æ“ä½œï¼Œå¯èƒ½å°è‡´ç„¡æ³•é€šéç¶²çµ¡è¨ªå•è©²è¨­å‚™",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("Ö´ĞĞ¹Ø±Õ²Ù×÷£¬¿ÉÄÜµ¼ÖÂÎŞ·¨Í¨¹ıÍøÂç·ÃÎÊ¸ÃÉè±¸",DivCloseMode_Alert);
+    	    showdiv("æ‰§è¡Œå…³é—­æ“ä½œï¼Œå¯èƒ½å¯¼è‡´æ— æ³•é€šè¿‡ç½‘ç»œè®¿é—®è¯¥è®¾å¤‡",DivCloseMode_Alert);
     	}
 		
 	}
@@ -243,7 +243,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -256,7 +256,7 @@ return true;
 
 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -265,34 +265,34 @@ function closeIntervals()
 function init()
 {
 	var TmpString="";
-	/*µ÷ÊÔ¿ª¹Øat+cfun*/
+	/*è°ƒè¯•å¼€å…³at+cfun*/
 	WebModemGetInfoCfunParamFun =<%getInfo("ModemGetInfoCfunParamFun");%>;
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
     	if(0==WebModemGetInfoCfunParamFun)
     	{
-    		SetLabelText("LB_FormCfun_Param_DebugSwitch","êPé]");
+    		SetLabelText("LB_FormCfun_Param_DebugSwitch","é—œé–‰");
     	}
     	else if(1==WebModemGetInfoCfunParamFun)
     	{
-    		SetLabelText("LB_FormCfun_Param_DebugSwitch","é_†¢");	
+    		SetLabelText("LB_FormCfun_Param_DebugSwitch","é–‹å•Ÿ");	
     	}
     	else
     	{
-    		showdiv("ModemGetInfoCfunParamFun …¢”µ«@È¡åeÕ`! value = "+WebModemGetInfoCfunParamFun,DivCloseMode_None);			
+    		showdiv("ModemGetInfoCfunParamFun åƒæ•¸ç²å–éŒ¯èª¤! value = "+WebModemGetInfoCfunParamFun,DivCloseMode_None);			
     	}
 	}else{	
     	if(0==WebModemGetInfoCfunParamFun)
     	{
-    		SetLabelText("LB_FormCfun_Param_DebugSwitch","¹Ø±Õ");
+    		SetLabelText("LB_FormCfun_Param_DebugSwitch","å…³é—­");
     	}
     	else if(1==WebModemGetInfoCfunParamFun)
     	{
-    		SetLabelText("LB_FormCfun_Param_DebugSwitch","¿ªÆô");	
+    		SetLabelText("LB_FormCfun_Param_DebugSwitch","å¼€å¯");	
     	}
     	else
     	{
-    		showdiv("ModemGetInfoCfunParamFun ²ÎÊı»ñÈ¡´íÎó! value = "+WebModemGetInfoCfunParamFun,DivCloseMode_None);			
+    		showdiv("ModemGetInfoCfunParamFun å‚æ•°è·å–é”™è¯¯! value = "+WebModemGetInfoCfunParamFun,DivCloseMode_None);			
     	}
 	}
 	document.all.FormCfun.FormCfun_Param_DebugSwitch.focus();
@@ -300,7 +300,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">Modem ¿ª¹ØÅäÖÃ</font></h3>
+<h3><font color="#0000FF">Modem å¼€å…³é…ç½®</font></h3>
 <body  onLoad="setCodeValue();init()">
 
  <table border="0" cellspacing="0" width="500">
@@ -313,19 +313,19 @@ function init()
 <form id="FormCfun" name="FormCfun">
   <table>
   	<tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>µ÷ÊÔ¿ª¹Ø:</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>è°ƒè¯•å¼€å…³:</b></font></td>
     </tr>   
     <tr> 
-	<td >µ±Ç°×´Ì¬:[<label id="LB_FormCfun_Param_DebugSwitch">LB_FormCfun_Param_DebugSwitch</label>]</td>        
+	<td >å½“å‰çŠ¶æ€:[<label id="LB_FormCfun_Param_DebugSwitch">LB_FormCfun_Param_DebugSwitch</label>]</td>        
       <td ><font size="2" weight="bold" >
 	    <select name="FormCfun_Param_DebugSwitch" id="FormCfun_Param_DebugSwitch" onchange ="selectonchange(this)">
-          <option value='0'>¹Ø±Õ</option>
-          <option value='1' >¿ªÆô</option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>
+          <option value='0'>å…³é—­</option>
+          <option value='1' >å¼€å¯</option>
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>
         </select> </font>
         
         </td>
-        <td><input type="button" value="È·¶¨" id="FormCfun_Button_Submit"  onClick="FormCfun_Submit();">  </td>
+        <td><input type="button" value="ç¡®å®š" id="FormCfun_Button_Submit"  onClick="FormCfun_Submit();">  </td>
     </tr>
   </table>
 </form>

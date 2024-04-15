@@ -54,9 +54,9 @@ function FormVcom_Submit()
 	{
 		
         if(zh_Lang_now == 't'){	    
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}
 		document.all.FormVcom.FormVcom_Param_Switch.focus();
 		return false;
@@ -66,9 +66,9 @@ function FormVcom_Submit()
 	param += document.all.FormVcom.FormVcom_Param_Switch.value;
 	//disableTextField(document.getElementById("FormVcom_Button_Submit"));		
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	WebPostProcess("/boafrm/formVcomProcess",param,null);	
 }
@@ -78,33 +78,33 @@ function FormVcom_Submit()
 function init()
 {
 	var TmpString="";	
-	/*µ÷ÊÔ¿ª¹Øat^vcom*/
+	/*è°ƒè¯•å¼€å…³at^vcom*/
 	WebModemGetInfoVcomParamFun =<%getInfo("ModemGetInfoVcomParamFun");%>;
 	if(0==WebModemGetInfoVcomParamFun)
 	{
 		var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    SetLabelText("LB_FormVcom_Param_Switch","êPé]");
+    	    SetLabelText("LB_FormVcom_Param_Switch","é—œé–‰");
     	}else{
-		    SetLabelText("LB_FormVcom_Param_Switch","¹Ø±Õ");
+		    SetLabelText("LB_FormVcom_Param_Switch","å…³é—­");
     	}
 	}
 	else if(1==WebModemGetInfoVcomParamFun)
 	{
 	    var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    SetLabelText("LB_FormVcom_Param_Switch","é_†¢");
+    	    SetLabelText("LB_FormVcom_Param_Switch","é–‹å•Ÿ");
     	}else{
-    	    SetLabelText("LB_FormVcom_Param_Switch","¿ªÆô");
+    	    SetLabelText("LB_FormVcom_Param_Switch","å¼€å¯");
     	}
 	}
 	else
 	{
     	var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){	    
-    	    alert("ModemGetInfoVcomParamFun …¢”µ«@È¡åeÕ`! value = "+WebModemGetInfoVcomParamFun );
+    	    alert("ModemGetInfoVcomParamFun åƒæ•¸ç²å–éŒ¯èª¤! value = "+WebModemGetInfoVcomParamFun );
     	}else{	
-    	    alert("ModemGetInfoVcomParamFun ²ÎÊı»ñÈ¡´íÎó! value = "+WebModemGetInfoVcomParamFun );
+    	    alert("ModemGetInfoVcomParamFun å‚æ•°è·å–é”™è¯¯! value = "+WebModemGetInfoVcomParamFun );
     	}
 	}
 
@@ -112,8 +112,8 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">VCOM¹¦ÄÜÅäÖÃ¹ÜÀí</font></h3>
-<h5><font color="red" >Note:ÉèÖÃÍê³ÉĞèÒªµôµçÖØÆôÉúĞ§</font><h5>
+<h3><font color="#0000FF">VCOMåŠŸèƒ½é…ç½®ç®¡ç†</font></h3>
+<h5><font color="red" >Note:è®¾ç½®å®Œæˆéœ€è¦æ‰ç”µé‡å¯ç”Ÿæ•ˆ</font><h5>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -129,16 +129,16 @@ function init()
   <table>
    
     <tr> 
-	<td >µ±Ç°×´Ì¬:[<label id="LB_FormVcom_Param_Switch">LB_FormVcom_Param_Switch</label>]</td>        
+	<td >å½“å‰çŠ¶æ€:[<label id="LB_FormVcom_Param_Switch">LB_FormVcom_Param_Switch</label>]</td>        
       <td ><font size="2" weight="bold" >
 	    <select name="FormVcom_Param_Switch" id="FormVcom_Param_Switch">
-          <option value='0'>¹Ø±Õ</option>
-          <option value='1'>¿ªÆô</option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>
+          <option value='0'>å…³é—­</option>
+          <option value='1'>å¼€å¯</option>
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>
         </select> </font>
         
         </td>
-        <td><input type="button" value="È·¶¨" id="FormVcom_Button_Submit"  onClick="FormVcom_Submit();">  </td>
+        <td><input type="button" value="ç¡®å®š" id="FormVcom_Button_Submit"  onClick="FormVcom_Submit();">  </td>
     </tr>
   </table>
 </form>

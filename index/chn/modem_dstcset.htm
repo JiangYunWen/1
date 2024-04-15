@@ -76,9 +76,9 @@ function FormDstc_Submit()
 	if("255"==document.all.FormDstc.FormDstc_Param_Conf.value)
 	{
         if(zh_Lang_now == 't'){
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}			
 		document.all.FormDstc.FormDstc_Param_Conf.focus();
 		return false;
@@ -91,9 +91,9 @@ function FormDstc_Submit()
 	//alert("FormDstc_Submit:" + param);	
 	send_FormDstc(param);
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -104,9 +104,9 @@ function send_FormDstc_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	//alert("send_FormDstc_result_get");
 	$.ajax({
@@ -124,23 +124,23 @@ function send_FormDstc_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}
 			openIntervals_Dstc();
 		}
@@ -176,7 +176,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -187,7 +187,7 @@ return false;
 return true; 
 } 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -199,35 +199,35 @@ function init()
 	var TmpString="";
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
-    	/*Ö÷´ÓÉèÖÃ*/
+    	/*ä¸»ä»è®¾ç½®*/
     	if(0 == WebModemGetInfoDdtcParamType)
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","×Ô„ÓÄ£Ê½£¬²»ÔÊÔSßMĞĞÉÏÏÂĞĞÔOÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","è‡ªå‹•æ¨¡å¼ï¼Œä¸å…è¨±é€²è¡Œä¸Šä¸‹è¡Œè¨­ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
-    		TmpString ="×Ô„Ó";	
+    		TmpString ="è‡ªå‹•";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamType)
     	{
-    		SetLabelText("LB_FormDstc_Note_Ddtc","ÖĞĞÄ¹üc(Ö÷)Ä£Ê½£¬ÔÊÔSßMĞĞÉÏÏÂĞĞÔOÖÃ");
-    		TmpString ="ÖĞĞÄ¹üc";
+    		SetLabelText("LB_FormDstc_Note_Ddtc","ä¸­å¿ƒç¯€é»(ä¸»)æ¨¡å¼ï¼Œå…è¨±é€²è¡Œä¸Šä¸‹è¡Œè¨­ç½®");
+    		TmpString ="ä¸­å¿ƒç¯€é»";
     	}
     	else if (2 == WebModemGetInfoDdtcParamType)
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","½ÓÈë¹üc(Ä)Ä£Ê½£¬²»ÔÊÔSßMĞĞÉÏÏÂĞĞÔOÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","æ¥å…¥ç¯€é»(å¾)æ¨¡å¼ï¼Œä¸å…è¨±é€²è¡Œä¸Šä¸‹è¡Œè¨­ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
-    		TmpString ="½ÓÈë¹üc";		
+    		TmpString ="æ¥å…¥ç¯€é»";		
     	}
     	else
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","²»ÄÜ×R„eÖ÷/Ä£¬²»ÔÊÔSßMĞĞÉÏÏÂĞĞÔOÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","ä¸èƒ½è­˜åˆ¥ä¸»/å¾ï¼Œä¸å…è¨±é€²è¡Œä¸Šä¸‹è¡Œè¨­ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
     	}
     	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
     	
-    	/*ÉÏÏÂĞĞ±È*/
+    	/*ä¸Šä¸‹è¡Œæ¯”*/
     	WebModemGetInfoDstcParamConf =<%getInfo("ModemGetInfoDstcParamConf");%>; 
     	TmpString ="";
     	if(0 == WebModemGetInfoDstcParamConf)
@@ -250,38 +250,38 @@ function init()
     	/*add by xuqingbo,20181217,end*/
     	else
     	{
-    		TmpString ="²»ÄÜ×R„e WebModemGetInfoDstcParamConf= "+WebModemGetInfoDstcParamConf;
+    		TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDstcParamConf= "+WebModemGetInfoDstcParamConf;
     	}	
 	}else{
-    	/*Ö÷´ÓÉèÖÃ*/
+    	/*ä¸»ä»è®¾ç½®*/
     	if(0 == WebModemGetInfoDdtcParamType)
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","×Ô¶¯Ä£Ê½£¬²»ÔÊĞí½øĞĞÉÏÏÂĞĞÉèÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","è‡ªåŠ¨æ¨¡å¼ï¼Œä¸å…è®¸è¿›è¡Œä¸Šä¸‹è¡Œè®¾ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
-    		TmpString ="×Ô¶¯";	
+    		TmpString ="è‡ªåŠ¨";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamType)
     	{
-    		SetLabelText("LB_FormDstc_Note_Ddtc","ÖĞĞÄ½Úµã(Ö÷)Ä£Ê½£¬ÔÊĞí½øĞĞÉÏÏÂĞĞÉèÖÃ");
-    		TmpString ="ÖĞĞÄ½Úµã";
+    		SetLabelText("LB_FormDstc_Note_Ddtc","ä¸­å¿ƒèŠ‚ç‚¹(ä¸»)æ¨¡å¼ï¼Œå…è®¸è¿›è¡Œä¸Šä¸‹è¡Œè®¾ç½®");
+    		TmpString ="ä¸­å¿ƒèŠ‚ç‚¹";
     	}
     	else if (2 == WebModemGetInfoDdtcParamType)
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","½ÓÈë½Úµã(´Ó)Ä£Ê½£¬²»ÔÊĞí½øĞĞÉÏÏÂĞĞÉèÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","æ¥å…¥èŠ‚ç‚¹(ä»)æ¨¡å¼ï¼Œä¸å…è®¸è¿›è¡Œä¸Šä¸‹è¡Œè®¾ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
-    		TmpString ="½ÓÈë½Úµã";		
+    		TmpString ="æ¥å…¥èŠ‚ç‚¹";		
     	}
     	else
     	{
-    		/*½ûÖ¹°´Å¥*/
-    		SetLabelText("LB_FormDstc_Note_Ddtc","²»ÄÜÊ¶±ğÖ÷/´Ó£¬²»ÔÊĞí½øĞĞÉÏÏÂĞĞÉèÖÃ");
+    		/*ç¦æ­¢æŒ‰é’®*/
+    		SetLabelText("LB_FormDstc_Note_Ddtc","ä¸èƒ½è¯†åˆ«ä¸»/ä»ï¼Œä¸å…è®¸è¿›è¡Œä¸Šä¸‹è¡Œè®¾ç½®");
     		disableTextField(document.getElementById("FormDstc_Button_Submit"));
     	}
     	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
     	
-    	/*ÉÏÏÂĞĞ±È*/
+    	/*ä¸Šä¸‹è¡Œæ¯”*/
     	WebModemGetInfoDstcParamConf =<%getInfo("ModemGetInfoDstcParamConf");%>; 
     	TmpString ="";
     	if(0 == WebModemGetInfoDstcParamConf)
@@ -304,7 +304,7 @@ function init()
     	/*add by xuqingbo,20181217,end*/
     	else
     	{
-    		TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDstcParamConf= "+WebModemGetInfoDstcParamConf;
+    		TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDstcParamConf= "+WebModemGetInfoDstcParamConf;
     	}	
 	}
 	SetLabelText("LB_FormDstc_Param_Conf",TmpString);
@@ -312,8 +312,8 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">ÉÏÏÂĞĞÅäÖÃ¹ÜÀí(½Úµã¹¤×÷ÀàĞÍ:[<label id="LB_FormDdtc_Param_Type">LB_FormDdtc_Param_Type</label>])</font></h3>
-<h5><font color="red" >Note:ÉèÖÃÍê³ÉºóĞèÒªÖØÆôModemÉúĞ§</font><h5>
+<h3><font color="#0000FF">ä¸Šä¸‹è¡Œé…ç½®ç®¡ç†(èŠ‚ç‚¹å·¥ä½œç±»å‹:[<label id="LB_FormDdtc_Param_Type">LB_FormDdtc_Param_Type</label>])</font></h3>
+<h5><font color="red" >Note:è®¾ç½®å®Œæˆåéœ€è¦é‡å¯Modemç”Ÿæ•ˆ</font><h5>
 <h5><font color="red" >Note:<label id="LB_FormDstc_Note_Ddtc">LB_FormDstc_Note_Ddtc</label></font><h5>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
@@ -331,16 +331,16 @@ function init()
 <form id="FormDstc" name="FormDstc">
   <table>
     <tr> 
-    	<td ><font size="2"  >µ±Ç°Öµ:[<label id="LB_FormDstc_Param_Conf">LB_FormDstc_Param_Conf</label>]</font></td>  
+    	<td ><font size="2"  >å½“å‰å€¼:[<label id="LB_FormDstc_Param_Conf">LB_FormDstc_Param_Conf</label>]</font></td>  
       <td ><font size="2" weight="bold" >
 	    <select name="FormDstc_Param_Conf" id="FormDstc_Param_Conf">
           <option value='0'>config0(2D3U)</option>
           <option value='1'>config1(3D2U)</option>
           <option value='2'>config2(4D1U) </option>
           <option value='3'>config3(1D4U) </option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>          
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>          
         </select> </font></td>
-	<td><input type="button" value="È·¶¨" id="FormDstc_Button_Submit"  onClick="FormDstc_Submit();">  </td>        
+	<td><input type="button" value="ç¡®å®š" id="FormDstc_Button_Submit"  onClick="FormDstc_Submit();">  </td>        
     </tr>
   </table>
 </form>

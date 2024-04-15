@@ -88,7 +88,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 	return false; 
@@ -108,9 +108,9 @@ function FormDrpc_Submit()
 		&& (""==document.all.FormDrpc.FormDrpc_Param_Freq.value))
 	{
 	    if(zh_Lang_now == 't'){
-    	    showdiv("›]ÓĞÔOÖÃ¸ü¸Ä…¢”µ",DivCloseMode_Alert);
+    	    showdiv("æ²’æœ‰è¨­ç½®æ›´æ”¹åƒæ•¸",DivCloseMode_Alert);
     	}else{
-    	    showdiv("Ã»ÓĞÉèÖÃ¸ü¸Ä²ÎÊı",DivCloseMode_Alert);
+    	    showdiv("æ²¡æœ‰è®¾ç½®æ›´æ”¹å‚æ•°",DivCloseMode_Alert);
     	}	
 		document.all.FormDrpc.FormDrpc_Param_Bandwidth.focus();
 		return false;
@@ -124,9 +124,9 @@ function FormDrpc_Submit()
 			     (document.all.FormDrpc.FormDrpc_Param_Power.value<=40)))
 			{
 				if(zh_Lang_now == 't'){
-            	    showdiv("Õˆßxİ”ÈëÕı´_”µÖµ(-40~40)",DivCloseMode_Alert);	
+            	    showdiv("è«‹é¸è¼¸å…¥æ­£ç¢ºæ•¸å€¼(-40~40)",DivCloseMode_Alert);	
             	}else{
-            	    showdiv("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ(-40~40)",DivCloseMode_Alert);	
+            	    showdiv("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼(-40~40)",DivCloseMode_Alert);	
             	}				
 				document.all.FormDrpc.FormDrpc_Param_Power.focus();
 				return false;
@@ -135,9 +135,9 @@ function FormDrpc_Submit()
 		else
 		{
 			if(zh_Lang_now == 't'){
-        	    showdiv("Õˆßxİ”ÈëÕı´_”µÖµ(-40~40)",DivCloseMode_Alert);	
+        	    showdiv("è«‹é¸è¼¸å…¥æ­£ç¢ºæ•¸å€¼(-40~40)",DivCloseMode_Alert);	
         	}else{
-        	    showdiv("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ(-40~40)",DivCloseMode_Alert);	
+        	    showdiv("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼(-40~40)",DivCloseMode_Alert);	
         	}			
 			document.all.FormDrpc.FormDrpc_Param_Power.focus();
 			return false;
@@ -153,9 +153,9 @@ function FormDrpc_Submit()
 				))
 			{
     			if(zh_Lang_now == 't'){
-            	    showdiv("Õˆßxİ”ÈëÕı´_”µÖµ24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);	
+            	    showdiv("è«‹é¸è¼¸å…¥æ­£ç¢ºæ•¸å€¼24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);	
             	}else{
-            	    showdiv("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);
+            	    showdiv("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);
             	}				
 				document.all.FormDrpc.FormDrpc_Param_Freq.focus();
 				return false;
@@ -164,9 +164,9 @@ function FormDrpc_Submit()
 		else
 		{
 			if(zh_Lang_now == 't'){
-        	    showdiv("Õˆßxİ”ÈëÕı´_”µÖµ24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);	
+        	    showdiv("è«‹é¸è¼¸å…¥æ­£ç¢ºæ•¸å€¼24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);	
         	}else{
-        	    showdiv("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);
+        	    showdiv("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼24015-24814,8060-8259,14279-14478",DivCloseMode_Alert);
         	}
 			document.all.FormDrpc.FormDrpc_Param_Freq.focus();
 			return false;
@@ -176,7 +176,7 @@ function FormDrpc_Submit()
 	{
 		if("255"==document.all.FormDrpc.FormDrpc_Param_Bandwidth.value)
 		{
-			alert("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ");
+			alert("è¯·é€‰æ‹©æ“ä½œç±»å‹");
 			document.all.FormDrpc.FormDrpc_Param_Bandwidth.focus();
 			return false;
 		}
@@ -188,14 +188,14 @@ function FormDrpc_Submit()
 			if((document.all.FormDrpc.FormDrpc_Param_Power.value<1) ||
 				(document.all.FormDrpc.FormDrpc_Param_Power.value>25))
 			{
-				alert("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ(1~25)");
+				alert("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼(1~25)");
 				document.all.FormDrpc.FormDrpc_Param_Power.focus();
 				return false;
 			}
 		}
 		else
 		{
-			alert("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ(1~25)");
+			alert("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼(1~25)");
 			document.all.FormDrpc.FormDrpc_Param_Power.focus();
 			return false;
 		}
@@ -209,14 +209,14 @@ function FormDrpc_Submit()
 				||((document.all.FormDrpc.FormDrpc_Param_Freq.value>=14279) &&(document.all.FormDrpc.FormDrpc_Param_Freq.value<=14478))
 				))
 			{
-				alert("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ24015-24814,8060-8259,14279-14478");
+				alert("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼24015-24814,8060-8259,14279-14478");
 				document.all.FormDrpc.FormDrpc_Param_Freq.focus();
 				return false;
 			}
 		}
 		else
 		{
-			alert("ÇëÑ¡ÊäÈëÕıÈ·ÊıÖµ24015-24814,8060-8259,14279-14478");
+			alert("è¯·é€‰è¾“å…¥æ­£ç¡®æ•°å€¼24015-24814,8060-8259,14279-14478");
 			document.all.FormDrpc.FormDrpc_Param_Freq.focus();
 			return false;
 		}
@@ -240,9 +240,9 @@ function FormDrpc_Submit()
 	//alert("FormDrpc_Submit:" + param);
 	send_FormDrpc(param);
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -253,9 +253,9 @@ function send_FormDrpc_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	//alert("send_FormDrpc_result_get");
 	$.ajax({
@@ -273,23 +273,23 @@ function send_FormDrpc_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}
 			openIntervals_Drpc();
 		}
@@ -308,7 +308,7 @@ function openIntervals_Drpc()
 	}
 }
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -324,13 +324,13 @@ function init()
 	WebModemGetInfoDrpcParamPower=<%getInfo("ModemGetInfoDrpcParamPower");%>;/*1_ModemGetInfoDrpcParamPower*/
 	/*-->DrpcParamFreq*/
 	TmpString ="";
-	//TODO:ºÏ·¨ĞÔÅÌµã
+	//TODO:åˆæ³•æ€§ç›˜ç‚¹
 	TmpString=TmpString+WebModemGetInfoDrpcParamFreq;
 	SetLabelText("LB_FormDrpc_Param_Freq",TmpString);	
 
 	/*-->DrpcParamPower*/
 	TmpString ="";
-	//TODO:ºÏ·¨ĞÔÅÌµã
+	//TODO:åˆæ³•æ€§ç›˜ç‚¹
 	TmpString=TmpString+WebModemGetInfoDrpcParamPower;
 	SetLabelText("LB_FormDrpc_Param_Power",TmpString);	
 	
@@ -364,9 +364,9 @@ function init()
 	{
 		var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){
-    	    TmpString ="²»ÄÜ×R„e WebModemGetInfoDrpcParamBandwidth= "+WebModemGetInfoDrpcParamBandwidth;
+    	    TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDrpcParamBandwidth= "+WebModemGetInfoDrpcParamBandwidth;
     	}else{
-    	    TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDrpcParamBandwidth= "+WebModemGetInfoDrpcParamBandwidth;
+    	    TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDrpcParamBandwidth= "+WebModemGetInfoDrpcParamBandwidth;
     	}		
 	}
 	SetLabelText("LB_FormDrpc_Param_Bandwidth",TmpString);
@@ -374,7 +374,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">½¨Á´×éÉèÖÃ¹ÜÀí</font></h3>
+<h3><font color="#0000FF">å»ºé“¾ç»„è®¾ç½®ç®¡ç†</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -390,11 +390,11 @@ function init()
   <table>
 
     <tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>½¨Á´×éÉèÖÃ:</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>å»ºé“¾ç»„è®¾ç½®:</b></font></td>
     </tr>
     <tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>´ø¿íÉèÖÃ:</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioA" checked  value="1" style="display:none"></font></td>
-		<td colspan=3 ><font size="2" weight="bold" ><b>µ±Ç°Öµ:[<label id="LB_FormDrpc_Param_Bandwidth">LB_FormDrpc_Param_Bandwidth</label>]</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>å¸¦å®½è®¾ç½®:</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioA" checked  value="1" style="display:none"></font></td>
+		<td colspan=3 ><font size="2" weight="bold" ><b>å½“å‰å€¼:[<label id="LB_FormDrpc_Param_Bandwidth">LB_FormDrpc_Param_Bandwidth</label>]</b></font></td>
       <td ><font size="2" weight="bold" >
 	    <select name="FormDrpc_Param_Bandwidth" id="FormDrpc_Param_Bandwidth">
           <option value='0'>1.4M</option>
@@ -402,24 +402,24 @@ function init()
           <option value='2'>5M</option>
           <option value='3'>10M</option>          
           <option value='5'>20M</option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>          
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>          
         </select> </font></td>		
     </tr>   
-      <td colspan=3 ><font size="2" weight="bold" ><b>¹¦ÂÊÉèÖÃ(-40~40):</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioB" value="2" style="display:none"></font></td>
-		<td colspan=3 ><font size="2" weight="bold" ><b>µ±Ç°Öµ:[<label id="LB_FormDrpc_Param_Power">LB_FormDrpc_Param_Power</label>]</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>åŠŸç‡è®¾ç½®(-40~40):</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioB" value="2" style="display:none"></font></td>
+		<td colspan=3 ><font size="2" weight="bold" ><b>å½“å‰å€¼:[<label id="LB_FormDrpc_Param_Power">LB_FormDrpc_Param_Power</label>]</b></font></td>
       <td> <font size="2" weight="bold" >
       		<input type="text"   name="FormDrpc_Param_Power" maxlength="15" size="20" id="FormDrpc_Param_Power" ></font>
       </td>		
     </tr> 
     </tr>   
-      <td colspan=3 ><font size="2" weight="bold" ><b>ÆµµãÉèÖÃ(24015-24814,8060-8259,14279-14478):</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioC" value="3" style="display:none"></font></td>
-		<td colspan=3 ><font size="2" weight="bold" ><b>µ±Ç°Öµ:[<label id="LB_FormDrpc_Param_Freq">LB_FormDrpc_Param_Freq</label>]</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>é¢‘ç‚¹è®¾ç½®(24015-24814,8060-8259,14279-14478):</b><input type ="radio" name ="DrpcRadio" id="DrpcRadioC" value="3" style="display:none"></font></td>
+		<td colspan=3 ><font size="2" weight="bold" ><b>å½“å‰å€¼:[<label id="LB_FormDrpc_Param_Freq">LB_FormDrpc_Param_Freq</label>]</b></font></td>
       <td> <font size="2" weight="bold" >
       		<input type="text"   name="FormDrpc_Param_Freq" maxlength="15" size="20" id="FormDrpc_Param_Freq" ></font>
       </td>		
     </tr>     
   </table>
-<input type="button" value="È·¶¨" id="FormDrpc_Button_Submit"  onClick="FormDrpc_Submit();">  
+<input type="button" value="ç¡®å®š" id="FormDrpc_Button_Submit"  onClick="FormDrpc_Submit();">  
 </form>
 
 </table>

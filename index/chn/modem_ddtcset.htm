@@ -41,11 +41,11 @@ var objTimeOut = "";
 var WebModemGetInfoDdtcParamType;
 var WebModemGetInfoDdtcParamWorkType;
 
-//ÆÁ±ÎF5   
+//å±è”½F5   
 document.onkeydown = mykeydown;  
 
 function mykeydown() {  
-    if (event.keyCode == 116) //ÆÁ±ÎF5Ë¢ĞÂ¼ü      
+    if (event.keyCode == 116) //å±è”½F5åˆ·æ–°é”®      
     {  
         window.event.keyCode = 0;  
         return false;  
@@ -89,9 +89,9 @@ function FormDdtc_Submit()
 	if("255"==document.all.FormDdtc.FormDdtc_Param_Type.value)
 	{
     	if(zh_Lang_now == 't'){	    
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}		
 		document.all.FormDdtc.FormDdtc_Param_Type.focus();
 		return false;
@@ -104,9 +104,9 @@ function FormDdtc_Submit()
 	//alert("FormDdtc_Submit:" + param);	
 	send_FormDdtc(param);	
     if(zh_Lang_now == 't'){	    
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 }
 
@@ -116,11 +116,11 @@ function send_FormDdtc_result_get()
 //	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-	    updatedivmsg("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    updatedivmsg("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    updatedivmsg("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    updatedivmsg("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
-//	updatedivmsg("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+//	updatedivmsg("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 //	alert("send_FormDdtc_result_get");
 	$.ajax({
 	url: "../lcModemManageDdtcProcess.asp",
@@ -137,24 +137,24 @@ function send_FormDdtc_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			updatedivmsg("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
-			//showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			updatedivmsg("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
+			//showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){	    
-        	    updatedivmsg("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    updatedivmsg("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{	
-        	    updatedivmsg("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    updatedivmsg("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    updatedivmsg("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    updatedivmsg("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{        	    
-        	    updatedivmsg("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    updatedivmsg("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}
 			openIntervals_Ddtc();
 		}
@@ -193,7 +193,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -205,7 +205,7 @@ return true;
 } 
 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -217,84 +217,84 @@ function init()
 	var TmpString="";
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){	    
-    	/*Ö÷´ÓÉèÖÃ*/
+    	/*ä¸»ä»è®¾ç½®*/
     	WebModemGetInfoDdtcParamType=<%getInfo("ModemGetInfoDdtcParamType");%>; 
     	WebModemGetInfoDdtcParamWorkType=<%getInfo("ModemGetInfoDdtcParamWorkType");%>;
     	TmpString ="";
     	if(0 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="×Ô„Ó";	
+    		TmpString ="è‡ªå‹•";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="ÖĞĞÄ¹üc";
+    		TmpString ="ä¸­å¿ƒç¯€é»";
     	}
     	else if (2 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="½ÓÈë¹üc";
+    		TmpString ="æ¥å…¥ç¯€é»";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜ×R„e WebModemGetInfoDaocndiParamType = "+WebModemGetInfoDdtcParamType;
+    		TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDaocndiParamType = "+WebModemGetInfoDdtcParamType;
     	}
     	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
     
     	TmpString ="";
     	if(0 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="×Ô„Ó";	
+    		TmpString ="è‡ªå‹•";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="ÖĞĞÄ¹üc";
+    		TmpString ="ä¸­å¿ƒç¯€é»";
     	}
     	else if (2 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="½ÓÈë¹üc";
+    		TmpString ="æ¥å…¥ç¯€é»";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜ×R„e WebModemGetInfoDaocndiParamWorkType = "+WebModemGetInfoDdtcParamWorkType;
+    		TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDaocndiParamWorkType = "+WebModemGetInfoDdtcParamWorkType;
     	}
 	}else{	
-    	/*Ö÷´ÓÉèÖÃ*/
+    	/*ä¸»ä»è®¾ç½®*/
     	WebModemGetInfoDdtcParamType=<%getInfo("ModemGetInfoDdtcParamType");%>; 
     	WebModemGetInfoDdtcParamWorkType=<%getInfo("ModemGetInfoDdtcParamWorkType");%>;
     	TmpString ="";
     	if(0 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="×Ô¶¯";	
+    		TmpString ="è‡ªåŠ¨";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="ÖĞĞÄ½Úµã";
+    		TmpString ="ä¸­å¿ƒèŠ‚ç‚¹";
     	}
     	else if (2 == WebModemGetInfoDdtcParamType)
     	{
-    		TmpString ="½ÓÈë½Úµã";
+    		TmpString ="æ¥å…¥èŠ‚ç‚¹";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDaocndiParamType = "+WebModemGetInfoDdtcParamType;
+    		TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDaocndiParamType = "+WebModemGetInfoDdtcParamType;
     	}
     	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
     
     	TmpString ="";
     	if(0 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="×Ô¶¯";	
+    		TmpString ="è‡ªåŠ¨";	
     	}
     	else if (1 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="ÖĞĞÄ½Úµã";
+    		TmpString ="ä¸­å¿ƒèŠ‚ç‚¹";
     	}
     	else if (2 == WebModemGetInfoDdtcParamWorkType)
     	{
-    		TmpString ="½ÓÈë½Úµã";
+    		TmpString ="æ¥å…¥èŠ‚ç‚¹";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDaocndiParamWorkType = "+WebModemGetInfoDdtcParamWorkType;
+    		TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDaocndiParamWorkType = "+WebModemGetInfoDdtcParamWorkType;
     	}
 	}
 	SetLabelText("LB_FormDdtc_Param_WorkType",TmpString);
@@ -303,8 +303,8 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">½Úµã¹¤×÷Ä£Ê½(Ö÷/´Ó)ÅäÖÃ</font></h3>
-<h5><font color="red" >Note:ÉèÖÃÍê³Éºó»á×Ô¶¯ÖØÆôModem</font><h5>
+<h3><font color="#0000FF">èŠ‚ç‚¹å·¥ä½œæ¨¡å¼(ä¸»/ä»)é…ç½®</font></h3>
+<h5><font color="red" >Note:è®¾ç½®å®Œæˆåä¼šè‡ªåŠ¨é‡å¯Modem</font><h5>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -321,17 +321,17 @@ function init()
 <form id="FormDdtc" name="FormDdtc">
   <table>
   	<tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>Ö÷´ÓÉèÖÃ:</b><br/></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>ä¸»ä»è®¾ç½®:</b><br/></font></td>
     </tr>  
     <tr> 
-    	<td ><font size="2" >µ±Ç°ÀàĞÍ:[<label id="LB_FormDdtc_Param_Type">LB_FormDdtc_Param_Type</label>]¹¤×÷ÀàĞÍ:[<label id="LB_FormDdtc_Param_WorkType">LB_FormDdtc_Param_WorkType]</label>]</font></td>     
+    	<td ><font size="2" >å½“å‰ç±»å‹:[<label id="LB_FormDdtc_Param_Type">LB_FormDdtc_Param_Type</label>]å·¥ä½œç±»å‹:[<label id="LB_FormDdtc_Param_WorkType">LB_FormDdtc_Param_WorkType]</label>]</font></td>     
       <td ><font size="2" weight="bold" >
 	    <select name="FormDdtc_Param_Type" id="FormDdtc_Param_Type">
-          <option value='1'>ÖĞĞÄ½Úµã</option>
-          <option value='2'>½ÓÈë½Úµã</option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>          
+          <option value='1'>ä¸­å¿ƒèŠ‚ç‚¹</option>
+          <option value='2'>æ¥å…¥èŠ‚ç‚¹</option>
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>          
         </select> </font></td>
-        <td><input type="button" value="È·¶¨" id="FormDdtc_Button_Submit"  onClick="FormDdtc_Submit();">  </td>
+        <td><input type="button" value="ç¡®å®š" id="FormDdtc_Button_Submit"  onClick="FormDdtc_Submit();">  </td>
     </tr>
   </table>
 </form>

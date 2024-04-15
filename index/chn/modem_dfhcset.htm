@@ -75,9 +75,9 @@ function FormDfhc_Submit()
 	if("255"==document.all.FormDfhc.FormDfhc_Param_N.value)
 	{	
         if(zh_Lang_now == 't'){
-    	    showdiv("Õˆßx“ñ²Ù×÷îĞÍ",DivCloseMode_Alert);
+    	    showdiv("è«‹é¸æ“‡æ“ä½œé¡å‹",DivCloseMode_Alert);
     	}else{	
-    	    showdiv("ÇëÑ¡Ôñ²Ù×÷ÀàĞÍ",DivCloseMode_Alert);
+    	    showdiv("è¯·é€‰æ‹©æ“ä½œç±»å‹",DivCloseMode_Alert);
     	}	
 		document.all.FormDfhc.FormDfhc_Param_N.focus();
 		return false;
@@ -90,9 +90,9 @@ function FormDfhc_Submit()
 	//alert("FormDfhc_Submit:" + param);	
 	send_FormDfhc(param);
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÕˆµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè«‹ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ¸ü¸Ä£¬ÇëµÈ´ı¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æ›´æ”¹ï¼Œè¯·ç­‰å¾…ã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 //	document.all.FormCfun.submit();
 }
@@ -103,9 +103,9 @@ function send_FormDfhc_result_get()
 	closediv(DivCloseMode_None);
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
-	    showdiv("ÕıÔÚ²éÔƒ¸üĞÂ½Y¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è©¢æ›´æ–°çµæœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}else{	
-	    showdiv("ÕıÔÚ²éÑ¯¸üĞÂ½á¹û¡£¡£¡£",DivCloseMode_None);
+	    showdiv("æ­£åœ¨æŸ¥è¯¢æ›´æ–°ç»“æœã€‚ã€‚ã€‚",DivCloseMode_None);
 	}
 	//alert("send_FormDfhc_result_get");
 	$.ajax({
@@ -123,23 +123,23 @@ function send_FormDfhc_result_get()
 		if(allmsg[0] == "success")
 		{
 			closeIntervals();
-			showdiv("¸üĞÂ³É¹¦!",DivCloseMode_Reload);
+			showdiv("æ›´æ–°æˆåŠŸ!",DivCloseMode_Reload);
 		}
 		else if(allmsg[0] == "failure")
 		{
 			closeIntervals();
             if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±æ•—!",DivCloseMode_Reload);
         	}else{
-        	    showdiv("¸üĞÂÊ§°Ü!",DivCloseMode_Reload);
+        	    showdiv("æ›´æ–°å¤±è´¥!",DivCloseMode_Reload);
         	}
 		}
 		else
 		{
         	if(zh_Lang_now == 't'){
-        	    showdiv("¸üĞÂÊ§”¡! À^Àm‡LÔ‡¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±æ•—! ç¹¼çºŒå˜—è©¦ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}else{	
-        	    showdiv("¸üĞÂÊ§°Ü! ¼ÌĞø³¢ÊÔ¡£¡£¡£",DivCloseMode_None);
+        	    showdiv("æ›´æ–°å¤±è´¥! ç»§ç»­å°è¯•ã€‚ã€‚ã€‚",DivCloseMode_None);
         	}	
 			openIntervals_Dfhc();
 		}
@@ -175,7 +175,7 @@ function isInteger(obj) {
     return (parseInt(obj, 10) === obj)
 }
 
-function isNumber(name) //ÊıÖµ¼ì²â 
+function isNumber(name) //æ•°å€¼æ£€æµ‹ 
 { 
 if(name.length == 0) 
 return false; 
@@ -186,7 +186,7 @@ return false;
 return true; 
 } 
 
-//¹Ø±Õ¶¨Ê±Æ÷
+//å…³é—­å®šæ—¶å™¨
 function closeIntervals()
 {
 	clearInterval(objTimeOut);
@@ -197,35 +197,35 @@ function init()
 {
 	var TmpString="";
 
-	/*ÌøÆµ¿ª¹Ø*/
+	/*è·³é¢‘å¼€å…³*/
 	WebModemGetInfoDfhcParamN =<%getInfo("ModemGetInfoDfhcParamN");%>;
 	TmpString ="";
 	var zh_str = zh_Lang_ex();
     if(zh_Lang_now == 't'){
     	if(0 == WebModemGetInfoDfhcParamN)
     	{
-    		TmpString ="êPé]";	
+    		TmpString ="é—œé–‰";	
     	}
     	else if (1 == WebModemGetInfoDfhcParamN)
     	{
-    		TmpString ="é_†¢";
+    		TmpString ="é–‹å•Ÿ";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜ×R„e WebModemGetInfoDfhcParamN= "+WebModemGetInfoDfhcParamN;
+    		TmpString ="ä¸èƒ½è­˜åˆ¥ WebModemGetInfoDfhcParamN= "+WebModemGetInfoDfhcParamN;
     	}
 	}else{
     	if(0 == WebModemGetInfoDfhcParamN)
     	{
-    		TmpString ="¹Ø±Õ";	
+    		TmpString ="å…³é—­";	
     	}
     	else if (1 == WebModemGetInfoDfhcParamN)
     	{
-    		TmpString ="¿ªÆô";
+    		TmpString ="å¼€å¯";
     	}
     	else
     	{
-    		TmpString ="²»ÄÜÊ¶±ğ WebModemGetInfoDfhcParamN= "+WebModemGetInfoDfhcParamN;
+    		TmpString ="ä¸èƒ½è¯†åˆ« WebModemGetInfoDfhcParamN= "+WebModemGetInfoDfhcParamN;
     	}
 	}
 	SetLabelText("LB_FormDfhc_Param_N",TmpString);
@@ -234,7 +234,7 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">ÌøÆµÅäÖÃ¹ÜÀí</font></h3>
+<h3><font color="#0000FF">è·³é¢‘é…ç½®ç®¡ç†</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();init()">
@@ -250,17 +250,17 @@ function init()
 <form id="FormDfhc" name="FormDfhc">
   <table>
     <tr> 
-      <td colspan=3 ><font size="2" weight="bold" ><b>ÌøÆµ¿ª¹Ø(ÉèÖÃºó¿ÉÁ¢¼´ÉúĞ§):</b></font></td>
+      <td colspan=3 ><font size="2" weight="bold" ><b>è·³é¢‘å¼€å…³(è®¾ç½®åå¯ç«‹å³ç”Ÿæ•ˆ):</b></font></td>
     </tr>  
     <tr> 
-      <td >µ±Ç°×´Ì¬:[<label id="LB_FormDfhc_Param_N">LB_FormDfhc_Param_N</label>]</td>    
+      <td >å½“å‰çŠ¶æ€:[<label id="LB_FormDfhc_Param_N">LB_FormDfhc_Param_N</label>]</td>    
       <td ><font size="2" weight="bold" >
 	    <select name="FormDfhc_Param_N" id="FormDfhc_Param_N">
-          <option value='0'>¹Ø±Õ</option>
-          <option value='1'>¿ªÆô</option>
-          <option value='255' selected ="selected">Ñ¡Ôñ²Ù×÷</option>          
+          <option value='0'>å…³é—­</option>
+          <option value='1'>å¼€å¯</option>
+          <option value='255' selected ="selected">é€‰æ‹©æ“ä½œ</option>          
         </select> </font></td>
-	<td ><input type="button" value="È·¶¨" id="FormDfhc_Button_Submit"  onClick="FormDfhc_Submit();">  </td>    
+	<td ><input type="button" value="ç¡®å®š" id="FormDfhc_Button_Submit"  onClick="FormDfhc_Submit();">  </td>    
     </tr>
   </table>
 </form>

@@ -102,9 +102,9 @@ function AjaxTest1(param)
 		objTimeOut=null;
     	var zh_str = zh_Lang_ex();
         if(zh_Lang_now == 't'){	    
-    	    showdiv("ˆÌĞĞ³¬•r£¬ĞèÒªÖØĞÂ‡LÔ‡Ë¢ĞÂí“Ãæ£¬™zœyWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("åŸ·è¡Œè¶…æ™‚ï¼Œéœ€è¦é‡æ–°å˜—è©¦åˆ·æ–°é é¢ï¼Œæª¢æ¸¬WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}else{	
-    	    showdiv("Ö´ĞĞ³¬Ê±£¬ĞèÒªÖØĞÂ³¢ÊÔË¢ĞÂÒ³Ãæ£¬¼ì²âWEBÊÇ·ñÕı³£¹¤×÷",DivCloseMode_TopReload);
+    	    showdiv("æ‰§è¡Œè¶…æ—¶ï¼Œéœ€è¦é‡æ–°å°è¯•åˆ·æ–°é¡µé¢ï¼Œæ£€æµ‹WEBæ˜¯å¦æ­£å¸¸å·¥ä½œ",DivCloseMode_TopReload);
     	}
 	};
     xhr.onreadystatechange = function () 
@@ -152,11 +152,11 @@ function AjaxTest1(param)
 					objTimeOut=null;				
             		var zh_str = zh_Lang_ex();
                     if(zh_Lang_now == 't'){	    
-                    	alert("ÕˆÇóÊ§”¡:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÕˆÇóÊ§”¡:" + xhr.status;
+                    	alert("è«‹æ±‚å¤±æ•—:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è«‹æ±‚å¤±æ•—:" + xhr.status;
                 	}else{	
-                    	alert("ÇëÇóÊ§°Ü:" + xhr.status);
-    					document.getElementById('out').innerHTML ="ÇëÇóÊ§°Ü:" + xhr.status;
+                    	alert("è¯·æ±‚å¤±è´¥:" + xhr.status);
+    					document.getElementById('out').innerHTML ="è¯·æ±‚å¤±è´¥:" + xhr.status;
                 	}
 	            }
 			}
@@ -167,7 +167,7 @@ function AjaxTest1(param)
 			}
         }
     };
-    //±ØĞëÔÚµ÷ÓÃopen()Ö®Ç°Ö¸¶¨onreadystatechangeÊÂ¼ş´¦Àí³ÌĞò,²ÅÄÜÈ·±£¿çä¯ÀÀÆ÷¼æÈİĞÔ.
+    //å¿…é¡»åœ¨è°ƒç”¨open()ä¹‹å‰æŒ‡å®šonreadystatechangeäº‹ä»¶å¤„ç†ç¨‹åº,æ‰èƒ½ç¡®ä¿è·¨æµè§ˆå™¨å…¼å®¹æ€§.
     //xhr.open("get", "test.txt", true);
     //xhr.send(null);
 	xhr.open("POST", "/boafrm/formCpReportMonitor", true);
@@ -194,13 +194,13 @@ function init()
 </script>
 </head>
 <blockquote>
-<h3><font color="#0000FF">Ö÷¶¯ÉÏ±¨ĞÅÏ¢²É¼¯</font></h3>
+<h3><font color="#0000FF">ä¸»åŠ¨ä¸ŠæŠ¥ä¿¡æ¯é‡‡é›†</font></h3>
 <script language='javascript' src='../zh.js'></script>
 <script type="text/javascript" src="../load.js"></script>
 <body  onLoad="setCodeValue();">
     <td >      
-    <input type="button" value="´ò¿ª" id="FormReport_Button_Open"   onClick="start_reportmonitor();"> 
-    <input type="button" value="¹Ø±Õ" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
+    <input type="button" value="æ‰“å¼€" id="FormReport_Button_Open"   onClick="start_reportmonitor();"> 
+    <input type="button" value="å…³é—­" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
     </td> 
     <table border="0" cellspacing="0" width="550">
     <tr><hr size=1 noshade align=top></tr>
@@ -209,7 +209,7 @@ function init()
     <div id=idDivenglish style="display:block">
     <table border=0 width="550" cellspacing=0 cellpadding=0>
     
-    <font size="2" weight="bold" >Ö÷¶¯ÉÏ±¨¼ì²é£¬²É¼¯:</font>
+    <font size="2" weight="bold" >ä¸»åŠ¨ä¸ŠæŠ¥æ£€æŸ¥ï¼Œé‡‡é›†:</font>
     <div style="width:2000px;overflow:auto;word-break:break-all;word-wrap:break-word;background:gray">
     <pre id='out'><br><br><br></pre>
     </div>
