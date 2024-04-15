@@ -2,12 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=" utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>management</title>
     <link rel="stylesheet" href="lx.css">
     <style>
         body {
-            background-color: #397a39;
+            /* background-color: #397a39; */
+            /* è®¾ç½®èƒŒæ™¯å›¾ç‰‡ */
+            background-image: url('./index/img/login_bg.jpg');
+            /* èƒŒæ™¯å›¾ç‰‡è¦†ç›–æ•´ä¸ªå…ƒç´  */
+            background-size: cover;
+            /* èƒŒæ™¯å›¾ç‰‡ä¸é‡å¤ */
+            background-repeat: no-repeat;
+            /* èƒŒæ™¯å›¾ç‰‡å›ºå®šï¼Œå†…å®¹æ»šåŠ¨æ—¶èƒŒæ™¯ä¸è·Ÿéšæ»šåŠ¨ */
+            background-attachment: fixed;
+            /* èƒŒæ™¯å›¾ç‰‡è®¾ç½®ä¸ºé»‘è‰²èƒŒæ™¯ï¼Œå¯é€‰ï¼Œç”¨äºé˜²æ­¢çŸ­æš‚çš„æ— å›¾åƒæ˜¾ç¤º */
+            background-color: #000;
         }
 
         #login-box {
@@ -41,9 +51,9 @@
 
         #login-title {
             color: #000;
-            /* ÉèÖÃ±êÌâÑÕÉ«Îª°×É« */
+            /* è®¾ç½®æ ‡é¢˜é¢œè‰²ä¸ºç™½è‰² */
             font-size: 24px;
-            /* ÉèÖÃ±êÌâ×ÖÌå´óĞ¡ */
+            /* è®¾ç½®æ ‡é¢˜å­—ä½“å¤§å° */
         }
     </style>
 </head>
@@ -53,16 +63,16 @@
         <div id="login-title">NMS-88</div>
         <div id="content">
             <br><br>
-            <p align="center">¹ÜÀíÔ±ÕËºÅ: <input id="uname" type="text" name="user"></p>
+            <p align="center">ç®¡ç†å‘˜è´¦å·: <input id="uname" type="text" name="user"></p>
             <br>
-            <p align="center">¹ÜÀíÔ±ÃÜÂë: <input id="upass" type="password" name="psw"></p>
+            <p align="center">ç®¡ç†å‘˜å¯†ç : <input id="upass" type="password" name="psw"></p>
             <div id="error_box"><br></div>
-            <div id="text1">ÓÃ»§ÃûÇëÊäÈë6-20Î»×Ö·û</div>
-            <div id="text2">ÓÃ»§ÃûÊ××Ö·û±ØĞëÎª×ÖÄ¸</div>
-            <div id="text3">ÓÃ»§Ãû±ØĞëÎª×ÖÄ¸¸úÊı×Ö×é³É</div>
-            <div id="text4">ÃÜÂëÇëÊäÈë6-20Î»×Ö·û</div>
-            <div id="text5">µ±Ç°ä¯ÀÀÆ÷²»Ö§³ÖActiveXObject</div>
-            <div id="text6">ÓÃ»§Ãû»òÃÜÂë²»ÕıÈ·£¬ÇëÖØÊÔ</div>
+            <div id="text1">ç”¨æˆ·åè¯·è¾“å…¥6-20ä½å­—ç¬¦</div>
+            <div id="text2">ç”¨æˆ·åé¦–å­—ç¬¦å¿…é¡»ä¸ºå­—æ¯</div>
+            <div id="text3">ç”¨æˆ·åå¿…é¡»ä¸ºå­—æ¯è·Ÿæ•°å­—ç»„æˆ</div>
+            <div id="text4">å¯†ç è¯·è¾“å…¥6-20ä½å­—ç¬¦</div>
+            <div id="text5">å½“å‰æµè§ˆå™¨ä¸æ”¯æŒActiveXObject</div>
+            <div id="text6">ç”¨æˆ·åæˆ–å¯†ç ä¸æ­£ç¡®ï¼Œè¯·é‡è¯•</div>
             <style>
                 #text1 {
                     display: none;
@@ -88,7 +98,7 @@
                     display: none;
                 }
             </style>
-            <button onclick="button_management_login()" class="btn btn-info">µÇÂ¼</button>
+            <button onclick="button_management_login()" class="btn btn-info">ç™»å½•</button>
         </div>
         <i>Powered by @2024</i>
         <div align="center" valign="middle">
@@ -96,7 +106,7 @@
             <script type="text/javascript" src="load_login.js"></script>
             <p style="text-align:center;">
                 <a href="javascript:zh_tran('s');" class="zh_click" id="zh_click_s"
-                    onclick="setCookieValuemanagement('s')">¼òÌå</a>
+                    onclick="setCookieValuemanagement('s')">ç®€ä½“</a>
                 <a href="javascript:englishrefresh();" class="zh_click" id="zh_click_s"
                     onclick="setEngilshmanagement()">Engilsh</a>
             </p>
