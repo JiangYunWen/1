@@ -1,0 +1,1 @@
+<% getInfo("ModemGetInfoDrpsExecResult"); %>*"Test"

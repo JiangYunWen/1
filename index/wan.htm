@@ -1,0 +1,1191 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="util_gw.js"> </script>
+<script type="text/javascript" src="res/jquery.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var debug="0";
+var plmn_list_content = "";
+
+var time;
+var lcweb_plmn_search_completed_count=0;
+function plmnListInitAsync()
+{
+var temp="plmn_result.asp";
+	$.ajax({
+		url: temp,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+				var allmsg = null;
+				var rspTxt = result;
+				rspTxt.replace(/\s/gm, "").replace(/\r\n/gm, "");
+				allmsg = rspTxt.split('*');
+				
+				//alert(allmsg);
+				if(allmsg==1)   //0  初始化  1已经返回结果 2正在搜索
+				{
+
+				    clearTimeout(time);
+				   
+				   plmnListcontentAsync();
+hide("light");
+				  // glanHideWaitAnimation("search_wait");
+				   lcweb_plmn_search_completed_count=0;
+				  // enableTextField(document.oper_scan_form.plmnconnectbutton);
+	       //  enableTextField(document.oper_scan_form.plmnSelectAllbutton);
+	       //  document.getElementById("plmn_button").disabled=false;
+	       //  document.getElementById("lc_plmn_mode").disabled=false;
+	        
+	         
+				    
+				}else if(allmsg==2)
+				{
+				    	//glanShowWaitAnimation("search_wait");
+				    	//disableTextField(document.oper_scan_form.plmnconnectbutton);
+			      	//disableTextField(document.oper_scan_form.plmnSelectAllbutton);
+             // document.getElementById("plmn_button").disabled=true;
+			      	//document.getElementById("lc_plmn_mode").disabled=true;
+				
+				}else if(allmsg==0)
+				{
+				
+				    //glanShowWaitAnimation("search_wait");
+				   // SelectAllplmn();
+				    //disableTextField(document.oper_scan_form.plmnconnectbutton);
+			      //disableTextField(document.oper_scan_form.plmnSelectAllbutton);
+			      // document.getElementById("plmn_button").disabled=true;
+			      //document.getElementById("lc_plmn_mode").disabled=true;
+				}
+				
+				lcweb_plmn_search_completed_count++;
+				if(lcweb_plmn_search_completed_count>10)
+				{
+				//发送设置set_afert_select_result=1；超时
+	         
+            alert("Time out.Please retry!");
+            	lcweb_plmn_search_completed_count=0;
+            	clearTimeout(time);
+              hide("light");
+            	//param = "";
+            	//param +="/boafrm/formsearchallplmn&lc_plmn_search=1&";
+            
+            	//param += Math.random();
+            	//send_connect_ap(param);
+           // $.get(param,function(r){ 
+            
+            //});
+
+var temp_p="/boafrm/formsearchallplmn";
+var data_p="lc_plmn_search=1";
+
+//	$.ajax({
+//  type: "POST",
+//
+//		url: temp_p,
+//		cache: false,
+//    data:data_p,
+//
+//		success: function(result) {
+//			if (result != null && result.length !== 0)
+//			{
+//       //alert("ok!");  
+//
+//			}
+//		},
+//		  
+//		complete: function(xmlHttpHeader, textStatus) {
+//			xmlHttpHeader = null;
+//		  	
+//
+//		}
+//	});
+
+	        
+				}
+
+			}
+		},
+
+		error: function(jqXHR, textStatus, errorThrown) {
+
+		},
+		 
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+	
+	 time=setTimeout("plmnListInitAsync()",8000)
+}
+function plmnListcontentAsync()
+{
+var temp="plmn_list.asp";
+	$.ajax({
+		url: temp,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+				var rspTxt = result;
+				lcweb_plmn_search_completed_count=0;
+
+if(debug==1)
+{
+console.warn( "rspTxt     "+result+"     " +rspTxt.substring(4));
+}
+				//plmn_list_content = rspTxt.substring(4);
+         plmn_list_content = rspTxt;
+				init_oper();
+			}
+		},
+
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+}
+function SelectAllplmn(){
+
+//需要先检查sim卡状态 ps状态
+
+
+//	param = "";
+//	param +="/boafrm/formsearchallplmn&lc_plmn_search=1&";
+
+//	param += Math.random();
+	//send_connect_ap(param);
+//$.get(param,function(r){ 
+//	delAllMsg_oper_plmn();
+//	plmnListInitAsync();
+//	plmn_list_content="";
+//});
+   show("light");
+//	var temp="/boafrm/formwansetup";
+var temp_p="/boafrm/formsearchallplmn";
+var data_p="lc_plmn_search=1";
+
+	$.ajax({
+type: "POST",
+
+		url: temp_p,
+		cache: false,
+    data:data_p,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+       	delAllMsg_oper_plmn();
+	      plmnListInitAsync();
+	      plmn_list_content="";
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+
+	
+}
+function delAllMsg_oper_plmn() 
+{
+  	var list_rows_count;
+  
+	list_rows_count=document.getElementById("oper_table").rows.length;
+	var i=list_rows_count-1;
+	for(;i>0;i--)
+	{
+		document.getElementById("oper_table").deleteRow(i);
+	}
+}
+//鼠标点击选择行时候变色
+function   change()   
+{   
+	var   oObj   =   event.srcElement;   
+	if(oObj.tagName.toLowerCase()   ==   "td")   
+	{   
+		var oTr = oObj.parentNode;
+		for(var   i=0;   i<document.all.wifiHot_table.rows.length;   i++)   
+		{   
+			document.all.wifiHot_table.rows[i].style.backgroundColor   =   "";   
+			document.all.wifiHot_table.rows[i].tag   =   false;   
+		}   
+		oTr.style.backgroundColor   =   "#CCCCFF";   
+		oTr.tag   =   true;   
+	}
+}
+//鼠标点击另外一行时关闭已选行变色
+function   out()
+{
+	var   oObj   =   event.srcElement;   
+	if(oObj.tagName.toLowerCase()   ==   "td")   
+	{
+		var   oTr   =   oObj.parentNode;
+		if(!oTr.tag)   
+		oTr.style.backgroundColor   =   "";
+	}
+}
+//鼠标移动到选择行上时的行变色
+function   over()   
+{   
+	var   oObj   =   event.srcElement;   
+	if(oObj.tagName.toLowerCase()   ==   "td")   
+	{   
+		var   oTr   =   oObj.parentNode;   
+		if(!oTr.tag)   
+		oTr.style.backgroundColor   =   "#E1E9FD";   
+	}
+}
+function lc_wan_mode_selected()
+{	
+	var wan_mode = document.getElementById("NetworkIp1").value;
+	
+	//alert(wan_mode);
+	if (wan_mode == 1 )
+	{
+
+
+     $("#Networkpretr").show();
+
+  }
+  else
+  {
+     $("#Networkpretr").hide();
+
+  }
+  
+
+
+	//system_ps_init();
+}
+
+function lc_plmn_mode_selected()
+{
+   var index=document.getElementById("Search_mode").value;
+   
+   if(index==1)
+	{
+		document.oper_scan_form.style.display="block"; 
+		
+	}else
+		{
+			
+
+ document.oper_scan_form.style.display="none";
+			//plmnListInitAsync();
+		//	SelectAllplmn();
+			
+		}
+
+
+}
+function wan_submit()
+{
+	
+	var tmpvar=document.getElementById("NetworkIp1").value ;
+  var pretype=document.getElementById("Networkpre").value;
+
+if(tmpvar==1&&pretype==1)
+{
+tmpvar=3;
+}else if(tmpvar==1&&pretype==2)
+{
+tmpvar=2;
+}else if(tmpvar==3)
+{
+tmpvar=1;
+}else if(tmpvar==4)
+{
+tmpvar=5;
+}else if(tmpvar==2)
+{
+tmpvar=4;
+}
+		var param;
+		param = "";
+		param +="wantype="+tmpvar +"&"+"connecttype="+document.getElementById("Connect_modeIp1").value+"&"+"Action=";
+
+//alert(param);
+send_submit(param);
+}
+function send_submit( param)
+{
+var temp="/boafrm/formwansetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+       alert("ok!");  
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+function lc_plmn_mode_submit()
+{
+//show("light");
+		var param;
+		param = "";
+		param +="Search_mode="+document.getElementById("Search_mode").value + ";" ;
+send_plmn_submit(param);
+
+}
+function send_plmn_submit( param)
+{
+var temp="/boafrm/formplmnsetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+         
+
+lc_plmn_mode_selected();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+
+function init_oper(){
+	plmnList = new Array
+	
+//	if(search_plmn_flag ==0)
+//	{
+		//SelectAllplmn();
+//	}
+
+delAllMsg_oper_plmn();
+//var all_plmn_data = "2[,]CHINA  MOBILE[,]CMCC[,]46000[,]2[;]1[,]CHINA  MOBILE[,]CMCC[,]46000[,]0[;]1[,]CHINA  MOBILE[,]CMCC[,]46000[,]7[;]1[,]CHINA TELECOM[,]CTC[,]46011[,]7[;]1[,]CHINA  MOBILE[,]CMCC[,]46002[,]7[;]3[,]CHN-UNICOM[,]UNICOM[,]46001[,]0[;]";
+	var all_plmn_data = plmn_list_content;
+
+plmndataString=all_plmn_data.split("[;]");
+
+if(debug==1)
+{
+
+console.warn( plmndataString );
+}
+
+	for(i=0;i<plmndataString.length-1;i++)
+	{
+		plmnList[i]=plmndataString[i].split("[,]");
+
+if(debug==1)
+{
+
+console.warn("line "+plmndataString[i] );
+}
+		for(j=0;j<plmnList[0].length;j++)
+		{
+		
+		//alert(plmnList[i][j]);
+			if(plmnList[i][j]=="")
+			{
+				plmnList[i][j]=" ";
+			}
+			if(plmnList[i][0]=="0")
+			{
+				
+				plmnList[i][0]="Unknow";
+			}else if(plmnList[i][0]=="1")
+				{
+					plmnList[i][0]="Available";
+					
+				}else if(plmnList[i][0]=="2")
+				{
+					plmnList[i][0]="Current";
+					
+				}
+				else if(plmnList[i][0]=="3")
+				{
+					plmnList[i][0]="Restrict";
+					
+				}
+				
+			if(plmnList[i][4]=="0")
+			{
+				
+				plmnList[i][4]="GSM";
+			}else if(plmnList[i][0]=="1")
+				{
+					plmnList[i][4]="GSM COMPACT";
+					
+				}else if(plmnList[i][4]=="2")
+				{
+					plmnList[i][4]="TD";
+					
+				}
+				else if(plmnList[i][4]=="7")
+				{
+					plmnList[i][4]="LTE";
+					
+				}else if(plmnList[i][4]=="3")
+				{
+					plmnList[i][4]="UNKNOWN";
+					
+				}
+		}
+	}
+//alert("plmnList.length"+plmnList.length);
+
+	for (i=0; i < plmnList.length ; i++) 
+	{
+		var row_tmp=document.getElementById("oper_table").insertRow(-1);
+		row_tmp.onclick=function s1(){
+			change();
+		};
+		row_tmp.onmouseover=function s2(){
+			over();
+		};
+		row_tmp.onmouseout=function s3(){
+			out();
+		};
+
+		var cell_tmp = document.createElement("td");
+
+		var e = document.createElement("input");
+        e.type = "checkbox";
+    e.name = "selectCheckbox";
+    e.id="selectCheckbox";
+    var ischecked = e.checked;
+    cell_tmp.appendChild(e);
+    row_tmp.appendChild(cell_tmp);
+
+    cell_tmp = document.createElement("td");
+    cell_tmp.innerHTML=plmnList[i][0]+"-"+plmnList[i][1]+"-"+plmnList[i][2]+"-"+plmnList[i][3]+"-"+plmnList[i][4];
+    cell_tmp.align = "center";
+    row_tmp.appendChild(cell_tmp);
+
+//alert(plmnList[i][0]+"-"+plmnList[i][2]+"-"+plmnList[i][3]+"-"+plmnList[i][4]);
+	}
+//parent.adjust_iframe();
+}
+function Connect_plmn(){
+
+		var item;
+	if(navigator.appName == "Microsoft Internet Explorer")
+	{ 
+
+     
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+                 item = document.getElementsByName("SelectCheckbox");
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+                item = document.getElementsByName("SelectCheckbox");
+              }else
+              {
+                // alert("ie10"); 
+                 item = document.getElementsByName("selectCheckbox");
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+         item = document.getElementsByName("SelectCheckbox");
+      }
+	}
+	else
+	{
+	   
+	   item = document.getElementsByName("selectCheckbox");
+	}
+	
+	if (item != null){
+		var str_selected;
+		str_selected = "";
+		var num_selected = 0;
+		var record_netstatus = 0;
+		for (i=0;i<item.length;i++)
+		{
+			if (item[i].checked == true)
+			{
+				str_selected = "1";
+				num_selected = num_selected+1;
+				record_netstatus = i;
+				plmn_select_line_num=record_netstatus;
+				//break;
+			}
+		}
+		//如果有选择
+		
+		var colRows = document.getElementById("oper_table").rows;
+		var status = "0";
+		
+		if(num_selected ==0)
+		{
+			
+			alert("Please select one of the operators!");
+			
+		}
+		
+		if(num_selected > 1)
+		{
+			alert("Can only choose one of the operators!");
+		}
+		else if(num_selected == 1)
+		{
+            	
+						//发送连接请求
+						param = "lc_plmn_select="+colRows[record_netstatus+1].cells[1].innerHTML;
+						
+						var  Input = param;
+						var flag ="";
+       
+           for(var i=0;i<Input.length;i++){
+
+	
+				      if(Input.split("")[i].charCodeAt(0)==45)
+			        {
+			        	//var j=0;
+			        	//j=i+3;
+			        	var temp= Input.substring(i+1,Input.length);
+			        	///alert(temp);
+			        	param = temp;
+			        	flag = Input.substring(0,i);
+			        	//alert(flag);
+
+                 break;
+
+			        }
+			        
+			      }
+
+           if(flag!="lc_plmn_select=Current"&&flag!="lc_plmn_select=Restrict")
+          {
+           // passvalue="/boafrm/formselectsetup&lc_plmn_select="+param;
+					
+            //	passvalue += Math.random();
+            	
+           // $.get(passvalue,function(r){ 
+          //  after_plmn_select_function();
+           // });
+show("light");
+               var temp_p="/boafrm/formselectsetup";
+               var data_p="lc_plmn_select="+param;
+               
+               	$.ajax({
+               type: "POST",
+               
+               		url: temp_p,
+               		cache: false,
+                   data:data_p,
+               
+               		success: function(result) {
+               			if (result != null && result.length !== 0)
+               			{
+                      //alert("ok!");  
+                       after_plmn_select_function();
+               			}
+               		},
+               		  
+               		complete: function(xmlHttpHeader, textStatus) {
+               			xmlHttpHeader = null;
+               		  	
+               
+               		}
+               	});
+						
+					}else if(flag=="lc_plmn_select=Current")
+						{
+							
+							alert("Is the current selection operator, please re select。");
+						}else if(flag=="lc_plmn_select=Restrict")
+						{
+							
+							alert("Your choice is restricted by the operator, please re select。");
+						}
+
+		}
+		}
+}
+var time2;
+var after_plmn_select_count=0;
+function after_plmn_select_function()
+{
+var parm1="after_plmn_select.asp";
+	$.ajax({
+		url: parm1,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+				var allmsg = null;
+				var rspTxt = result;
+				rspTxt.replace(/\s/gm, "").replace(/\r\n/gm, "");		// 去掉回车、空格等
+				allmsg = rspTxt.split('*');
+				
+				//alert(allmsg);
+				if(allmsg==1)   //0  初始化  1已经返回结果 2正在搜索
+				{
+
+				    clearTimeout(time2);
+				   
+				   //plmnListcontentAsync();
+				  
+	         after_plmn_select_count=0;
+	         
+	         re_init_oper();
+hide("light");
+				    
+				}else if(allmsg==2)
+				{
+				
+
+				
+				}else if(allmsg==0)
+				{
+				
+
+				}else if(allmsg==3)
+				{
+				
+
+				}
+				else if(allmsg==4)
+				{
+				
+
+				}else if(allmsg==5)
+				{
+				
+
+				}
+				
+				after_plmn_select_count++;
+				if(after_plmn_select_count>5)
+				{
+				//发送设置set_afert_select_result=1；超时
+	    hide("light");     
+alert("Set the timeout,please click on the search button again.");
+	          			after_plmn_select_count=0;
+				          clearTimeout(time2);
+				          //var param="lc_plmn_afert_select_result=1&";
+				   	     // param="/goform/formSyWebCfg?oem_cfg=changed&action=Apply&"+param;
+	               // param=param+"&"+Math.random();
+
+            //param="/boafrm/formafertselectresult&"+param;
+					
+            //	param += Math.random();
+
+            	
+             // var temp_p="/boafrm/formafertselectresult";
+            //  var data_p="lc_plmn_afert_select_result=1";
+              
+            //  	$.ajax({
+          //    type: "POST",
+              
+           //   		url: temp_p,
+          //    		cache: false,
+         //         data:data_p,
+              
+         //     		success: function(result) {
+         //     			if (result != null && result.length !== 0)
+          //    			{
+                     //alert("ok!");  
+              
+       //       			}
+       //       		},
+              		  
+         //     		complete: function(xmlHttpHeader, textStatus) {
+       //       			xmlHttpHeader = null;
+              		  	
+              
+       //       		}
+       //       	});
+
+	       
+				}
+
+			}
+		},
+		 
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+	
+	 time2=setTimeout("after_plmn_select_function()",4000)
+
+}
+var plmnList2;
+function re_init_oper(){
+
+	plmnList2 = new Array
+
+delAllMsg_oper_plmn();
+var all_plmn_data = plmn_list_content;
+	plmndataString=all_plmn_data.split("[;]");
+
+	for(i=0;i<plmndataString.length-1;i++)
+	{
+		plmnList2[i]=plmndataString[i].split("[,]");
+		for(j=0;j<plmnList2[0].length;j++)
+		{
+			if(plmnList2[i][0]=="2")
+		   {
+		
+		       plmnList2[i][0]="1";
+		   }
+		
+		   if(i==plmn_select_line_num)
+		   {
+		
+		       plmnList2[i][0]="2";
+		   }
+		
+
+		
+		//alert(plmnList2[i][j]);
+			if(plmnList2[i][j]=="")
+			{
+				plmnList2[i][j]=" ";
+			}
+			if(plmnList2[i][0]=="0")
+			{
+				
+				plmnList2[i][0]="Unknow";
+			}else if(plmnList2[i][0]=="1")
+				{
+					plmnList2[i][0]="Available";
+					
+				}else if(plmnList2[i][0]=="2")
+				{
+					plmnList2[i][0]="Current";
+					
+				}
+				else if(plmnList2[i][0]=="3")
+				{
+					plmnList2[i][0]="Restrict";
+					
+				}
+				
+			if(plmnList2[i][4]=="0")
+			{
+				
+				plmnList2[i][4]="GSM";
+			}else if(plmnList2[i][0]=="1")
+				{
+					plmnList2[i][4]="GSM COMPACT";
+					
+				}else if(plmnList2[i][4]=="2")
+				{
+					plmnList2[i][4]="TD";
+					
+				}
+				else if(plmnList2[i][4]=="7")
+				{
+					plmnList2[i][4]="LTE";
+					
+				}else if(plmnList2[i][4]=="3")
+				{
+					plmnList2[i][4]="UNKNOWN";
+					
+				}
+		}
+	}
+//alert("plmnList.length"+plmnList.length);
+
+	for (i=0; i < plmnList2.length ; i++) 
+	{
+		var row_tmp=document.getElementById("oper_table").insertRow(-1);
+		row_tmp.onclick=function s1(){		
+			change();
+		};
+		row_tmp.onmouseover=function s2(){
+			over();
+		};
+		row_tmp.onmouseout=function s3(){
+			out();
+		};
+
+		var cell_tmp = document.createElement("td");
+
+		var e = document.createElement("input");
+        e.type = "checkbox";
+    e.name = "selectCheckbox";
+    e.id="selectCheckbox";
+    var ischecked = e.checked;
+    cell_tmp.appendChild(e);
+    row_tmp.appendChild(cell_tmp);
+
+    cell_tmp = document.createElement("td");
+    cell_tmp.innerHTML=plmnList2[i][0]+"-"+plmnList2[i][1]+"-"+plmnList2[i][2]+"-"+plmnList2[i][3]+"-"+plmnList2[i][4];
+    cell_tmp.align = "center";
+    row_tmp.appendChild(cell_tmp);
+
+//alert(plmnList[i][0]+"-"+plmnList[i][2]+"-"+plmnList[i][3]+"-"+plmnList[i][4]);
+	}
+//parent.adjust_iframe();
+}
+function show(tag){
+ var light=document.getElementById(tag);
+ var fade=document.getElementById('fade');
+ light.style.display='block';
+ fade.style.display='block';
+ }
+function hide(tag){
+ var light=document.getElementById(tag);
+ var fade=document.getElementById('fade');
+ light.style.display='none';
+ fade.style.display='none';
+}
+function wan_submit_autopdp()
+{
+if (document.getElementById("autoconnect").checked)
+{
+
+//alert("1");
+
+               var temp_p="/boafrm/formwan_auto_connect";
+               var data_p="autoconnect="+"1";
+               
+               	$.ajax({
+               type: "POST",
+               
+               		url: temp_p,
+               		cache: false,
+                   data:data_p,
+               
+               		success: function(result) {
+               			if (result != null && result.length !== 0)
+               			{
+                      alert("Set Success!");  
+                      // after_plmn_select_function();
+               			}
+               		},
+               		  
+               		complete: function(xmlHttpHeader, textStatus) {
+               			xmlHttpHeader = null;
+               		  	
+               
+               		}
+               	});
+}else
+{
+//alert("0");
+               var temp_p="/boafrm/formwan_auto_connect";
+               var data_p="autoconnect="+"0";
+               
+               	$.ajax({
+               type: "POST",
+               
+               		url: temp_p,
+               		cache: false,
+                   data:data_p,
+               
+               		success: function(result) {
+               			if (result != null && result.length !== 0)
+               			{
+                      alert("Set Success!"); 
+                      // after_plmn_select_function();
+               			}
+               		},
+               		  
+               		complete: function(xmlHttpHeader, textStatus) {
+               			xmlHttpHeader = null;
+               		  	
+               
+               		}
+               	});
+} 
+
+}
+function init()
+{
+
+var wantype=<% getInfo("wantype"); %>;
+var pretype=<% getInfo("pretype"); %>;
+var connecttype=<% getInfo("connecttype"); %>;
+
+var Search_mode=<% getInfo("Search_mode"); %>;
+//1：4G only
+//2：4G/3G/2G，4G优先
+//3：4G/3G/2G，3G/2G优先
+//4：3G/2G
+//5：2G only
+if(connecttype==1)
+{
+document.getElementById("autoconnect").checked=true;
+}
+
+if(wantype==1)
+{
+wantype=3;
+pretype=2;//none
+}else if(wantype==2)
+{
+wantype=1;
+pretype=2;
+}else if(wantype==3)
+{
+wantype=1;
+pretype=1;
+}else if(wantype==4)
+{
+wantype=2;
+pretype=2;//none
+}else if(wantype==5)
+{
+wantype=4;
+pretype=2;//none
+}
+
+document.getElementById("NetworkIp1").value=wantype;
+document.getElementById("Networkpre").value=pretype;
+if(wantype==1)
+{
+$("#Networkpretr").show();
+
+}else
+{
+$("#Networkpretr").hide();
+
+}
+document.getElementById("Connect_modeIp1").value=connecttype;
+document.getElementById("Search_mode").value=Search_mode;
+
+   if(Search_mode==1)
+	{
+		document.oper_scan_form.style.display="block";  
+		
+	}else
+		{
+			
+document.oper_scan_form.style.display="none";
+			//plmnListInitAsync();
+		//	SelectAllplmn();
+			
+		}
+
+}
+</script>
+</head>
+<blockquote>
+<h2><font color="#0000FF">Network Settings</font></h2>
+
+<body onload="init()">
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+<h2>Network</h2>
+	<tr>
+	<td width ="25%">
+	<font size=2> <b> Network : </b> </font>
+	</td>
+	<td width ="75%">
+		<select name="NetworkIp1" id="NetworkIp1" onchange = "lc_wan_mode_selected();">
+                <option value='1'>4G/3G/2G</option>
+                <option value='2'>3G/2G</option>
+                <option value='3'>4G only</option>
+                <option value='4'>2G only</option>
+			</select>
+		</td>
+	</tr>
+
+	<tr style="display:none" id="Networkpretr" name="Networkpretr">
+	<td width ="25%">
+	<font size=2> <b> </b> </font>
+	</td>
+	<td width ="75%">
+		<select name="Networkpre" id="Networkpre" >
+                <option value='1'>3G/2G PRE</option>
+                <option value='2'>4G PRE</option>
+			</select>
+		</td>
+	</tr>
+
+
+	<tr  style="display:none">
+	<td width ="25%">
+	<font size=2> <b> Connect mode : </b> </font>
+	</td>
+	<td width ="75%">
+		<select name="Connect_modeIp1"   id="Connect_modeIp1">
+                <option value='1'>Manual</option>
+                <option value='0'>Auto</option>
+			</select>
+		</td>
+	</tr>
+
+
+
+</table>
+ <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Apply Change" name="save" onClick="wan_submit();">
+
+
+
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+<h2>PDP connect mode</h2>
+
+
+
+
+	<tr>
+	<td width ="25%">
+
+	</td>
+  <tr>
+      <td width="100%" colspan=2><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="autoconnect" name="autoconnect" value="ON" ONCLICK="">auto connect</b>
+      </td>
+  </tr>
+	</tr>
+
+
+
+</table>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="subimit" name="save" onClick="wan_submit_autopdp();">
+
+
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+<h2>Network Search</h2>
+
+
+
+
+	<tr>
+	<td width ="25%">
+	<font size=2> <b> Mode : </b> </font>
+	</td>
+	<td width ="75%">
+		<select name="Search_mode"   id="Search_mode">
+                <option value='1'>Manual</option>
+                <option value='0'>Auto</option>
+			</select>
+		</td>
+	</tr>
+
+
+
+</table>
+ <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Apply Change" name="save" onClick="lc_plmn_mode_submit();">
+
+<form name="oper_scan_form" style="display:block" id="oper_scan_form">
+  <table id="taboper" cellSpacing=0 cellPadding=0 width="545px" border="1px" bordercolor="#dddddd" style="border-collapse:collapse;" >
+	<tr>
+		<td colspan=5 noWrap >
+			<table  border=0 cellSpacing=0 cellPadding=0 width="545px" >
+				 <tr>
+				 	<td id="search_wait" align="left" width="20px"></td>
+					<td class=listViewPaginationTdS1 noWrap align="right">
+					<input accessKey=I id=plmnconnectbutton  onclick=javascript:Connect_plmn(); name=" connectplmn " value=" Set " type=button> 
+					<input accessKey=S id=plmnSelectAllbutton   onclick=javascript:SelectAllplmn(); name=" SelectAll " value=" Search " type=button> 
+					</td>
+				 </tr>
+			</table> 
+		</td>
+	</tr>
+	<tr>
+		<td align=center id="forwardCurrentVirtualSrvNo" class="head1_top" bgcolor="#CCCCCC" width="3%"></td>
+		<td align=center id="forwardCurrentVirtualSrvNo" class="head1_top" bgcolor="#CCCCCC" width="35%"></td>
+	</tr>
+	<tbody id="oper_table" >
+		<tr>
+		</tr>
+	</tbody>
+  
+</table>
+   </form>
+</div>
+
+   <div id="fade" class="black_overlay">
+    </div>
+    <div id="light" class="white_content">
+        <div style="text-align: center; cursor: default; height: 40px;">
+            <br />
+            <span style="font-size: 16px;">...Waiting...</span>
+        </div>
+    </div>
+
+</body>
+</blockquote>
+</html>
+
+

@@ -1,0 +1,216 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<html>
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--script type="text/javascript" src="../res/sychip.js"></script-->
+<script language="JavaScript" src="../res/jquery.js"></script>
+<!--link rel="stylesheet" href="../style/iframe.css" type="text/css"-->
+
+
+</head>
+
+<style type="text/css">
+.txt1{
+	
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	padding: 0;
+	margin:0;
+width:180px;
+
+}
+
+.button1{
+	
+ display: block;
+ position: absolute;
+ top: 190px;
+ left: 200px;
+
+
+}
+.button2{
+	
+ display: block;
+ position: absolute;
+ top: 190px;
+ left: 270px;
+
+
+}
+</style>
+<SCRIPT language=javascript>
+
+var time=null;
+
+var ASCIIStrValid = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz' + '0123456789' +  '!$()-.%.:<=>?@[]^_{|}~+' + "\'";
+function checkASC(keyval,place)
+{
+         var j, k, flag;
+         for ( k=0; k<keyval.value.length; k++ ){                  
+                   for(j=0;j<ASCIIStrValid.length;j++){
+                            flag = false;
+                            if(keyval.value.charAt(k) ==  ASCIIStrValid.charAt(j)){
+                                     flag = true;
+                                     break;
+                            }
+                   }
+                   if(flag == false){
+                       alert("存在非法字符,请重新输入!");                            
+                            keyval.value=keyval.defaultValue;
+                            keyval.focus();
+                            return false;
+                   }
+         }
+         return true;
+}
+function checkwifisetresult()
+{
+
+
+}
+var count=0;
+function _checkwifisetresult(result)
+{
+
+
+}
+function init()
+{
+
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+//alert(allmsg[0]+"   "+allmsg[1]+"   "+allmsg[2]+"   "+allmsg[3]+"   "+allmsg[4]+"   ");
+
+if(allmsg[5]=="0")
+{
+
+document.getElementById("button_1").disabled=true;
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">没有(U)SIM卡或(U)SIM卡无效时不能操作短信设置,请检查(U)SIM卡.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+
+return 0;
+}else if(allmsg[5]=="2")
+{
+document.getElementById("button_1").disabled=true;
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PIN码开启时不能操作短信设置,请进入移动网络->(U)SIM卡页面输入PIN码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}else if(allmsg[5]=="3")
+{
+
+document.getElementById("button_1").disabled=true;
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PUK码开启时不能操作短信设置,请进入移动网络->(U)SIM卡页面输入PUK码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}
+
+document.getElementById("sms_center_no").value="<%getsmsInfo("sms_center_no");%>";
+document.getElementById("sms_flag_Sel").value="<%getsmsInfo("sms_flag_Sel");%>";
+
+
+}
+
+
+function close_the_page()
+{
+
+wifisetHideModalDialog();
+}
+
+function wifisetHideModalDialog()
+{
+	window.top.tb_remove();
+
+}
+
+
+
+function saveClick()
+{
+
+var temp="/boafrm/formsms_set_sms_center_no";
+param="lc_sms_center_no="+document.getElementById("sms_center_no").value+"&lc_sms_flag_Sel="+document.getElementById("sms_flag_Sel").value;
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         alert("设置成功！");
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+
+}
+</script>
+<body onLoad="init()">
+<blockquote>
+
+<h2><font color="#0000FF">短信设置</font></h2>
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+			<table width="800px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="left"><span id="sim_stat_warring" style="display:none" width="100%" align="left"></span></td></tr>
+			</table>
+
+<form  method=POST name="password">
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+
+
+    <tr>
+      <td width="20%"><font size=2><b>短信中心号码:</b></td>
+      <td width="50%"><font size=2><input type="text" name="sms_center_no" id="sms_center_no" class="txt1"  size="20" maxlength="30" value="" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>短信发送回执:</b></td>
+      <td width="50%">				<select id="sms_flag_Sel" name="sms_flag_Sel" onChange="">
+					<option value='1'>是</option>
+					<option value='0'>否</option>
+				</select></td>
+    </tr>
+
+  </table>
+   <input type="hidden" value="" name="submit-url">
+  <p><input type="button" class="button1" id="button_1" value="确定" name="save" onClick="return saveClick()">&nbsp;&nbsp;
+
+</form>
+</body>
+<blockquote>
+</html>

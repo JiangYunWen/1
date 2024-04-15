@@ -1,0 +1,80 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>恢复出厂设置</title>
+
+<script type="text/javascript" src="../res/jquery.js"></script>
+<% language=javascript %>
+</head>
+
+<script>
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function send_submit()
+{
+if(confirm("恢复出厂设置需要立即重启，是否立即重启?\n恢复出厂设置，需要几分钟时间，在这段时间请不要重启或关闭设备电源。"))
+{
+var param="formrecovery=1";
+var temp="/boafrm/formrecovery";
+ShowModalDialog("/chn/info_reboot.htm","");
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+//alert("成功！");
+				window.top.open('','_self');
+				window.top.close();  
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+}
+</script>
+<BODY >
+<blockquote>
+<h2><font color="#0000FF">恢复出厂设置</font></h2>
+<form action=/boafrm/formrecovery method=POST name="recover">
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+  <tr><font size=2>
+   
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+  <tr>
+      <td ><font size=3><b></b></td>
+  </tr>
+  <tr height=3>
+  </tr>
+  <tr>
+      <td ><font size=2>
+        <input type="button" value=" 恢复出厂设置 " name="recover"  onclick="send_submit();">
+      </td>
+  </tr>
+</table>
+<input type="hidden" value="/chn/recovery_chn.htm" name="return-url">
+</form>
+<blockquote>
+</body>
+</html>
+
+

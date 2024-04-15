@@ -1,0 +1,1 @@
+<% getsmsInfo("draftbox_file_exist"); %>

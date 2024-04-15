@@ -1,0 +1,100 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>Samba Server</title>
+<script type="text/javascript" src="util_gw.js"> </script>
+<script>
+function saveClick()
+{
+ 
+	if(document.formSambaSet.smb_enable.checked)
+		{
+					
+			if(!document.formSambaSet.tcard_enable.checked && !document.formSambaSet.usb_enable.checked)
+			{
+				alert("Please Config Shard Path!");
+				return false;
+			}
+			
+	}
+		return true;
+}
+
+function updateState1()
+{
+}
+function updateState()
+{
+  if (document.formSambaSet.smb_enable.checked) {
+ 	enableTextField(document.formSambaSet.tcard_enable);
+ 	enableTextField(document.formSambaSet.usb_enable);
+ 	
+  }
+  else {
+ 	disableTextField(document.formSambaSet.tcard_enable);
+ 	disableTextField(document.formSambaSet.usb_enable);
+ 	
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("smb_enable"); %> )
+		document.formSambaSet.smb_enable.checked = true;
+		
+	if ( <% getIndex("tcard_enable"); %> )
+		document.formSambaSet.tcard_enable.checked = true;
+		
+		
+			if ( <% getIndex("usb_enable"); %> )
+		document.formSambaSet.usb_enable.checked = true;
+	
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">Samba</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><td><font size=2>
+
+	Samba is a file sharing service in the local area network,Android & Ios device can be accessed through the file system browsing tools,Win device visit \\hostgateway!
+
+
+</font></td></tr>
+
+<tr><td><hr size=1 noshade align=top></td></tr>
+
+<form action=/boafrm/formSambaSet method=POST name="formSambaSet">
+<tr><td><font size=2><b>
+   	<input type="checkbox" name="smb_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;Enable Samba</b>
+    </td>
+</tr>
+<tr><td><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="tcard_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;share Tcard</b>
+    </td>
+</tr>
+
+<tr><td><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="usb_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;share usbstorage</b>
+    </td>
+</tr>
+
+
+<tr><td>
+   <br>
+     <input type="submit" value="Apply Changes" name="save" onClick="return saveClick()">&nbsp;&nbsp;
+        <input type="reset" value="Reset" name="reset">
+        <input type="hidden" value="/smb.htm" name="submit-url">
+</td></tr>
+     <script> updateState(); </script>
+</form>
+</table>
+</blockquote>
+</body>
+</html>

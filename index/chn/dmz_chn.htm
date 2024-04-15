@@ -1,0 +1,73 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>DMZ主机</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script>
+function saveClick()
+{
+  if (!document.formDMZ.enabled.checked)
+  	return true;
+
+  if (document.formDMZ.ip.value=="")
+	return true;
+
+  if ( checkIpAddr(document.formDMZ.ip, '无效IP地址') == false )
+	    return false;
+
+  return true;
+}
+
+function updateState()
+{
+  if (document.formDMZ.enabled.checked) {
+ 	enableTextField(document.formDMZ.ip);
+  }
+  else {
+ 	disableTextField(document.formDMZ.ip);
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("dmzEnabled"); %> )
+		document.formDMZ.enabled.checked = true;
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">DMZ</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><td><font size=2>
+
+
+</font></td></tr>
+
+<tr><td><hr size=1 noshade align=top></td></tr>
+
+<form action=/boafrm/formDMZ method=POST name="formDMZ">
+<tr><td><font size=2><b>
+   	<input type="checkbox" name="enabled" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;开启DMZ</b>
+    </td>
+</tr>
+<tr><td>
+     <font size=2><b>DMZ主机IP地址: </b><input type="text" name="ip" size="15" maxlength="15" value=<% getInfo("dmzHost"); %> ></font>
+</td></tr>
+<tr><td>
+   <br>
+     <input type="submit" value="提交" name="save" onClick="return saveClick()">&nbsp;&nbsp;
+        <input type="reset" value="重置" name="reset">
+        <input type="hidden" value="/chn/dmz_chn.htm" name="submit-url">
+</td></tr>
+     <script> updateState(); </script>
+</form>
+</table>
+</blockquote>
+</body>
+</html>

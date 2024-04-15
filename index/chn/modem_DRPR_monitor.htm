@@ -1,0 +1,337 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../util_web.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var objTimeOut = "";
+var TimeOut = "";
+function SetLabelText(Labelid,Text)
+{
+    document.getElementById(Labelid).innerHTML=(Text);
+}
+
+function stop_reportmonitor()
+{
+    clearInterval(TimeOut);
+}
+function start_reportmonitor()
+{
+    TimeOut= setInterval('FormAtcmd_Submit()',3*1000);
+}
+function AjaxTest1(param)
+{
+    var xhr = createXHR();
+	xhr.ontimeout = function (e) 
+	{
+		clearInterval(TimeOut);
+		TimeOut=null;
+    	var zh_str = zh_Lang_ex();
+        if(zh_Lang_now == 't'){
+    	    showdiv("執行超時，需要重新嘗試刷新頁面，檢測WEB是否正常工作",DivCloseMode_TopReload);
+    	}else{	
+    	    showdiv("执行超时，需要重新尝试刷新页面，检测WEB是否正常工作",DivCloseMode_TopReload);
+    	}
+	};
+    xhr.onreadystatechange = function () 
+	{
+		if (xhr.readyState == 4) 
+		{
+			try
+			{
+				if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+				{
+				    var response_temp = new Array();
+				    response_temp = xhr.responseText.replace(/[\r\n]/g,"").replace(/[\""]/g,"");
+					var response_split = new Array();              
+					var per = [];
+					if(response_temp.indexOf("DDTC") != -1)//DDTC 0
+					{
+                		var zh_str = zh_Lang_ex();
+                        if(zh_Lang_now == 't'){
+                    	    alert("節點類型為0，請檢查是否入網");
+                    	}else{	
+                    	    alert("节点类型为0，请检查是否入网");
+                    	}
+					}
+					if(response_temp.indexOf("DAPR") != -1)//主节点
+					{
+					    //alert("response_temp:" + response_temp);
+    					response_split = response_temp.replace(/[" "]/g,"").split("^DAPR:");
+    					//alert("response_split:" + response_split[1]);//1到response_split.length-1
+    					for(var i = 1; i < response_split.length; i++)
+    					{
+    					    var temparray = new Array();
+    					    temparray = response_split[i].split(",");
+    					    var ipV4 = nthIndexOf(temparray[0],'.',12);
+    					    var tempIParray = temparray[0].substring(ipV4+1);
+    					    per.push({ip:tempIParray,rsrp:temparray[4],snr:temparray[6],dis:temparray[7]});
+    					    //per.push({ip:temparray[0],rsrp:temparray[4],snr:temparray[6],dis:temparray[7]});
+    					}
+					}
+					if(response_temp.indexOf("DRPR") != -1)//从节点
+					{
+    					response_split = response_temp.replace(/[" "]/g,"").split("^DRPR:");
+    					for(var i = 1; i < response_split.length; i++)
+    					{
+    					    var temparray = new Array();
+    					    temparray = response_split[i].split(",");
+    					    per.push({ip: "",rsrp:temparray[5],snr:temparray[7],dis:temparray[8]});
+    					}
+					}
+                    var tbody = document.getElementById('tbMain');
+                    for(var i = 0;i < per.length; i++){ //遍历一下json数据
+                        var trow = getDataRow(per[i]); //定义一个方法,返回tr数据
+                        tbody.appendChild(trow);
+                        $(tbody).attr("align","center");
+                        //tbody.style.setProperty('text-align', 'center', 'important');//DOM对象
+                        //$("#tbMain td").attr("align","center"); //Jquery对象
+                    } 
+                    var rows = tbody.rows.length;
+                    var index = 0;
+                    //数据放到数组里
+                    //var eararray=new Array(rows);
+                    var rsrparray=new Array(rows);
+                    var snrarray=new Array(rows);
+                    var disarray=new Array(rows);
+                    //alert("rows:"+rows);
+                    for(index; index < rows; index++){
+                        //eararray[index]=$(tbody).rows[index].cells[1].innerHTML.toString();
+                        //rsrparray[index]=$(tbody).rows[index].cells[2].innerHTML.toString();
+                        //disarray[index]=$(tbody).rows[index].cells[4].innerHTML.toString();
+                        //eararray[index] = $("tbody").find("tr").eq(index).find("td").eq(1).text();
+                        rsrparray[index] = $("tbody").find("tr").eq(index).find("td").eq(1).text();
+                        snrarray[index] = $("tbody").find("tr").eq(index).find("td").eq(2).text();
+                        disarray[index] = $("tbody").find("tr").eq(index).find("td").eq(3).text();
+                    }
+                    //区间赋色
+                    arrSetRSRPColor(rsrparray,1);
+                    arrSetSNRColor(snrarray,2);
+	            }
+	            else 
+				{
+					clearInterval(objTimeOut);
+					objTimeOut=null;				
+            		var zh_str = zh_Lang_ex();
+                    if(zh_Lang_now == 't'){
+                        alert("請求超時，請刷新重試");
+                    	//alert("請求失敗:" + xhr.status);
+    					//document.getElementById('out').innerHTML ="請求失敗:" + xhr.status;
+                	}else{
+                	    alert("请求超时，请刷新重试");
+                    	//alert("请求失败:" + xhr.status);
+    					//document.getElementById('out').innerHTML ="请求失败:" + xhr.status;
+                	}
+	            }
+			}
+			catch(ex)
+			{
+				clearInterval(objTimeOut);
+				objTimeOut=null;			
+			}
+        }
+    };
+	xhr.open("POST", "/boafrm/formDRPRMonitor", true);
+	xhr.timeout = 3*1000;//35s	
+    xhr.send(param);
+}
+function nthIndexOf(str,c,num){
+    var x=str.indexOf(c);
+    for(var i=0;i<num-1;i++){
+        x=str.indexOf(c,x+1);
+        //alert("x: "+x);
+    }
+    //alert("x: "+x);
+    return x;
+}
+function FormAtcmd_Submit()
+{
+	param = "";
+    param +="DdtcType=1";
+    //$("#tbMain tr").html("");
+    tbMain.parentNode.outerHTML = tbMain.parentNode.outerHTML.replace(tbMain.innerHTML, "");
+    //alert("clearData");
+	AjaxTest1(param);
+}
+//赋色
+function arrSetRSRPColor(arr,p){
+
+    for(var i = 0; i < arr.length; i++){
+        var arrcolor = $("tbody").find("tr").eq(i).find("td").eq(p).text();                        
+        if( arrcolor > -64 ){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#F0F0F0');
+        }
+        if( -64 >= arrcolor && arrcolor >= -84){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFF68F');
+        }
+        if( -85 >= arrcolor && arrcolor >= -103){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFA500');
+        }
+        if( -104 >= arrcolor && arrcolor >= -124){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FF3400');
+        }
+        if( -124 > arrcolor ){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#CD3000');
+        }
+        //$("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFF68F');
+    }
+}
+function arrSetSNRColor(arr,p){
+    for(var i = 0; i < arr.length; i++){
+        var arrcolor = $("tbody").find("tr").eq(i).find("td").eq(p).text();                        
+        if( arrcolor > 18 ){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#F0F0F0');
+        }
+        if( 18 >= arrcolor && arrcolor >= 13){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFF68F');
+        }
+        if( 12 >= arrcolor && arrcolor >= 7){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFA500');
+        }
+        if( 6 >= arrcolor && arrcolor >= 0){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FF3400');
+        }
+        if( 0 > arrcolor ){
+            $("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#CD3000');
+        }
+        //$("tbody").find("tr").eq(i).find("td").eq(p).css('background-color', '#FFF68F');
+    }
+}
+
+function getDataRow(h){
+    var row = document.createElement('tr'); //创建行  
+    
+    var ipCell = document.createElement('td'); //创建第一列ip    
+    ipCell.innerHTML = h.ip; //填充数据     
+    row.appendChild(ipCell); //加入行  ，下面类似 
+    
+    
+    //var earCell = document.createElement('td'); //创建第一列ear  
+    //earCell.innerHTML = h.ear; //填充数据        
+    //row.appendChild(earCell); //加入行  ，下面类似  
+    
+    var rsrpCell = document.createElement('td');//创建第二列rsrp 
+    rsrpCell.innerHTML = h.rsrp;  
+    row.appendChild(rsrpCell);  
+    
+    var snrCell = document.createElement('td');//创建第三列snr 
+    snrCell.innerHTML = h.snr;  
+    row.appendChild(snrCell);  
+    
+    var disCell = document.createElement('td');//创建第四列dis
+    disCell.innerHTML = h.dis;
+    row.appendChild(disCell);
+    
+    return row; //返回tr数据      
+}
+
+</script>
+</head>
+<blockquote>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<style type="text/css">
+#tbMain{
+background-color: #F0F0F0;
+}
+.item1 {
+width:50px;
+float:left;
+}
+ 
+.item2 {
+width:150px;
+float:left;
+}
+#menursrp li{
+display:inline-block;
+vertical-align:"";
+list-style-type: square;
+width: 130px;
+}
+#menusnr li{
+display:inline-block;
+vertical-align:"";
+list-style-type: square;
+width: 90px;
+}
+</style>
+<body onLoad="setCodeValue();">
+    <div class="item1">
+    <td>
+    <input type="button" value="启动" id="FormReport_Button_Open"   onClick="start_reportmonitor();">
+    <br></br>
+    <input type="button" value="暂停" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
+    </td>
+    </div>
+    <div class="item2">
+    <ul id="menursrp">
+    <li style="background-color:#CD3000; ">RSRP极差 <-124</li>
+    <li style="background-color:#FF3400; ">RSRP差 -124~-104</li>
+    <li style="background-color:#FFA500; ">RSRP低 -103~-85</li>
+    <li style="background-color:#FFF68F; ">RSRP中 -84~-65</li>
+    <li style="background-color:#F0F0F0; ">RSRP高 >-64</li>
+    </ul>
+    </div>
+    <div class="item2">
+    <ul id="menusnr">
+    <li style="background-color:#CD3000; ">SNR极差 <0</li>
+    <li style="background-color:#FF3400; ">SNR差 0~6</li>
+    <li style="background-color:#FFA500; ">SNR低 7~12</li>
+    <li style="background-color:#FFF68F; ">SNR中 13~18</li>
+    <li style="background-color:#F0F0F0; ">SNR高 >19</li>
+    </ul>
+    </div>
+    </div>
+    <div style="width:600px;overflow:auto;word-break:break-all;word-wrap:break-word;">
+    <table width="600" border="1" cellspacing="0" align="center">
+    <thead>
+    <tr>
+    <th style="background-color:#F0F0F0;">IP</th>
+    <!--
+    <th style="background-color:#F0F0F0;">EARFCN</th>
+    -->
+    <th style="background-color:#F0F0F0;">RSRP</th>
+    <th style="background-color:#F0F0F0;">SNR</th>
+    <th style="background-color:#F0F0F0;">DISTANCE</th>
+    </tr>
+    </thead>  
+    <tbody id="tbMain"></tbody>  
+    </table>
+    </div>
+    </table>
+</body>
+</blockquote>
+</html>

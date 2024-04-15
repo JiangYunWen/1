@@ -1,0 +1,156 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script>
+
+function saveClick(){
+	
+	$.ajax({
+type: "POST",
+
+		url: "/boafrm/formSysLog",
+		cache: false,
+    data:"Apply=Apply+Changes&submit-url=%2Fsyslog.htm&msg=",
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         alert("删除日志成功！");
+         document.getElementById("msg").value="";
+        // location.reload();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+}
+function updateState(){
+
+}
+
+function updateStateSys(){
+
+}
+
+function updateStateRemote(){
+
+
+}
+function scrollElementToEnd (element) {
+
+}
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function init()
+{
+
+ //ShowModalDialog("/chn/info_log.htm","");
+
+//var urlop="/chn/log";
+//	$.ajax({
+//
+//
+//		url: urlop,
+//		cache: false,
+//    
+//		success: function(result) {
+//			if (result.length !== 0)
+//			{
+//        
+//        //send_security();
+//       //  alert("设置成功！");
+//        // location.reload();
+////alert("456");
+//        document.getElementById("msg").value=result;
+////window.top.tb_remove();
+//
+//			}
+//		},
+//		  
+//		complete: function(xmlHttpHeader, textStatus) {
+//			xmlHttpHeader = null;
+//		  	
+//
+//		}
+//
+//});
+}
+
+function lc_pdp_status_get()
+{
+
+		$.ajax({
+		url: "log_content.asp",
+		cache: false,
+
+		success: function(result) {
+		//all_content=result;
+
+document.getElementById("msg").value="";
+document.getElementById("msg").value=result;
+
+
+		},	 
+
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+		});
+}
+function clear_log_buffer()
+{
+       document.formSysLog.msg.value="";
+}
+</script>
+</head>
+<blockquote>
+<h2><font color="#0000FF">系统日志</font></h2>
+
+<body onload="init();">
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+  <form action=/boafrm/formSysLog method=POST name="formSysLog">
+
+
+
+  <p>
+  <input type="hidden" value="/chn/syslog_chn.htm" name="submit-url">
+  <textarea rows="15" name="msg" id="msg" cols="80" wrap="virtual"><% sysLogList(); %></textarea>
+  <script>
+   scrollElementToEnd(this.formSysLog.msg);
+  </script>
+  <p>
+  <input type="button" value="刷新"  onClick="lc_pdp_status_get()">
+  <input type="button" value="删除日志" onClick="saveClick()">
+</form>
+</table>
+</body>
+</blockquote>
+</html>
+
+

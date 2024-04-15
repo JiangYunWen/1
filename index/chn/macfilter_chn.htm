@@ -1,0 +1,127 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>MAC Filtering</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script>
+function addClick()
+{
+  if (!document.formFilterAdd.enabled.checked)
+  	return true;
+
+  if (document.formFilterAdd.mac.value=="" && document.formFilterAdd.comment.value=="" )
+	return true;
+
+  var str = document.formFilterAdd.mac.value;
+  if ( str.length < 12) {
+	alert("输入的MAC地址不完整. ");
+	document.formFilterAdd.mac.focus();
+	return false;
+  }
+
+  // add for "All MAC Address field can't reject 00:00:00:00:00:00/ff:ff:ff:ff:ff:ff MAC Address" issue
+  with(document.formFilterAdd)
+  {
+	if(!checkMacAddr(mac,"无效的MAC地址!"))
+		return false;
+  }
+  return true;
+}
+
+
+function deleteClick()
+{
+  if ( !confirm('确定删除已选中过滤项吗?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+function deleteAllClick()
+{
+   if ( !confirm('确定删除所有过滤项吗?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+function disableDelButton()
+{
+	disableButton(document.formFilterDel.deleteSelFilterMac);
+	disableButton(document.formFilterDel.deleteAllFilterMac);
+}
+
+function updateState()
+{
+  if (document.formFilterAdd.enabled.checked) {
+ 	enableTextField(document.formFilterAdd.mac);
+	enableTextField(document.formFilterAdd.comment);
+  }
+  else {
+ 	disableTextField(document.formFilterAdd.mac);
+	disableTextField(document.formFilterAdd.comment);
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("macFilterEnabled"); %> )
+		document.formFilterAdd.enabled.checked = true;
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">MAC地址过滤</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><td><font size=2>
+</font></td></tr>
+
+<tr><td><hr size=1 noshade align=top></td></tr>
+
+<form action=/boafrm/formFilter method=POST name="formFilterAdd">
+<tr><td><font size=2><b>
+	<input type="checkbox" name="enabled" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;开启MAC地址过滤</b><br>
+    </td>
+</tr>
+
+<tr><td>
+     <p><font size=2><b>MAC地址: </b> <input type="text" name="mac" size="15" maxlength="12">&nbsp;&nbsp;
+   	<b><font size=2>说明: </b> <input type="text" name="comment" size="16" maxlength="20"></font>
+     </p>
+     <p><input type="submit" value="应用" name="addFilterMac" onClick="return addClick()">&nbsp;&nbsp;
+        <input type="reset" value="重设" name="reset">
+        <input type="hidden" value="/chn/macfilter_chn.htm" name="submit-url">
+     </p>
+  </td><tr>
+  <script> updateState(); </script>
+</form>
+</table>
+
+<br>
+<form action=/boafrm/formFilter method=POST name="formFilterDel">
+  <table border="0" width=500>
+  <tr><font size=2><b>MAC地址过滤列表:</b></font></tr>
+  <% macFilterList(); %>
+  </table>
+  <br>
+  <input type="submit" value="删除已选中" name="deleteSelFilterMac" onClick="return deleteClick()">&nbsp;&nbsp;
+  <input type="submit" value="全部删除" name="deleteAllFilterMac" onClick="return deleteAllClick()">&nbsp;&nbsp;&nbsp;
+  <input type="reset" value="重设" name="reset">
+  <input type="hidden" value="/chn/macfilter_chn.htm" name="submit-url">
+ <script>
+	if ( <% getIndex("macFilterNum"); %> == 0 )
+		disableDelButton();
+ </script>
+</form>
+
+</blockquote>
+</body>
+</html>

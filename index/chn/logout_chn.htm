@@ -1,0 +1,150 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>Logout</title>
+<% language=javascript %>
+</head>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script>
+function clear_Logout()  
+{ 
+var temp="/boafrm/formLogout";
+var param="formLogout";
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         //alert("设置成功！");
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+}
+function clear_auth()  
+{  
+    try  
+    {  
+      if(navigator.userAgent.indexOf("MSIE")>0)         //IE浏览器实现注销功能   
+      {  
+        document.execCommand("ClearAuthenticationCache");  
+      }  
+      else if(isFirefox=navigator.userAgent.indexOf("Firefox")>0)       //Firefox实现注销功能   
+      {  
+         var xmlhttp = new XMLHttpRequest();  
+         xmlhttp.open("GET",".force_logout_offer_login_mozilla",true,"logout","logout");  
+         xmlhttp.send("");  
+         xmlhttp.abort();  
+      }  
+      else       //Google Chrome等浏览器实现注销功能   
+      {  
+         var xmlHttp = false;  
+         if(window.XMLHttpRequest)  
+         {  
+            xmlHttp = new XMLHttpRequest();  
+         }  
+         xmlHttp.open("GET", "./", false, "logout", "logout");    
+         xmlHttp.send(null);  
+         xmlHttp.abort();  
+      }  
+    }  
+    catch(e)  
+    {  
+        alert("there was an error");  
+        return false;  
+    }  
+    parent.window.location = parent.window.location;  
+} 
+function clearAuthData()
+{
+
+clear_Logout();
+	clear_auth();
+  if (document.all) 
+  {
+    // Internet Explorer: 'ClearAuthenticationCache' is only available in IE
+    document.execCommand('ClearAuthenticationCache');
+
+	} 
+//	else 
+//	{
+//    var xmlhttp;
+//    if (window.XMLHttpRequest) 
+//   	{
+//        xmlhttp = new XMLHttpRequest();
+//    } 
+//    else if (window.ActiveXObject) 
+//    {
+//        try {
+//            xmlhttp = new ActiveXObject('Msxml2.XMLHTTP');
+//        } catch (ex) {
+//            try {
+//                xmlhttp = new ActiveXObject('Microsoft.XMLHTTP');
+//            } catch (ex) {}
+//        }
+//    }
+//    if (xmlhttp.readyState < 4) 
+//    {
+//        xmlhttp.abort();
+//    }
+//    // Firefox/Mozilla: use anonymous "login" to trigger a "logout"
+//    xmlhttp.open('GET', '/?sling:authRequestLogin=1', false, 'anonymous', 'null');
+//    xmlhttp.send('');
+//}
+	//	document.logout.submit();
+				//window.parent.parent.parent.open('','_self');
+				window.parent.parent.parent.close_all();
+
+				//window.top.location = "/goform/logout";
+				//window.top.open('','_self');
+				//window.top.close();  
+
+		return true;
+
+}
+</script>
+<BODY >
+<blockquote>
+<h2><font color="#0000FF">退出</font></h2>
+<form action=/boafrm/formLogout method=POST name="logout">
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+  <tr><font size=2>
+    
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+  <tr>
+      <td ><font size=3><b>您是否要退出?</b></td>
+  </tr>
+  <tr height=3>
+  </tr>
+  <tr>
+      <td ><font size=2>
+        <input type="button" value="提交" name="logout" onclick="return clearAuthData()">
+      </td>
+  </tr>
+</table>
+<input type="hidden" value="/chn/status_chn.htm" name="return-url">
+</form>
+<blockquote>
+</body>
+</html>
+
+

@@ -1,0 +1,404 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../util_web_en.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var objTimeOut = "";
+var WebModemGetInfoNetifcfgParamIp_br0;
+
+function SetLabelText(Labelid,Text)
+{
+//obj_label= document.getElementById(Labid).innerHTML;
+//obj_label.innerHTML=Text;
+document.getElementById(Labelid).innerHTML=(Text);
+}
+
+
+function send_FormNetifcfg( param)
+{
+	var temp="/boafrm/formNetifcfgProcess";
+	var varajax=$.ajax({
+		type: "POST",
+		url: temp,
+		cache: false,
+		timeout : 4000, //超时时间设置，单位毫秒
+		data:param,
+		success: function(result) 
+		{
+			if (result != null && result.length !== 0)
+			{
+				openIntervals_Netifcfg();
+			}
+		},
+		complete: function(xmlHttpHeader, textStatus) 
+		{
+			xmlHttpHeader = null;
+	　　　　if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+	 　　　　　 varajax.abort();
+				param = "";
+				param +=document.getElementsByName("IPInput")[0].value;
+				param +=".";
+				param +=document.getElementsByName("IPInput")[1].value;
+				param +=".";
+				param +=document.getElementsByName("IPInput")[2].value;
+				param +=".";	
+				param +=document.getElementsByName("IPInput")[3].value;
+
+				closediv(DivCloseMode_None);
+	 			//alert("Try to go to new IP address"+param);
+				showdiv("Try to go to new IP address:"+param,DivCloseMode_None);
+				top.location.href="http://"+param;
+	　　　　}
+		}
+	});
+}
+
+function FormNetifcfg_Submit()
+{
+	var i;
+	for(i=0;i<4;i++)
+	{
+		if((document.getElementsByName("IPInput")[i].value =="" )
+			||(document.getElementsByName("IPInput")[i].value >255))
+		{
+			showdiv("IP address illegal",DivCloseMode_Alert);	
+			document.getElementsByName("IPInput")[i].focus();
+			return false;
+		}
+	}
+	param = "";
+    param +="FormNetifcfg_Param_Ip=";
+    param +=document.getElementsByName("IPInput")[0].value;
+    param +=".";
+    param +=document.getElementsByName("IPInput")[1].value;
+    param +=".";
+	param +=document.getElementsByName("IPInput")[2].value;
+    param +=".";	
+	param +=document.getElementsByName("IPInput")[3].value;
+	disableTextField(document.getElementById("FormNetifcfg_Button_Submit"));
+	//alert("FormNetifcfg_Submit:" + param);	
+	send_FormNetifcfg(param);
+	showdiv("Changing，Please Wait...",DivCloseMode_None);
+//	document.all.FormCfun.submit();
+}
+
+
+function send_FormNetifcfg_result_get()
+{ 
+	closediv(DivCloseMode_None);
+	showdiv("Query Changing Result...",DivCloseMode_None);
+	//alert("send_FormNetifcfg_result_get");
+	$.ajax({
+	url: "../lcModemManageNetifcfgProcess.asp",
+	cache: false,
+
+	success: function(result) 
+	{
+		closediv(DivCloseMode_None);
+		allmsg=result.split('*');
+		allmsg[0] = allmsg[0].replace(/[\r\n]/g,"");
+	  	allmsg[1] = allmsg[1].replace(/[\r\n]/g,"");
+		//alert("send_FormCfun_result_get:"+allmsg[0]);
+		enableTextField(document.getElementById("FormNetifcfg_Button_Submit"));
+		if(allmsg[0] == "success")
+		{
+			param = "";
+		    param +=document.getElementsByName("IPInput")[0].value;
+		    param +=".";
+		    param +=document.getElementsByName("IPInput")[1].value;
+		    param +=".";
+			param +=document.getElementsByName("IPInput")[2].value;
+		    param +=".";	
+			param +=document.getElementsByName("IPInput")[3].value;
+			showdiv("Update Success!Please use new address:"+param+"login",DivCloseMode_None);
+			closeIntervals();
+//			location.reload();
+			window.location.href="http://"+param;
+		}
+		else if(allmsg[0] == "failure")
+		{
+			closeIntervals();
+			showdiv("Update Failure!",DivCloseMode_Alert);
+		}
+		else
+		{
+			showdiv("Update Failure! Try again...",DivCloseMode_None);	
+			openIntervals_Netifcfg();
+		}
+	},	 
+
+	complete: function(xmlHttpHeader, textStatus) {
+	 	xmlHttpHeader = null;
+	}
+	});
+}
+function openIntervals_Netifcfg()
+{
+	if (objTimeOut == null || objTimeOut=="")
+	{
+		objTimeOut= setInterval('send_FormNetifcfg_result_get()',2000);
+	}
+}
+function GetRadioValueByName(RadioName)
+{
+	var item = null;
+	var obj = document.getElementsByName(RadioName);
+	for(var i=0;i<obj.length;i++)
+	{
+		if(obj[i].checked)
+		{
+			item =obj[i].value;
+		}
+	}
+	return item;
+}
+
+function isInteger(obj) {
+    return (parseInt(obj, 10) === obj)
+}
+
+function isNumber(name) //数值检测 
+{ 
+if(name.length == 0) 
+return false; 
+for(i = 0; i < name.length; i++) { 
+if(name.charAt(i) < "0" || name.charAt(i) > "9") 
+return false; 
+} 
+return true; 
+} 
+
+//关闭定时器
+function closeIntervals()
+{
+	clearInterval(objTimeOut);
+	objTimeOut=null;
+}
+
+function init()
+{
+	var TmpString="";
+
+	/*IP设置at^netifcfg= */
+	WebModemGetInfoNetifcfgParamIp_br0 = <%getInfo("ModemGetInfoNetifcfgParamIp_br0");%>; 
+	TmpString =""+WebModemGetInfoNetifcfgParamIp_br0;
+	SetLabelText("LB_FormNetifcfg_Param_Ip_Br0",TmpString);
+}
+</script>
+</head>
+<blockquote>
+<h3><font color="#0000FF">IP Address Change Management</font></h3>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<body  onLoad="setCodeValue();init()">
+
+ <table border="0" cellspacing="0" width="550">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+
+
+<style>
+div.IPDiv{background:#ffffff;width:120;font-size:9pt;text-align:center;border:1 solid;border-right:1 solid;border-bottom:1 solid; } input.IPInput{background:#ffffff;width:24;font-size:9pt;text-align:center;border-width:0;} 
+</style> 
+<script language="JScript" >
+// 获取光标位置 
+function getCursortPosition (textDom) 
+{  
+	var cursorPos = 0;  
+	if (document.selection) 
+	{   
+	// IE Support   
+	textDom.focus ();   
+	var selectRange = document.selection.createRange();   
+	selectRange.moveStart ('character', -textDom.value.length);   
+	cursorPos = selectRange.text.length;  
+	}
+	else if (textDom.selectionStart || textDom.selectionStart == '0') 
+	{   // Firefox support   
+	cursorPos = textDom.selectionStart;  
+	}  
+	return cursorPos; 
+} 	
+function IPKeydown(i)
+{
+	if((event.keyCode==39) )//右箭头
+	{
+		if(i<3)
+		{
+			if(event.srcElement.value.length==getCursortPosition(event.srcElement))
+			{
+				document.getElementsByName("IPInput")[i+1].focus();
+				//event.keyCode = 9;//TAB
+				return true;
+			}
+		}
+		return true;
+	}
+	if((event.keyCode==190)||(event.keyCode==110))//.
+	{
+	    //alert(event.srcElement.value);
+        window.event.keyCode = 0;  
+		event.returnValue =false;
+		document.getElementsByName("IPInput")[i+1].focus();
+		return true;    
+	}	
+	if(event.keyCode==37)//左箭头
+	{
+//		alert(getCursortPosition(event.srcElement))
+		if(i>0)
+		{
+			if(getCursortPosition(event.srcElement)==0)
+			{
+				document.getElementsByName("IPInput")[i-1].focus();
+				document.getElementsByName("IPInput")[i-1].value=document.getElementsByName("IPInput")[i-1].value;
+		    	event.returnValue =false;			
+		    	return true;
+	  		}
+		}
+		return true;
+	}
+	if(event.keyCode==8)//Backspace
+	{
+//		alert(getCursortPosition(event.srcElement))
+		if(getCursortPosition(event.srcElement)>0)
+		{
+			return true;
+		}
+		else
+		{
+			if(i>0)
+			{
+					document.getElementsByName("IPInput")[i-1].focus();
+					document.getElementsByName("IPInput")[i-1].value=document.getElementsByName("IPInput")[i-1].value;
+		    	return true;
+			}
+			else
+			{
+		    	event.returnValue =false;			
+		    	return true;
+			}
+		}
+	}	
+	if(event.keyCode==9)//TAB
+	{
+		return true;
+	}
+	if(event.keyCode==46)//DEL
+	{
+		return true;
+	}		
+	if(event.keyCode==13)//回车
+	{
+		event.keyCode=9;
+		return true;
+	}
+	if(event.keyCode==144)//NumLock
+	{
+		return true;
+	}
+	if(((event.keyCode>=48) && (event.keyCode<=57))
+		||((event.keyCode>=96) && (event.keyCode<=105)))/*0~9*//*小键盘0~9*/
+	{
+//			alert(event.keyCode);	
+		if(event.srcElement.value.length==3)
+		{
+			if(i<3)
+			{
+				document.getElementsByName("IPInput")[i+1].focus();
+				document.getElementsByName("IPInput")[i+1].value=document.getElementsByName("IPInput")[i+1].value;				
+			}
+		}
+		return true;
+	}
+	else
+	{
+//		alert(event.keyCode);
+		event.returnValue =false;			
+		return true;
+	}
+}
+//屏蔽F5和标点
+document.onkeydown = mykeydown;  
+function mykeydown() 
+{  
+    //alert("屏蔽");
+    if ((event.keyCode == 116)||(event.keyCode==190)||(event.keyCode==110)||((event.keyCode>=65)&&(event.keyCode<=90))||((event.keyCode>=186)&&(event.keyCode<=192))||((event.keyCode>=219)&&(event.keyCode<=222))) //屏蔽F5刷新键      
+    {  
+        window.event.keyCode = 0;  
+        return false;  
+    }
+    if ((event.keyCode == 106)||(event.keyCode==190)||(event.keyCode==107)||(event.keyCode==109)||(event.keyCode==110)||(event.keyCode==111)) //屏蔽    
+    {  
+        window.event.keyCode = 0;  
+        return false;  
+    }
+}   
+</script>
+<form id="FormNetifcfg" name="FormNetifcfg">
+  <table>
+	<tr> 
+      <td colspan=3 ><font size="2" weight="bold" ><b>IP Setting:</b></font></td>
+    </tr>
+    <tr> 
+	<td colspan=3><font size="2" >Now IP Address:[<label id="LB_FormNetifcfg_Param_Ip_Br0">LB_FormNetifcfg_Param_Ip_Br0</label>]</font></td>   
+    </tr>
+    <tr> 	
+	<td ><font size="2" weight="bold" ><b>New IP Address:</b></font></td>
+      <td> 
+	<script language="JScript">
+	var IPlikeInputStr=[]; 
+	for(var i=0;i<4;i++)
+	 IPlikeInputStr[i]="<input class=IPInput name=IPInput type=text size=3 maxlength=3 onpaste=\"return false;\"  onkeydown='IPKeydown("+i+")';>"+(i==3?"":"."); 
+	document.write("<div class=IPDiv>"+IPlikeInputStr.join("")+"</div>"); 
+	</script>      		
+      </td>	
+      	<td ><input type="button" value="OK" id="FormNetifcfg_Button_Submit"  onClick="FormNetifcfg_Submit();">   </td>
+    </tr>
+  </table>
+
+</form>
+
+</table>
+
+
+</body>
+</blockquote>
+</html>
+
+

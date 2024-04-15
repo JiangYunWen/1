@@ -1,0 +1,1252 @@
+
+<html>
+<head>
+<title></title>
+<!-- eavoo add begin -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<!-- eavoo add end -->
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--link rel="stylesheet" href="style/normal_ws.css" type="text/css"-->
+<script type="text/javascript" src="../res/sychip.js"></script>
+<!-- eavoo add begin -->
+<!--[if lt IE 9]>
+	<script src="p/js/html5.js"></script>
+	<script src="p/js/css3-mediaqueries.js"></script>
+<![endif]-->
+<script language="JavaScript" src="../res/jquery.js"></script>
+<!--link rel="stylesheet" href="p/css/iframe.css" type="text/css"-->
+<!-- eavoo add end -->
+
+<!--script type="text/javascript" src="res/ui.js"></script-->
+<!--script type="text/javascript" src="res/sms.js" charset="gb2312"></script-->
+<script type="text/javascript" >
+
+	
+//*******************************************************
+//
+//初始化函数
+//*******************************************************
+var debug="0";
+var smsdel_flag=0;
+var smsBoxValue;
+var smsBoxList;
+var smsListUpdateTimer = null;
+var smsOldListLen = -1;
+
+var enableNotify = false;
+var enableclosewait = 0;
+var gSmsStatusIconArray_inner = null;
+
+var unreadpng="";
+
+var readpng="";
+var DataField_inner = {
+	STATUS:			0,
+	UID:					1,
+	NUMBER:		2,
+	MESSAGE:		3,
+	DATETIME:		4,
+	STORAGE:		5,
+	COUNT:			6
+};
+var DataFieldName_inner = {
+	STATUS:			"sta",
+	UID:					"uid",
+	NUMBER:		"num",
+	MESSAGE:		"msg",
+	DATETIME:		"time",
+	STORAGE:		"loc"
+};
+var ListColumn_inner = {
+	CHECKBOX: 	0,
+	STATUS:			1,			// READ / UNREAD, SHOW ICON
+	NUMBER:		2,
+	MESSAGE:		3,
+	DATETIME:		4,
+	STORAGE:		5,			// SIM / PHONE, SHOW ICON
+	COUNT:			6
+};
+var SmsStatusIcon_inner = {
+	ICON_OVERRIDE:	-1,
+	ICON_DEFAULT:	-2
+};
+function sms_list_init()
+{
+
+}
+function StatusIcon_inner(_STATUS_VALUE, _ICON_FILE)
+{
+	this._STATUS_VALUE = _STATUS_VALUE;
+	this._ICON_FILE = _ICON_FILE;
+}
+function sms_list_init_async()
+{
+
+}
+
+function clearNewSmsCount()
+{
+	var param = "lc_new_sms_count=";
+	$.ajax({
+		url: "/goform/formSyWebCfg?oem_cfg=changed&action=Apply&" + param,
+		cache: false,
+
+		success: function(result) {
+			// do nothing
+		},
+		
+		error: function(jqXHR, textStatus, errorThrown) {
+		 	smsOldListLen = -1;
+		},
+
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		}
+	});
+}
+
+function onSmsListInitSuccess(_smsList, _smsValue, _smsCount)
+{
+
+}
+
+function onSmsListInitError(error)
+{
+
+}
+
+
+
+function reload_sms_list()
+{
+
+
+var parm1="/chn/sms_refrash_draftbox.asp";
+
+	$.ajax({
+		url: parm1,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+
+
+			}
+		},
+		 
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+//smsInitAsync();
+setTimeout("smsInitAsync()",1000);
+if(smsdel_flag==0)
+{
+ShowModalDialog_info("/chn/info_sms.htm","");
+}else
+{
+
+ShowModalDialog_info("/chn/info_del_sms.htm","");
+}
+}
+
+function reload_sms_list_do()
+{
+
+}
+function smsAddStatusIcon_inner(statusVal, iconFile)
+{
+	if (gSmsStatusIconArray_inner == null)
+		gSmsStatusIconArray_inner = new Array;
+
+	gSmsStatusIconArray_inner[gSmsStatusIconArray_inner.length] = new StatusIcon_inner(statusVal, iconFile);
+}
+var plmn_list_content = "";
+
+var time;
+var lcweb_sms_count=0;
+function smsInitAsync()
+{
+var temp="../chn/sms_draftbox_prepare.asp";
+	$.ajax({
+		url: temp,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+				var allmsg = null;
+				var rspTxt = result;
+				rspTxt.replace(/\s/gm, "").replace(/\r\n/gm, "");
+				allmsg = rspTxt.split('*');
+				
+				//alert(allmsg);
+				if(allmsg==1)   //0  初始化  1已经返回结果 2正在搜索
+				{
+
+				    clearTimeout(time);
+				   
+				  // plmnListcontentAsync();
+//增加请求xml  去掉遮罩
+//xmlcontentAsync();
+	    delayloadxml();    
+	         
+				    
+				}else if(allmsg==0)
+				{
+				
+				    //glanShowWaitAnimation("search_wait");
+				   // SelectAllplmn();
+				    //disableTextField(document.oper_scan_form.plmnconnectbutton);
+			      //disableTextField(document.oper_scan_form.plmnSelectAllbutton);
+			      // document.getElementById("plmn_button").disabled=true;
+			      //document.getElementById("lc_plmn_mode").disabled=true;
+				}
+				
+				lcweb_sms_count++;
+				if(lcweb_sms_count>100)
+				{
+
+	        alert("短信内容准备时间过长");
+				}
+
+			}
+		},
+
+		error: function(jqXHR, textStatus, errorThrown) {
+
+		},
+		 
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+	
+	 time=setTimeout("smsInitAsync()",1000)
+}
+function delayloadxml()
+{
+setTimeout(function() {
+xmlcontentAsync();
+},500);
+
+}
+function xmlcontentAsync()
+{
+var temp="../chn/sms_xml_draftbox_from_app.asp";
+	$.ajax({
+		url: temp,
+		cache: false,
+		dataType: "xml",
+
+		success: function(result) {
+		 	if (1)
+			{
+
+
+if(debug==1)
+{
+console.warn( "xmlcontentAsync()");
+}
+smsListParseXml_inner(result,temp);
+			}
+		},
+
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+}
+function smsListParseXml_inner(xmlDoc,xmlFile)
+{
+	if (xmlDoc == null)
+		return;
+
+	var smsList = new Array;
+	var smsValue = new Array;
+	
+	var members = xmlDoc.getElementsByTagName("sms");
+	var maxRes = members.length;
+	
+	for(i=0;i<maxRes;i++)
+	{
+		smsList[i]=new Array(DataField_inner.COUNT);
+	}
+	
+	for(i=0; i<maxRes; i++)
+	{
+		smsValue[i]=new Array(2);
+	}
+	
+	for(i=0; i<maxRes; i++)
+	{
+		var status = members[i].getElementsByTagName(DataFieldName_inner.STATUS);
+		var id = members[i].getElementsByTagName(DataFieldName_inner.UID);
+		var number = members[i].getElementsByTagName(DataFieldName_inner.NUMBER);
+		var mesage = members[i].getElementsByTagName(DataFieldName_inner.MESSAGE);
+		var sms_time = members[i].getElementsByTagName(DataFieldName_inner.DATETIME);
+		var storage = members[i].getElementsByTagName(DataFieldName_inner.STORAGE);
+		
+		smsValue[i][0]=smsList[i][DataField_inner.STATUS]=status[0].firstChild.nodeValue;
+		smsValue[i][1]=smsList[i][DataField_inner.UID]=id[0].firstChild.nodeValue;
+	
+var gl_IE_ver=0;		
+if(navigator.appName == "Microsoft Internet Explorer"){ 
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+
+								gl_IE_ver=9;
+                 
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+								gl_IE_ver=11;
+                
+              }else
+              {
+                // alert("ie10"); 
+								gl_IE_ver=10;
+                 
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+			gl_IE_ver=8;
+         
+      }
+		}else
+    {
+
+     		gl_IE_ver=99;//not ie
+    }
+
+if(gl_IE_ver=10||gl_IE_ver>90)
+{
+			if(number[0].firstChild==null){
+				smsList[i][DataField_inner.NUMBER]="";
+			}else{
+				smsList[i][DataField_inner.NUMBER]=number[0].firstChild.nodeValue;
+			}
+			
+			if(mesage[0].firstChild==null){
+				smsList[i][DataField_inner.MESSAGE]="";
+			}else{
+				smsList[i][DataField_inner.MESSAGE]=mesage[0].firstChild.nodeValue;
+			}
+
+}else
+{
+			if(number[0].text==""){
+				smsList[i][DataField_inner.NUMBER]="";
+			}else{
+				smsList[i][DataField_inner.NUMBER]=number[0].firstChild.nodeValue;
+			}
+			
+			if(mesage[0].text==""){
+				smsList[i][DataField_inner.MESSAGE]="";
+			}else{
+				smsList[i][DataField_inner.MESSAGE]=mesage[0].firstChild.nodeValue;
+			}
+
+}
+
+//console.warn(mesage[0].firstChild.nodeValue);
+
+		smsList[i][DataField_inner.DATETIME] = sms_time[0].firstChild.nodeValue;
+		smsList[i][DataField_inner.STORAGE] = storage[0].firstChild.nodeValue;
+	}
+	
+	gSmsValueArray = smsValue;
+	
+
+	// Xml parse OK, proceed to next step: Generate the html list
+	smsListPrepareTableFromXml_inner(smsList, smsValue, maxRes,xmlFile);
+}
+function smsListCreateRow_inner(tableName, postion)
+{
+	var row_tmp = document.getElementById(tableName).insertRow(postion);
+	
+	// Set event handlers
+	smsListRowSetEventHandlers_inner(row_tmp);
+	
+	// Create cells
+	smsListRowPopulateCells_inner(row_tmp);
+	
+	return row_tmp;
+}
+function smsListRowClearCells_inner(row_item)
+{
+	while (row_item.cells.length > 0)
+	{
+		row_item.deleteCell(0);
+	}
+}
+function smsListRowPopulateCells_inner(row_item)
+{
+	// checkbox
+	var cell_tmp = document.createElement("td");
+	var e = document.createElement("input");
+	e.type = "checkbox";
+	e.name = "selectcheckbox";
+	e.id="SelectCheckbox";
+	e.onclick = checkboxOnClick_inner;
+	cell_tmp.appendChild(e);
+	cell_tmp.align = "center";
+	row_item.appendChild(cell_tmp);
+
+	// status
+	cell_tmp = document.createElement("td");
+	cell_tmp.align = "center";
+	cell_tmp.setAttribute("width","35");
+	var img_status = document.createElement("img");
+	img_status.setAttribute("src", "");
+	cell_tmp.appendChild(img_status);
+	cell_tmp.align = "center";
+	//cell_tmp.style.display="none";
+	row_item.appendChild(cell_tmp);
+
+	// phone Number
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","100");
+	row_item.appendChild(cell_tmp);
+
+	// msg
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","360");
+	row_item.appendChild(cell_tmp);
+
+	// date
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","110");
+	row_item.appendChild(cell_tmp);
+	
+	// storage
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","25");
+	var img_storage= document.createElement("img");
+	img_storage.setAttribute("src", "");
+	cell_tmp.appendChild(img_storage);
+	cell_tmp.align = "center";
+	row_item.appendChild(cell_tmp);
+}
+function checkboxOnClick_inner()
+{
+	smsSelBtnStateClear_inner(document.getElementById("select_sms"));
+}
+function smsGetCheckedItems_inner()
+{
+	var listItems;
+	if (navigator.appName == "Microsoft Internet Explorer")
+	{ 
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+                 listItems = document.getElementsByName("SelectCheckbox");
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+                listItems = document.getElementsByName("SelectCheckbox");
+              }else
+              {
+                // alert("ie10"); 
+                 listItems = document.getElementsByName("selectcheckbox");
+                // console.warn( listItems.length );
+
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+         listItems = document.getElementsByName("SelectCheckbox");
+      }
+	}
+	else
+	{
+		listItems = document.getElementsByName("selectcheckbox");
+	}
+	return listItems;
+}
+function smsSelBtnStateClear_inner(btn)
+{
+	var checkedCnt = 0;
+	var checkbox = smsGetCheckedItems_inner();
+	for (i=0; i<checkbox.length; i++){
+		if (checkbox[i].checked == true)
+			checkedCnt++;
+	}
+	if (checkedCnt == 0)
+		btn.value = " 全选 ";
+	else if (checkedCnt == checkbox.length)
+		btn.value = " 全不选 ";
+}
+function smsListRowPopulateCells_inner_123(row_item)
+{
+	// checkbox
+	var cell_tmp = document.createElement("td");
+	var e = document.createElement("input");
+	e.type = "checkbox";
+	e.name = "selectcheckbox";
+	e.id="SelectCheckbox";
+	e.onclick = checkboxOnClick_inner;
+	cell_tmp.appendChild(e);
+	cell_tmp.align = "center";
+	row_item.appendChild(cell_tmp);
+
+	// status
+	cell_tmp = document.createElement("td");
+	cell_tmp.align = "center";
+	cell_tmp.setAttribute("width","35");
+	var img_status = document.createElement("img");
+	img_status.setAttribute("src", "");
+	cell_tmp.appendChild(img_status);
+	cell_tmp.align = "center";
+	//cell_tmp.style.display="none";
+	row_item.appendChild(cell_tmp);
+
+	// phone Number
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","100");
+	row_item.appendChild(cell_tmp);
+
+	// msg
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","360");
+	row_item.appendChild(cell_tmp);
+
+	// date
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","110");
+	row_item.appendChild(cell_tmp);
+	
+	// storage
+	cell_tmp = document.createElement("td");
+	cell_tmp.setAttribute("width","25");
+	var img_storage= document.createElement("img");
+	img_storage.setAttribute("src", "");
+	cell_tmp.appendChild(img_storage);
+	cell_tmp.align = "center";
+	row_item.appendChild(cell_tmp);
+}
+function smsListRowSetEventHandlers_inner(row_item)
+{
+	row_item.onclick = function s1()
+	{
+		var sms_list = document.getElementById("sms_inbox_table");
+		if (sms_list != null)
+		{
+			var obj = event.srcElement;
+			if (obj.tagName.toLowerCase() == "td")
+			{
+				var tr = obj.parentNode;
+				for (var i = 0; i < sms_list.rows.length; i++)
+				{
+					sms_list.rows[i].style.backgroundColor = "";
+					sms_list.rows[i].tag = false;
+				}
+				tr.style.backgroundColor = "#CCCCFF";
+				tr.tag = true;
+			}
+		}
+	};
+	
+	row_item.onmouseover=function s2()
+	{
+		var obj = event.srcElement;
+		if (obj.tagName.toLowerCase() == "td")
+		{
+			var tr = obj.parentNode;
+			if (!tr.tag)
+				tr.style.backgroundColor = "#E1E9FD";
+		}
+	};
+	
+	row_item.onmouseout=function s3()
+	{
+		var obj = event.srcElement;
+		if (obj.tagName.toLowerCase() == "td")
+		{
+			var tr = obj.parentNode;
+			if (!tr.tag)
+				tr.style.backgroundColor = "";
+		}
+	};
+	
+	row_item.ondblclick=function s4()
+	{
+		var rowid = getRowNo_inner(this);
+		var colRows = document.getElementById("sms_inbox_table").rows;
+		var item;
+		if(navigator.appName == "Microsoft Internet Explorer"){ 
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+                 item = document.getElementsByName("SelectCheckbox");
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+                item = document.getElementsByName("SelectCheckbox");
+              }else
+              {
+                // alert("ie10"); 
+                 item = document.getElementsByName("selectcheckbox");
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+         item = document.getElementsByName("SelectCheckbox");
+      }
+		}else{
+			item = document.getElementsByName("selectcheckbox");
+		}
+
+if(1)
+{
+   var myDate = new Date();
+   time_read_or_unread=myDate.getTime();
+
+
+var cell = document.getElementById("total_count").innerHTML;
+//cell.innerHTML
+//console.warn( cell.innerHTML);
+
+//var cell ="共有1000条短信，未读99条";
+//cell=cell.search(/未读/));
+var place_in=cell.search(/未读/);
+
+var part_one=cell.substring(0,place_in+2);
+
+var weiducount=parseInt(cell.substring(place_in+2,cell.length-1),10)-1;
+if(weiducount>=0)
+{
+var fin=part_one+weiducount+"条";
+
+document.getElementById("total_count").innerHTML=fin;
+}
+
+
+var row_tmp=document.getElementById("sms_inbox_table").rows[rowid];
+
+var isIE =!!window.ActiveXObject;
+var isIE6 =isIE&&!window.XMLHttpRequest;
+var isIE8 =isIE&&!!document.documentMode;
+var isIE7 = isIE&&!isIE6&&!isIE8;
+var png_flag=0;
+
+var readpng="data:image/png;base64,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";
+
+
+var draftpng="data:image/png;base64,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";
+var  pngtmp="<img src='";
+pngtmp=pngtmp+draftpng+"'>";
+
+
+
+
+}
+
+
+			document.all.lc_sms_msg_id.value = gSmsValueArray[rowid][1];
+		document.all.lc_sms_phone_number.value = colRows[rowid].cells[DataField_inner.NUMBER].innerText;
+		document.all.lc_sms_message.value = convertHtmlToText_inner(colRows[rowid].cells[DataField_inner.MESSAGE].innerHTML);
+
+	share.data("dialogArgs", window);
+ShowModalDialog("/chn/sms_draft_sub.htm","");
+	};
+}
+function convertHtmlToText_inner(stringIn)
+{
+	return stringIn.replace(/\&nbsp\; {0,}/gmi, " ").replace(/\<br\s*\/{0,}\s*\>/gmi, "\r\n")
+		.replace(/\&lt\;/gmi, "<").replace(/\&gt\;/gmi, ">")
+		.replace(/\&amp\;/gmi, "&").replace(/\&quot\;/gmi, "\"");
+}
+function getRowNo_inner(obj){
+	var trObj = getRowObj_inner(obj); 
+	var trArr = trObj.parentNode.children;
+	for(var trNo= 0; trNo < trArr.length; trNo++){
+		if(trObj == trObj.parentNode.children[trNo]){
+			return trNo;
+		}
+	}
+}
+function getRowObj_inner(obj)
+{
+   var i = 0;
+   while(obj.tagName.toLowerCase() != "tr"){
+    obj = obj.parentNode;
+    if(obj.tagName.toLowerCase() == "tbody")return null;
+   }
+   return obj;
+}
+function smsListPrepareTableFromXml_inner(smsList, smsValue, smsCount,xmlFile)
+{
+	var smsCount = smsCount;
+	if (smsCount < 0)
+	{
+		gErrorString = "读取短信列表失败！";
+		//gSmsBox.onError();
+   alert(gErrorString);
+		return 0;
+	}
+	
+	//if (isDeletingSms)
+	//{
+		//gSmsBox.onError();
+		//return;
+	//}
+	
+	var list_idx = 0;
+	var list_table = document.getElementById("sms_inbox_table");
+	var exist_rows = list_table.rows.length;
+	
+	for (list_idx = 0; list_idx < (exist_rows - smsCount); list_idx++)
+	{
+		       list_table.deleteRow(0);
+		       	if(debug==1)
+			{
+				console.warn( "480linegdelteingexist:"+share.data("gdelteingexist")+"gnewsmsexist:"+share.data("gnewsmsexist") +"exist_rows:"+exist_rows+"smsCount:"+smsCount+"list_idx:"+list_idx);
+			}
+
+	}
+	
+
+
+	
+	for (list_idx = 0; list_idx < smsCount; list_idx++) 
+	{
+		var row_tmp = null;
+		
+		if (list_idx < exist_rows)
+			row_tmp = list_table.rows[list_idx];
+		else
+			row_tmp = smsListCreateRow_inner("sms_inbox_table", -1);
+		
+		if (row_tmp != null && row_tmp.cells.length < ListColumn_inner.COUNT)
+		{
+			smsListRowClearCells_inner(row_tmp);
+			smsListRowPopulateCells_inner(row_tmp);
+			smsListRowSetEventHandlers_inner(row_tmp);
+		}
+		
+		smsListUpdateRow_inner(row_tmp, smsList[list_idx]);
+	}
+
+	gSmsListUpdated = true;
+	
+	// Notify UI
+	//if (gSmsBox.onSuccess != null)
+		//gSmsBox.onSuccess(smsList, smsValue, smsCount);
+ sms_total_count_init();
+smsdel_flag=0;
+window.top.tb_remove();
+}
+function sms_total_count_init()
+{
+	//if (gSmsValueArray != null)
+	//{
+
+		
+		set_list_status_text("共有" + gSmsValueArray.length + "条短信");
+	//}
+}
+function smsListUpdateRow_inner(row_item, sms_item)
+{
+	if (row_item == null || (row_item != null && row_item.cells.length < ListColumn_inner.COUNT))
+	{
+		alert("无效的行对象！");
+		return;
+	}
+	
+	// checkbox
+	var checkbox = row_item.cells[ListColumn_inner.CHECKBOX].childNodes[0];
+	checkbox.checked = false;
+	//row_item.cells[0].getElementById("SelectCheckbox").value = sms_item[1];
+
+	// status
+	var img_status = row_item.cells[ListColumn_inner.STATUS].childNodes[0];
+	for (i = 0; i < gSmsStatusIconArray_inner.length; i++)
+	{
+		// 检查短信状态，并相应更改图标
+		// 若设置的状态值为SmsStatusIcon.ICON_OVERRIDE (-1)，则强制使用对应的图标
+		if ((gSmsStatusIconArray_inner[i]._STATUS_VALUE == SmsStatusIcon_inner.ICON_OVERRIDE) || 
+				(sms_item[DataField_inner.STATUS] == gSmsStatusIconArray_inner[i]._STATUS_VALUE))
+		{
+			img_status.setAttribute("src", gSmsStatusIconArray_inner[i]._ICON_FILE);
+			break;
+		}
+		else if (gSmsStatusIconArray_inner[i]._STATUS_VALUE == SmsStatusIcon_inner.ICON_DEFAULT)
+		{
+			img_status.setAttribute("src", gSmsStatusIconArray_inner[i]._ICON_FILE);
+		}
+	}
+
+	// phone Number
+	row_item.cells[ListColumn_inner.NUMBER].innerText = sms_item[DataField_inner.NUMBER];
+
+	// msg
+	row_item.cells[ListColumn_inner.MESSAGE].innerHTML = convertTextToHtml_inner(sms_item[DataField_inner.MESSAGE]);
+	//row_item.cells[ListColumn_inner.MESSAGE].innerText = sms_item[DataField_inner.MESSAGE];
+
+	// date
+	row_item.cells[ListColumn_inner.DATETIME].innerText = sms_item[DataField_inner.DATETIME];
+	
+	// storage
+	var img_storage = row_item.cells[ListColumn_inner.STORAGE].childNodes[0];
+	img_storage.setAttribute("src", (sms_item[DataField_inner.STORAGE] == 2) ? "../graphics/phone.png" : "../graphics/sim1.png");
+
+}
+function convertTextToHtml_inner(stringIn)
+{
+	// 注意替换空格时，要在&nbsp;后加一个空格，避免连续&nbsp;无法换行
+	//return stringIn.replace(/ /gm, "&nbsp; ").replace(/(\r\n)|(\n)|(\r)/gm, "<br/>");
+stringIn=stringIn.replace( /(\<|\>|\&|\'|\")/g,
+                          function($0, $1)
+                          {
+                              return{
+                                  "<" : "&lt;"
+                                , ">" : "&gt;"
+                                , "&" : "&amp;"
+                                , "'" : "&#39;"
+                                , "\"": "&quot;"        
+                              }[$1];
+                          }
+                         );
+
+return stringIn.replace(/ /gm, "&nbsp; ").replace(/(\r\n)|(\n)|(\r)/gm, "<br/>");
+
+}
+function init()
+{
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+//alert(allmsg[0]+"   "+allmsg[1]+"   "+allmsg[2]+"   "+allmsg[3]+"   "+allmsg[4]+"   ");
+
+if(allmsg[5]=="0")
+{
+
+document.getElementById("refresh_list").disabled=true;
+document.getElementById("new_sms").disabled=true;
+document.getElementById("del_sms").disabled=true;
+document.getElementById("select_sms").disabled=true;
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">没有(U)SIM卡或(U)SIM卡无效时不能操作短信,请检查(U)SIM卡.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+
+return 0;
+}else if(allmsg[5]=="2")
+{
+document.getElementById("refresh_list").disabled=true;
+document.getElementById("new_sms").disabled=true;
+document.getElementById("del_sms").disabled=true;
+document.getElementById("select_sms").disabled=true;
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PIN码开启时不能操作短信,请进入移动网络->(U)SIM卡页面输入PIN码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}else if(allmsg[5]=="3")
+{
+
+document.getElementById("refresh_list").disabled=true;
+document.getElementById("new_sms").disabled=true;
+document.getElementById("del_sms").disabled=true;
+document.getElementById("select_sms").disabled=true;
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PUK码开启时不能操作短信,请进入移动网络->(U)SIM卡页面输入PUK码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}
+
+
+smsAddStatusIcon_inner(SmsStatusIcon_inner.ICON_OVERRIDE, "../graphics/sms_draft.png");
+var test="<% getsmsInfo("draftbox")%>";
+//显示遮罩
+//smsInitAsync();
+ShowModalDialog_info("/chn/info_sms.htm","");
+setTimeout("smsInitAsync()",1000);
+}
+function sms_check_auto_del_runing()
+{
+
+
+
+}
+function set_list_status_text(status_text)
+{
+	var cell = document.getElementById("total_count");
+	if (cell != null)
+	{
+		cell.innerHTML = status_text;
+	}
+}
+
+function delete_sms()
+{
+
+
+}
+
+function new_sms_click()
+{
+ShowModalDialog("/chn/sms_sub_new.htm","");
+}
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=300&amp;width=430&amp;modal=true";
+//alert("123");
+	window.top.tb_show("", url, null);
+}
+function ShowModalDialog_info(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+//alert("123");
+	window.top.tb_show("", url, null);
+}
+function smsToggleSelectAll_inner(btn)
+{
+	var selectDoc = smsGetCheckedItems_inner();
+
+	if (btn.value == " 全选 " || btn.value == null){
+		smsCheckAll_inner(selectDoc);
+		btn.value = " 全不选 ";
+	}else{
+		smsUncheckAll_inner(selectDoc);
+		btn.value = " 全选 ";
+	}
+	
+	btn.disabled = true;
+	setTimeout(function() { btn.disabled = false; }, 500);
+}
+function smsCheckAll_inner(checkbox)
+{
+	if (checkbox == null)
+		return false;
+	
+	for (i=0;i<checkbox.length;i++){
+		if (checkbox[i].checked == false)
+			checkbox[i].checked = true;
+	}
+}
+
+function smsUncheckAll_inner(checkbox)
+{
+	if (checkbox == null)
+		return false;
+
+	for (i=0; i<checkbox.length; i++){
+		if (checkbox[i].checked == true)
+			checkbox[i].checked = false;
+	}
+}
+function smsDelete_inner()
+{
+	//if (isDeletingSms)
+	//	return;
+		
+	selCount = 0;
+	
+	listItems = smsGetCheckedItems_inner();
+	if (listItems != null)
+	{
+		for (i=0; i<listItems.length; i++)
+		{
+			if (listItems[i].checked == true)
+				selCount++;
+		}
+		
+		if (selCount > 0)
+		{
+			var confirmed = window.confirm("是否删除选择的短信?", "系统提示");
+			if (confirmed)
+				smsStartDeleting_inner();
+		}
+		else
+		{
+			alert("请先选择要删除的短信!");
+		}
+	}
+}
+function smsStartDeleting_inner()
+{
+	delIndex = 0;
+	delCount = 0;
+	listIndex = 0;
+
+smsdel_flag=1;
+	
+	// 开启定时器
+	timerDeleting = setTimeout('smsDoDelete_inner();', 10);
+	if (timerDeleting)
+	{
+		isDeletingSms = true;
+		//showWaitDlg("", "开始删除短信", null);
+		//smsdelShowModalDialog("sms_delteing.html", window);
+	}
+}
+
+function smsDoDelete_inner()
+{
+	while (listItems[listIndex].checked != true)
+	{
+		listIndex++;
+		if (listIndex >= listItems.length)
+		{
+			smsFinishDeleting_inner();
+			return;
+		}
+	}
+
+	delIndex++;
+	//changeWaitDlgMsg("正在删除短信 (" + delIndex + "/" + selCount + ")，请稍候...");
+
+
+
+var param = "";
+	param = "";
+	param +="lc_sms_id=";
+	param += gSmsValueArray[listIndex][1];
+var temp="/boafrm/formsms_del_sms_on_phone";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+
+	  		if (result.toLowerCase().indexOf("success") >= 0)
+{
+delCount++;
+}
+				
+			
+			listIndex++;
+			smsCheckFinishedDeleting_inner();
+
+
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+
+
+	});
+}
+function smsCheckFinishedDeleting_inner()
+{
+	if (listIndex >= listItems.length || delCount == selCount)
+	{
+		// 已到达末尾
+		smsFinishDeleting_inner();
+	}
+	else
+	{
+		// 继续定时器
+		timerDeleting = setTimeout('smsDoDelete_inner();', 10);
+		if (timerDeleting == null)
+		{
+			alert("定时器创建失败！");
+			smsFinishDeleting_inner();
+		}
+	}
+}
+function smsFinishDeleting_inner()
+{
+	//closeWaitDlg();
+	//smsHideModalDialog();
+	
+	isDeletingSms = false;
+
+	if (timerDeleting != null)
+	{
+		clearTimeout(timerDeleting);
+		timerDeleting = null;
+	}
+	if(debug==1)
+	{
+	console.warn( "smsFinishDeleting" );
+  }
+	setTimeout('smsShowDeleteResult_inner();', 50);
+}
+function smsShowDeleteResult_inner()
+{
+	if (delCount > 0)
+	{
+		var result = "成功删除" + delCount + "条";
+		if (selCount > delCount)
+		{
+				result += "\n剩余" + (selCount - delCount) + "条未能删除，请重试";
+			 // smsHideModalDialog();
+		    
+		}
+        
+
+           // smsdelShowModalDialog("sms_refresh.html", window);
+reload_sms_list();
+            delayalert_inner(result);
+           
+  
+	 
+	   if(debug==1)
+	   {  
+	      console.warn( "delCount:"+delCount+";selCount:"+selCount );
+	   }
+	}
+	else
+		alert("删除短信失败");
+
+
+}
+function delayalert_inner(result)
+{
+setTimeout(function() {
+alert(result);
+},2000);
+
+}
+</script>
+<style type="text/css">
+#tab_in {
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	color:#88899a;
+}
+#total_count {
+	font-family:微软雅黑;
+	font-size:14px;
+	font-weight:normal;
+	color:#88899a;
+}
+#tab_in tr{
+
+}
+</style>
+
+</head>
+
+<body onLoad="init()">
+<blockquote>
+
+<h2><font color="#0000FF">草稿箱</font></h2>
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+			<table width="800px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="left"><span id="sim_stat_warring" style="display:none" width="100%" align="left"></span></td></tr>
+			</table>
+
+<form name="inbox_form">
+
+<input type="hidden" id="lc_sms_index"/>
+<input type="hidden" id="lc_sms_msg_id"/>
+<input type="hidden" id="lc_sms_phone_number"/>
+<input type="hidden" id="lc_sms_message"/>
+
+<div id="container" style="overflow-y:auto;height:375px;width:100%;">
+
+
+	<TABLE cellSpacing=0 cellPadding=0 width="600px" border=1 bordercolor="#dddddd"  >
+	<tr>
+		<TD colspan=6 noWrap >
+			<TABLE border=0 cellSpacing=0 cellPadding=0 width="100%" >
+				 <TR>
+				 	<td id="refresh_sms_list" align="left" width="80">
+				 		<INPUT id="refresh_list" onclick="reload_sms_list();" name=" Refresh" value=" 刷新 " type="button"> 
+				 	</td>
+				 	<td id="refresh_wait" align="left" width="20"></td>
+				 	<td id="total_count" align="center"></td>
+					<TD class=listViewPaginationTdS1 noWrap align="right">
+						<INPUT id="new_sms" onclick="new_sms_click();" name=" New " value=" 新建 " type="button"> 
+						<INPUT id="del_sms" onclick="smsDelete_inner();" name=" Delete " value=" 删除 " type="button"> 
+						<INPUT id="select_sms" onclick="smsToggleSelectAll_inner(this);" name=" SelectAll " value=" 全选 " type=button>
+					</TD>
+				 </TR>
+			</TABLE> 
+		</TD>
+	</tr>
+</TABLE> 
+
+
+<table id="tab_in" cellSpacing=0 cellPadding=0 width="600px" border=1 bordercolor="#dddddd" style="table-layout:fixed;border-collapse:collapse;word-wrap:break-word;word-break:break-all;" >
+
+
+
+	<tr>
+		<td align=center id="forwardCurrentVirtualSrvNo" width="4%" class="head1_top" bgcolor="#CCCCCC" ></td>
+		<td align=center id="forwardCurrentVirtualSrvNo" width="5%" class="head1_top" bgcolor="#CCCCCC" ></td>
+		<td align=center id="forwardCurrentVirtualSrvNo" width="16%" class="head1_top" bgcolor="#CCCCCC" >电话号码</td>
+		<td align=center id="forwardCurrentVirtualSrvIP" width="55%" class="head2_top" bgcolor="#CCCCCC" > 信息</td>
+		<td align=center id="forwardCurrentVirtualSrvPort" width="16%" class="head2_top" bgcolor="#CCCCCC" >时间</td>
+		<td align=center id="forwardCurrentVirtualSrvPort" width="4%" class="head2_top" bgcolor="#CCCCCC" ></td>
+	</tr>
+
+	<tbody id="sms_inbox_table">
+	</tbody>
+
+</table>
+</div>
+
+<tr>
+  <td align="right"><input id='save_all' type="hidden" name="save_all1" /></td>
+  <td align="right"><span id='del_all'><input type="hidden" name="del_all" /></span></td>
+  <td align="right"><span id='ok_all'><input type="hidden" name="ok_all" /></span></td>
+</tr>
+
+</form>
+</body>
+<blockquote>
+</html>

@@ -1,0 +1,1 @@
+<% getsmsInfo("sms_send_result_all_inner")%>

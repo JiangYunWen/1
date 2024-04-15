@@ -1,0 +1,195 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Pragma" content="no-cache">
+<meta HTTP-equiv="Cache-Control" content="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="Mon, 01 Jan 1990 00:00:01 GMT">
+
+
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+<style type="text/css">
+.txt1{
+	
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	padding: 0;
+	margin:0;
+width:180px;
+
+}
+
+.button1{
+	
+ display: block;
+ position: absolute;
+ top: 130px;
+ left: 200px;
+
+
+}
+.button2{
+	
+
+
+
+}
+</style>
+<title>bandlock</title>
+
+<script language="JavaScript" type="text/javascript">
+var debug=0;
+
+
+
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function send_reboot()
+{
+   ShowModalDialog("/chn/info.htm","");
+	$.ajax({
+  type: "POST",
+
+		url: "/boafrm/formreboot",
+		cache: false,
+    data:"formreboot=1",
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+       // send_security();
+          
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+  });
+
+}
+function saveClick()
+{
+
+
+if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+{
+ShowModalDialog("/chn/info.htm","");
+var index=document.getElementById("lc_band_setting").value;
+var temp="/boafrm/formbandsetting";
+
+param="lc_band_setting="+index;
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+       // send_reboot();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+}
+		return true;
+}
+
+
+function init()
+{
+    var tmp="<% getstatusInfo("lc_band_setting"); %>";
+    document.getElementById("lc_band_setting").value=tmp;
+
+}
+</SCRIPT>
+</head>
+
+<body onload=init()>
+<blockquote>
+<h2><font color="#0000FF">频段配置</font></h2>
+
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+
+<!--h2><font size="2" weight="bold" ><b>锁频段</b></font></h2-->
+
+<form id="pin_setting_form" name="pin_setting_form">
+  <input type="hidden" name="oem_cfg" value="changed" >
+  <table>
+    <tr> 
+      <td><font size="2" weight="bold" ><b>锁频段:</b></font></td>
+      <td ><font size="2" weight="bold" >
+	    <select name="lc_band_setting" id="lc_band_setting" onchange="">
+          <option value='0'>GSM_BAND_Auto</option>
+          <option value='1'>EURO_BAND/AUS_BAND/AUS_BAND2:CM_BAND_PREF_GSM_GSM_900|CM_BAND_PREF_GSM_DCS_1800</option>
+          <option value='2'>US_BAND:CM_BAND_PREF_GSM_850|CM_BAND_PREF_GSM_PCS_1900</option>
+          <option value='3'>OTHER_BAND:CM_BAND_PREF_GSM_900|CM_BAND_PREF_GSM_PCS_1900</option>
+          <option value='4'>CM_BAND_PREF_GSM_GSM_900</option>
+          <option value='5'>CM_BAND_PREF_GSM_DCS_1800</option>
+          <option value='6'>CM_BAND_PREF_GSM_850</option>
+          <option value='7'>CM_BAND_PREF_GSM_PCS_1900</option>
+          <option value='9'>Unlock</option>
+          <option value='10'>TDD_BAND_Auto</option>
+          <option value='11'>TDD_BAND_A:2010~2025</option>
+          <option value='12'>TDD_BAND_B:1880~1920</option>
+          <option value='13'>TDD_BAND_C:2300~2400</option>
+          <option value='14'>TDD_BAND_A|TDD_BAND_B</option>
+          <option value='15'>TDD_BAND_A|TDD_BAND_C</option>
+          <option value='16'>TDD_BAND_B|TDD_BAND_C</option>
+          <option value='17'>LTE band33</option>
+          <option value='18'>LTE band34</option>
+          <option value='19'>LTE band35</option>
+          <option value='20'>LTE band36</option>
+          <option value='21'>LTE band37</option>
+          <option value='22'>LTE band38</option>
+          <option value='23'>LTE band39</option>
+          <option value='24'>LTE band40</option>
+          <option value='25'>LTE band1</option>
+          <option value='26'>LTE band3</option>
+          <option value='27'>LTE band7</option>
+          <option value='28'>LTE band13</option>
+          <option value='29'>LTE band17</option>
+          <option value='30'>LTE band Auto</option>
+        </select> </font></td>
+    </tr>
+  </table>
+
+  <p><input type="button" class="button1" value="确定" name="save" onClick="saveClick()">&nbsp;&nbsp;
+</form>
+<blockquote>
+
+</table>
+</body>
+</html>
+
+

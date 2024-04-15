@@ -1,0 +1,289 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../util_web.js"></script>
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var objTimeOut = "";
+var WebModemGetInfoCfunParamFun;
+
+//屏蔽F5   
+document.onkeydown = mykeydown;  
+
+function mykeydown() {  
+    if (event.keyCode == 116) //屏蔽F5刷新键      
+    {  
+        window.event.keyCode = 0;  
+        return false;  
+    }  
+}   
+
+function SetLabelText(Labelid,Text)
+{
+//obj_label= document.getElementById(Labid).innerHTML;
+//obj_label.innerHTML=Text;
+document.getElementById(Labelid).innerHTML=(Text);
+}
+
+
+function send_FormCfun( param)
+{
+	var temp="/boafrm/formCfunProcess";
+	var varajax =$.ajax({
+		type: "POST",
+		url: temp,
+		cache: false,
+		timeout : 4000, //超时时间设置，单位毫秒				
+		data:param,
+		success: function(result) 
+		{
+			if (result != null && result.length !== 0)
+			{
+				openIntervals_Cfun();
+			}
+		},
+		complete: function(xmlHttpHeader, textStatus) 
+		{
+			xmlHttpHeader = null;
+	　　　　if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+	 　　　　　 varajax.abort();
+				closediv(DivCloseMode_None);
+            	var zh_str = zh_Lang_ex();
+                if(zh_Lang_now == 't'){	    
+            	    showdiv("執行操作后，可能已經無法訪問:"+location.hostname+";請保證鏈路聯通后再訪問",DivCloseMode_TopReload);
+            	}else{	
+            	    showdiv("执行操作后，可能已经无法访问:"+location.hostname+";请保证链路联通后再访问",DivCloseMode_TopReload);
+            	}
+	　　　　}	
+		}
+	});
+}
+function FormCfun_Submit()
+{
+	param = "";
+    param +="FormCfun_Param_DebugSwitch=3";
+	disableTextField(document.getElementById("FormCfun_Button_Submit"));
+//	alert("FormCfun_Submit:" + param);
+	send_FormCfun(param);
+	var zh_str = zh_Lang_ex();
+    if(zh_Lang_now == 't'){	    
+	    showdiv("正在更改，請等待。。。",DivCloseMode_None);
+	}else{	
+	    showdiv("正在更改，请等待。。。",DivCloseMode_None);
+	}
+//	document.all.FormCfun.submit();
+}
+
+
+function send_FormCfun_result_get()
+{ 
+	closediv(DivCloseMode_None);
+	var zh_str = zh_Lang_ex();
+    if(zh_Lang_now == 't'){	    
+	    showdiv("正在查詢更新結果。。。",DivCloseMode_None);
+	}else{	
+	    showdiv("正在查询更新结果。。。",DivCloseMode_None);
+	}
+	var varajax= $.ajax({
+	url: "../lcModemManageCfunProcess.asp",
+	cache: false,
+
+	success: function(result) 
+	{
+		closediv(DivCloseMode_None);
+		allmsg=result.split('*');
+		allmsg[0] = allmsg[0].replace(/[\r\n]/g,"");
+	  	allmsg[1] = allmsg[1].replace(/[\r\n]/g,"");
+		enableTextField(document.getElementById("FormCfun_Button_Submit"));
+		if(allmsg[0] == "success")
+		{
+			closeIntervals();
+			showdiv("更新成功!",DivCloseMode_Reload);
+		}
+		else if(allmsg[0] == "failure")
+		{
+			closeIntervals();
+            if(zh_Lang_now == 't'){	    
+        	    showdiv("更新失敗!",DivCloseMode_Reload);
+        	}else{	
+        	    showdiv("更新失败!",DivCloseMode_Reload);
+        	}
+		}
+		else
+		{
+			
+        	if(zh_Lang_now == 't'){	    
+        	    showdiv("更新失敗! 繼續嘗試。。。",DivCloseMode_None);
+        	}else{	
+        	    showdiv("更新失败! 继续尝试。。。",DivCloseMode_None);
+        	}
+			/*TODO:打开得了吗*/
+			openIntervals_Cfun();
+		}
+	},	 
+
+	complete: function(xmlHttpHeader, textStatus) {
+	 	xmlHttpHeader = null;
+　　　　if(textStatus=='timeout'){//超时,status还有success,error等值的情况
+ 　　　　　 varajax.abort();
+			closediv(DivCloseMode_None);
+            if(zh_Lang_now == 't'){	    
+        	    showdiv("執行操作后，可能已經無法訪問:"+location.hostname+";請保證鏈路聯通后再訪問",DivCloseMode_TopReload);
+        	}else{	
+        	    showdiv("执行操作后，可能已经无法访问:"+location.hostname+";请保证链路联通后再访问",DivCloseMode_TopReload);
+        	}
+　　　　}		
+	}
+	});
+}
+function openIntervals_Cfun()
+{
+	if (objTimeOut == null || objTimeOut=="")
+	{
+		objTimeOut= setInterval('send_FormCfun_result_get()',2000);
+	}
+}
+
+
+
+function GetRadioValueByName(RadioName)
+{
+	var item = null;
+	var obj = document.getElementsByName(RadioName);
+	for(var i=0;i<obj.length;i++)
+	{
+		if(obj[i].checked)
+		{
+			item =obj[i].value;
+		}
+	}
+	return item;
+}
+
+function isInteger(obj) {
+    return (parseInt(obj, 10) === obj)
+}
+
+function isNumber(name) //数值检测 
+{ 
+if(name.length == 0) 
+return false; 
+for(i = 0; i < name.length; i++) { 
+if(name.charAt(i) < "0" || name.charAt(i) > "9") 
+return false; 
+} 
+return true; 
+} 
+
+
+
+//关闭定时器
+function closeIntervals()
+{
+	clearInterval(objTimeOut);
+	objTimeOut=null;
+}
+
+function init()
+{
+	var TmpString="";
+
+	/*调试开关at+cfun*/
+	WebModemGetInfoCfunParamFun =<%getInfo("ModemGetInfoCfunParamFun");%>;
+	if(0==WebModemGetInfoCfunParamFun)
+	{
+	    var zh_str = zh_Lang_ex();
+        if(zh_Lang_now == 't'){	    
+    	    SetLabelText("LB_FormCfun_Param_DebugSwitch","關閉");
+    	}else{	
+    	    SetLabelText("LB_FormCfun_Param_DebugSwitch","关闭");
+    	}
+	}
+	else if(1==WebModemGetInfoCfunParamFun)
+	{
+		var zh_str = zh_Lang_ex();
+        if(zh_Lang_now == 't'){	    
+    	    SetLabelText("LB_FormCfun_Param_DebugSwitch","開啟");
+    	}else{	
+    	    SetLabelText("LB_FormCfun_Param_DebugSwitch","开启");
+    	}			
+	}
+	else
+	{					
+    	var zh_str = zh_Lang_ex();
+        if(zh_Lang_now == 't'){	    
+    	    showdiv("ModemGetInfoCfunParamFun 參數獲取錯誤! value = "+WebModemGetInfoCfunParamFun ,DivCloseMode_None);
+    	}else{	
+    	    showdiv("ModemGetInfoCfunParamFun 参数获取错误! value = "+WebModemGetInfoCfunParamFun ,DivCloseMode_None);
+    	}
+	}
+}
+
+</script>
+</head>
+<blockquote>
+<h3><font color="#0000FF">Modem 重启</font></h3>
+
+<body  onLoad="setCodeValue();init()">
+
+ <table border="0" cellspacing="0" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="500" cellspacing=0 cellpadding=0>
+
+<form id="FormCfun" name="FormCfun" >
+  <table>
+  	<tr> 
+      <td colspan=3 ><font size="2" weight="bold" ><b>重启设备:</b></font></td>
+    </tr>   
+    <tr> 
+	<td >当前状态:[<label id="LB_FormCfun_Param_DebugSwitch">LB_FormCfun_Param_DebugSwitch</label>]</td>        
+      <td >
+        </td>
+        <td><input type="button" value="重启设备" id="FormCfun_Button_Submit"  onClick="FormCfun_Submit();">  </td>
+    </tr>
+  </table>
+</form>
+
+
+</table>
+
+
+</body>
+</blockquote>
+</html>

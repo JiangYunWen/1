@@ -1,0 +1,315 @@
+
+<html>
+<head>
+<title></title>
+<!-- eavoo add begin -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<!-- eavoo add end -->
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--link rel="stylesheet" href="style/normal_ws.css" type="text/css"-->
+
+<style>
+.date-picker-wp {
+    display: none;
+    position: absolute;
+    background: #f1f1f1;
+    left: 40px;
+    top: 40px;
+    border-top: 4px solid #3879d9;
+}
+.date-picker-wp table {
+    border: 1px solid #ddd;
+}
+.date-picker-wp td {
+    background: #fafafa;
+    width: 22px;
+    height: 18px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    text-align: center;
+}
+.date-picker-wp td.noborder {
+    border: none;
+    background: none;
+}
+.date-picker-wp td a {
+    color: #1c93c4;
+    text-decoration: none;
+}
+.strong {font-weight: bold}
+.hand {cursor: pointer; color: #3879d9}
+
+.file-box{ position:relative; width: 100%; border:0px solid red;}
+.txt{
+	font-family:微软雅黑;
+	font-size: 12px;
+	color: #333333;
+	border: 1px solid #cccccc;
+	height:24px; 
+	width:200px; 
+	padding:0px;
+	padding-left:10px;
+	text-align:left;
+	border-radius: 3px;
+}
+/*.btn{ height:24px; width:70;}*/
+.file{ position:absolute; top:0px; left:330px; height:26px; line-height:26px; filter:alpha(opacity:0); opacity: 0; width:40px; cursor: pointer; }
+</style>
+
+<script type="text/javascript" src="../res/sychip.js" charset="utf-8"></script>
+<script type="text/javascript" src="../res/ui.js"></script>
+
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+
+
+		
+		
+
+
+
+
+
+
+
+</script>
+<!-- eavoo add end -->
+
+
+
+<script type="text/javascript">
+
+function init() 
+{
+
+var gl_IE_ver=0;		
+if(navigator.appName == "Microsoft Internet Explorer"){ 
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+
+								gl_IE_ver=9;
+document.getElementById("uploadfilename").style.left="345px";
+
+                 
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+								gl_IE_ver=11;
+document.getElementById("uploadfilename").style.left="345px";
+
+                
+              }else
+              {
+                // alert("ie10"); 
+								gl_IE_ver=10;
+document.getElementById("uploadfilename").style.left="345px";
+                 
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+			gl_IE_ver=8;
+document.getElementById("uploadfilename").style.left="345px";
+         
+      }
+		}else
+    {
+
+     		gl_IE_ver=99;//not ie
+document.getElementById("uploadfilename").style.left="330px";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+// 初始化页面
+function sys_init()
+{
+	
+	initFormSubmitIframe("upload_dummy", upload_finish);
+	share.data("gChildPageUnloadConfirm", true);
+
+
+}
+
+
+
+
+
+
+function showUploadDialog()
+{
+	var url = "upload_progress_chn.asp?arg=progress&amp;";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=110&amp;width=400&amp;modal=true";
+	//share.data("gIgnoreRequests", true);
+	//share.data("gServerMode", "FileUpload");
+//	window.top.tb_show("", url, null);
+
+window.parent.parent.parent.tb_show("", url, null);
+
+//console.warn("showUploadDialog");
+
+  window.parent.scrollTo(0,0);
+
+}
+
+function showCheckingDialog()
+{
+	var url = "upload_progress_chn.asp?arg=checking&amp;";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=110&amp;width=400&amp;modal=true";
+	share.data("gIgnoreRequests", true);
+	share.data("gServerMode", "FileUpload");
+	window.top.tb_show("", url, null);
+}
+
+function hideDialog()
+{
+	//share.data("gIgnoreRequests", false);
+	//share.data("gServerMode", "");
+	//window.top.tb_remove();
+}
+
+var retryCount = 0;
+function check_file_name()
+{
+
+
+
+//retryCount = 0;
+//
+var filePath = document.all.upload_file_form.uploadfilename.value;
+if (filePath.length == 0)
+{
+	document.all.upload_file_form.uploadfilename.focus();
+	alert("请选择上传文件!");
+	return false;
+}
+/*else if (filePath.indexOf("system_upload.bin")==-1)
+{
+	alert("文件选择不正确!请重新选择名为system_upload.bin的文件");
+	document.all.upload_file_form.uploadfilename.text="";
+	document.all.upload_file_form.uploadfilename.focus();
+	return false;
+}*/
+else
+{
+	alert("建议采用USB连接方式进行升级，若采用WLAN方式可能会升级失败；\n软件升级过程中，请勿刷新网页，以免打断升级过程");
+	showUploadDialog();
+	return true;
+}
+
+}
+
+function upload_finish()
+{
+	var percentage = share.data("gUploadPercentage");
+	if (percentage < 100)
+	{
+		retryCount++;
+		if (retryCount < 3)
+		{
+			setTimeout(upload_finish, 2000);
+			return;
+		}
+	}
+	/*if (percentage < 100)
+	{
+		hideDialog();
+		alert("文件上传中断，请检查连接");
+	}
+	else*/
+	{
+		showCheckingDialog();
+	}
+}
+
+window.onbeforeunload = function()
+{
+	try {
+		if (share.data("gChildPageUnloadConfirm") && share.data("gServerMode") == "FileUpload")
+			return "升级过程将会中断";
+	} catch (e) {
+		// handle errors here
+	}
+}
+
+
+
+function uploadCtrlOnChange(file_path)
+{
+	var path_str = file_path;
+	var separator = path_str.lastIndexOf("\\");
+	if (separator < 0)
+		separator = path_str.lastIndexOf("/");
+	if (separator >= 0)
+		path_str = path_str.substring(separator + 1);
+	document.getElementById('textfield').value = path_str;
+}
+
+</script>
+</head>
+
+<body onunload="hideDialog()"  onload="init()">
+
+
+<blockquote>
+<h2><font color="#0000FF">软件升级</font></h2>
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr></tr>
+</table>
+
+<!--   ===================================== File Upload ===================================== -->
+<form name="upload_file_form" action=/boafrm/formUploadConfig method=POST Enctype="multipart/form-data" target="upload_dummy">
+	<input type="hidden"  name="action" value="upload">
+	    <br>
+
+		 
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr width="100%">
+			<th  width="100px" align="left">软件升级:</th>
+			<td  width="440px" align="right">
+				<div class="file-box" align="right">
+					<input type="text" name="textfield" id="textfield" class="txt1" readonly="readonly"/>
+					<input type="button" class="btn" value="浏览..." />
+					<input type="submit" name="submit" class="btn" value="上传"  onclick="return check_file_name();" />
+					<input type="file" name="uploadfilename" class="file" id="uploadfilename" size="28" onchange="uploadCtrlOnChange(this.value)" />
+				</div>
+			</td>
+		</tr>
+	</table>
+</form>
+
+<blockquote>
+<br>
+<br>
+
+<iframe id="upload_dummy" name="upload_dummy" style="display:none"/>
+
+</body>
+</html>

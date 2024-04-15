@@ -1,0 +1,307 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>LAN Interface Setup </title>
+<% language=javascript %>
+<script type="text/javascript" src="../util_gw_chn.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<SCRIPT>
+var initialDhcp;
+function checkMode()
+{
+	var dhcp=<% getInfo("dhcp"); %> ;
+
+  document.getElementById("dhcp").value=dhcp;
+  if(dhcp==0)
+  {
+     disableTextField(document.getElementById("Tcpipsave"));
+  }else
+  {
+    enableTextField(document.getElementById("Tcpipsave"));
+
+  } 
+}
+
+function dhcpChange()
+{
+  var dhcp=document.getElementById("dhcp").value;
+  if(dhcp==0)
+  {
+     disableTextField(document.getElementById("Tcpipsave"));
+  }else
+  {
+    enableTextField(document.getElementById("Tcpipsave"));
+
+  } 
+
+}
+
+
+
+
+function checkClientRange(start,end)
+{
+  start_d = getDigit(start,4);
+  start_d += getDigit(start,3)*256;
+  start_d += getDigit(start,2)*256;
+  start_d += getDigit(start,1)*256;
+
+  end_d = getDigit(end,4);
+  end_d += getDigit(end,3)*256;
+  end_d += getDigit(end,2)*256;
+  end_d += getDigit(end,1)*256;
+
+  if ( start_d < end_d )
+	return true;
+
+  return false;
+}
+
+
+function saveChanges()
+{
+
+  if ( checkIpAddr(document.getElementById("lan_ip"), '无效的IP地址! ') == false )
+	    return false;
+
+
+
+
+  	if ( checkIpAddr(document.getElementById("dhcpRangeStart"), 'DHCP地址范围起始地址值无效!') == false )
+	    return false;
+
+	if ( !checkSubnet(document.getElementById("lan_ip").value,document.getElementById("lan_ip").value,document.getElementById("dhcpRangeStart").value)) {
+		alert('网关IP地址和DHCP地址范围不在同一个网段范围内。');
+		//document.tcpip.dhcpRangeStart.value = document.tcpip.dhcpRangeStart.defaultValue;
+		document.getElementById("dhcpRangeStart").focus();
+		return false;
+	}
+  	if ( checkIpAddr(document.getElementById("dhcpRangeEnd"), 'DHCP地址范围结束地址值无效! ') == false )
+	    return false;	
+
+	if ( !checkSubnet(document.getElementById("lan_ip").value,document.getElementById("lan_ip").value,document.getElementById("dhcpRangeEnd").value)) {
+		alert('网关IP地址和DHCP地址范围不在同一个网段范围内。');
+		//document.tcpip.dhcpRangeEnd.value = document.tcpip.dhcpRangeEnd.defaultValue;
+		//document.tcpip.dhcpRangeEnd.focus();
+    document.getElementById("dhcpRangeEnd").focus();
+		return false;
+	}
+        if ( !checkClientRange(document.getElementById("dhcpRangeStart").value,document.getElementById("dhcpRangeEnd").value) ) {
+		alert('DHCP地址范围值无效!\n结束地址必须大于起始地址。');
+		document.getElementById("dhcpRangeStart").focus();
+		return false;
+        }
+
+
+ var  lan_ip_d = getDigit(document.getElementById("lan_ip").value, 4);
+ var  dhcpRangeStart_d = getDigit(document.getElementById("dhcpRangeStart").value, 4);
+ var  dhcpRangeEnd_d = getDigit(document.getElementById("dhcpRangeEnd").value, 4);
+
+   if(lan_ip_d>dhcpRangeStart_d&&lan_ip_d<dhcpRangeEnd_d)
+   {
+     alert("DHCP地址范围不能包含网关IP地址。");
+     return false;  
+   }
+
+
+
+   if(lan_ip_d==dhcpRangeStart_d||lan_ip_d==dhcpRangeEnd_d)
+   {
+     alert("DHCP地址范围不能包含网关IP地址。");
+     return false;  
+   }
+
+
+  if(!checkFieldDigitRange(document.getElementById("dhcpLeaseTime"),1,10080,"无效的租约时间!租约时间必须在1~10080之间。"))
+  	return false;  
+
+
+  return true;
+}
+function TcpipSetupClick() {
+
+if(saveChanges())
+{
+	param = "";
+	param += "lan_ip="+document.getElementById("lan_ip").value+"&lan_mask=255.255.255.0&lan_gateway="+document.getElementById("lan_ip").value;
+  param += "&dhcp=2&dhcpRangeStart="+document.getElementById("dhcpRangeStart").value+"&dhcpRangeEnd="+document.getElementById("dhcpRangeEnd").value+"&dhcpLeaseTime="+document.getElementById("dhcpLeaseTime").value+"domainName=Realtek&stp=0&lan_macAddr=000000000000&save=Apply+Changes&submit-url=%2Ftcpiplan.htm";
+	
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+    	$.ajax({
+    type: "POST",
+    
+    		url: "/boafrm/formTcpipSetup",
+    		cache: false,
+        data:param,
+    
+    
+		// ajax请求成功
+		success: function(result) {
+			//location.reload();
+     // alert("设置成功!");
+       send_reboot();
+		},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+}
+}
+
+}
+function dhcpSetupClick()
+{
+	param = "";
+	param += "dhcp="+document.getElementById("dhcp").value;
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+    	$.ajax({
+    type: "POST",
+    
+    		url: "/boafrm/formlcdhcp",
+    		cache: false,
+        data:param,
+    
+    
+		// ajax请求成功
+		success: function(result) {
+			//location.reload();
+      send_reboot();
+		},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+}
+
+}
+function send_reboot()
+{
+//alert("设置成功！");
+ShowModalDialog("/chn/info.htm","");
+	$.ajax({
+   type: "POST",
+
+		url: "/boafrm/formreboot",
+		cache: false,
+    data:"formreboot=1",
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+       // send_security();
+          
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+}
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function dhcpTblClick(url) {
+
+}
+function staticdhcpChange(index)
+{
+
+}
+function staticdhcpTblClick(url) {
+
+}
+</SCRIPT>
+</head>
+
+<body onload="checkMode();">
+<blockquote>
+<h2><font color="#0000FF">局域网DHCP配置</font></h2>
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+
+  <tr>
+      <td width="30%"><font size=2><b>DHCP服务:</b></td>
+      <td width="70%"><select size="1" name="dhcp" id="dhcp" onChange="dhcpChange()">
+       <option selected value="0">关闭DHCP</option>
+       <option value="2">打开DHCP</option>  
+	   </select>
+     </td>
+  </tr>
+
+
+  </table>
+   <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="确定" name="save" onClick="return dhcpSetupClick()">&nbsp;&nbsp;
+
+
+<form action=/boafrm/formTcpipSetup method=POST name="tcpip">
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+
+  <tr>
+      <td width="30%"><font size=2><b>网关IP地址:</b></td>
+      <td width="70%"><input type="text" name="lan_ip" id="lan_ip" size="15" maxlength="15" value=<% getInfo("ip-rom"); %>></td>
+  </tr>
+
+
+
+
+  <tr>
+      <td width="30%"><font size=2><b>DHCP地址范围:</b></td>
+      <td width="70%"><input type="text" name="dhcpRangeStart" id="dhcpRangeStart" size="12" maxlength="15" value="<% getInfo("dhcpRangeStart"); %>">
+      <font face="Arial" size="5">-</font> <input type="text" name="dhcpRangeEnd" id="dhcpRangeEnd" size="12" maxlength="15" value="<% getInfo("dhcpRangeEnd"); %>">&nbsp;
+  
+      </td>
+  </tr>
+
+  <tr>
+      <td width="30%"><font size=2><b>租约时间:</b></td>
+      <td width="70%"><input type="text" name="dhcpLeaseTime" id="dhcpLeaseTime"  size="6" maxlength="5" value="<% getInfo("dhcpLeaseTime"); %>"> <font size=2>(1 ~ 10080分钟)</td>
+  </tr>
+
+
+		<tr>
+			<td colspan="2" >
+			<span style="color: #FF0B34; font-size:12px;font-family:微软雅黑;">
+		  (关闭DHCP服务、设置不恰当的网关IP地址或设置不恰当的DHCP地址范围会导致无法分配IP打不开登陆网页，需恢复出厂设置才能恢复。)</span>
+				</td>
+		</tr>
+  </table>
+  <br>
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" value="确定" name="Tcpipsave" id="Tcpipsave" onClick="return TcpipSetupClick()">&nbsp;&nbsp;
+     
+      <input type="hidden" value="/chn/tcpiplan_chn.htm" name="submit-url">
+ </form>
+</blockquote>
+</body>
+
+</html>

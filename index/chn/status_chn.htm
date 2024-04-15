@@ -1,0 +1,730 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<script type="text/javascript" src="../res/jquery.js"></script>
+<% getIndex("no-cache"); %>
+<title>系统信息</title>
+
+<script>
+var debug=0;
+function adjust_iframe(){
+	var isIE =!!window.ActiveXObject;
+	var isIE6 =isIE&&!window.XMLHttpRequest;
+	var isIE8 =isIE&&!!document.documentMode;
+	var isIE7 = isIE&&!isIE6&&!isIE8;
+
+	var frameWin = document.getElementById("lan_status_frame");
+	var frameBox = document.getElementById("frameBox1");
+	var newHeight;
+	if(isIE)
+	{
+		if (frameWin.Document){
+			newHeight = frameWin.Document.body.scrollHeight + 20 + "px";
+			//frameWin.Document.body.style.backgroundColor="#f5f5f5";
+		}else{
+			newHeight = frameWin.contentDocument.body.scrollHeight+ 20 + "px";
+			//frameWin.contentDocument.body.style.backgroundColor="#f5f5f5";
+		}
+        frameWin.style.height = newHeight;
+        frameBox.style.height = newHeight;
+	}else
+	{
+		frameWin.height = 0;
+        frameBox.height = 0;
+		if (frameWin.Document){
+			newHeight = frameWin.Document.body.scrollHeight + 10;
+		}else{
+			newHeight = frameWin.contentDocument.body.scrollHeight + 10;
+		}
+		//alert('kao'+newHeight);
+        frameWin.height = (newHeight>200?newHeight:200);
+        frameBox.height = (newHeight>200?newHeight:200);
+		//var fdh=(this.Document?this.Document.body.scrollHeight:this.contentDocument.body.offsetHeight);this.height=(fdh>200?fdh:200);alert('kao'+fdh);
+	}	
+
+}
+var uptime="<% getstatusInfo("statusInfouptime"); %>";
+
+var current_profile=<% getInfo("apn_cur_profile"); %>;
+var content_apntop="<% getInfo("apn_profile_info"); %>";
+var rel_sel=new Array();
+var sim_flag=0;
+var apn_info=9;
+var wanv="<% getInfo("leadcorewantype"); %>";
+var images=new Array();
+var content=new Array();
+function showtime()
+{
+ uptime=parseInt(uptime,10)+1;
+
+ 
+ 	var totalSeconds_pdp = uptime;                                        
+	var hours_pdp = Math.floor(totalSeconds_pdp/3600);                                        
+	var currentHours_pdp = hours_pdp>0?hours_pdp+"小时" : "";                                        
+	var currentMinutes_pdp = Math.floor((totalSeconds_pdp-hours_pdp*3600)/60) > 0 ? Math.floor((totalSeconds_pdp-hours_pdp*3600)/60) + "分" : "";
+	var currentSeconds_pdp = totalSeconds_pdp%60+"秒";                                        
+	document.getElementById("time_stat").innerHTML= currentHours_pdp + currentMinutes_pdp + currentSeconds_pdp;  
+	//document.getElementById("time_stat").innerHTML=totalSeconds_pdp+"秒";
+	
+	//console.warn(window.parent.parent.parent.title);
+	//console.warn(window.parent.title.document.content_all_v());
+//	console.warn(window.parent.title.all_content);
+	
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+	content_status=allmsg[6];
+	var content_status_tmp= new String(content_status);
+	allmsg_tmp=content_status_tmp.split('|');
+	
+	// if(typeof(allmsg[1])!=undefined)
+	
+	//console.warn(typeof(content_status)!=String);
+	//	console.warn(typeof(content_status));
+	
+	if(typeof(content_status)!="undefined")
+	{
+	   if(wanv=="0")
+	   {
+	     var content_status_tmp_net=allmsg[1];
+	     var content_status_tmp_net_r= new String(content_status_tmp_net);
+	     allmsg_r_tmp=content_status_tmp_net_r.split('-');
+	     
+	     if(allmsg[5]=="0"||allmsg[5]=="2"||allmsg[5]=="3"||allmsg_r_tmp[0]!="1"||allmsg[0]=="0")
+	     {
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+	       sim_flag=1;
+	       
+	     }
+	     
+	     if(allmsg_tmp[0].length>3)
+	     {
+	        var content_status_tmp_ip=allmsg_tmp[0];
+	        var content_status_tmp_ip_r= new String(content_status_tmp_ip);
+	        allmsg_r_ip=content_status_tmp_ip_r.split('.');
+	        allmsg_tmp[2]=allmsg_r_ip[0]+"."+allmsg_r_ip[1]+"."+allmsg_r_ip[2]+"."+"1";
+	     }
+	     
+	     
+	   }
+  } else
+{
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+}
+
+if(debug==2)
+{
+console.warn("20150924"+"  allmsg  "+allmsg[5]+"   in");
+}
+
+if(allmsg[5]=="1")//apn info 
+{
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+
+
+
+    var apn_select_html;
+    //"0[,]jack[,]123456[,]cmnet[,]name[;]1[,]john[,]1234[,]cmwap[,]name[;]"//til_request_query_apn_profile
+    var current_profile=<% getInfo("apn_cur_profile"); %>;//til_request_query_current_apn_profile
+    var index=current_profile;
+     content=content_apntop.split("[;]");
+    
+    //alert(content.length    +  "    "+content[0]+"     "+content[1]+"     "+content[2]);
+    
+    apn_select_html="<select name=\"lc_system_profile_type\" id=\"lc_system_profile_type\" onChange=\"changeSelected();\" >";
+
+    
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][j]+" init  "+content_inner[j]);
+           }
+  
+
+           if(j==0)
+           {
+              apn_select_html+="<option value='"+i+"'>"+i+"</option>";
+              rel_sel[i]=content_inner[j];
+              if(current_profile==content_inner[j])
+              {
+              	current_profile=i;
+              }
+           }
+           
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+
+           }
+    }
+
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+apn_info=images[index][5];
+
+if(debug==2)
+{
+console.warn("20150924"+"   "+apn_info+"   in");
+}
+}//apn info 
+
+
+if(apn_info==0) //ipv4
+{
+allmsg_tmp[6]="NA";
+allmsg_tmp[5]="NA";
+allmsg_tmp[9]="NA";
+allmsg_tmp[10]="NA";
+}else if(apn_info==1)//ipv6
+{
+allmsg_tmp[0]="NA";
+allmsg_tmp[2]="NA";
+allmsg_tmp[3]="NA";
+allmsg_tmp[4]="NA";
+
+
+}else if(apn_info==2)//ipv4 & ipv6
+{
+var Cts = allmsg_tmp[0];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[0]="NA";
+} 
+
+ Cts = allmsg_tmp[2];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[2]="NA";
+} 
+
+ Cts = allmsg_tmp[3];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[3]="NA";
+} 
+
+
+ Cts = allmsg_tmp[4];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[4]="NA";
+} 
+}
+
+if(wanv=="0")
+{
+if(allmsg[0]=="0")
+{
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+}
+}
+	
+	if(typeof(content_status)!="undefined")
+	{
+	  
+	// console.warn(allmsg_tmp[0]+"   in");
+	    if(allmsg_tmp[0].length>0)
+	    {
+	      document.getElementById("ipv4_stat").innerHTML=allmsg_tmp[0];
+	    }else
+	    {
+	        allmsg_tmp[0]="NA";
+	         document.getElementById("ipv4_stat").innerHTML=allmsg_tmp[0];
+	    }
+	    
+	    if(allmsg_tmp[2].length>0)
+	    {
+	      document.getElementById("ipv4_netgate_stat").innerHTML=allmsg_tmp[2];
+	    }else
+	    {
+	        allmsg_tmp[2]="NA";
+	         document.getElementById("ipv4_netgate_stat").innerHTML=allmsg_tmp[2];
+	    }
+	    
+	    if(allmsg_tmp[3].length>0)
+	    {
+	      document.getElementById("ipv4_m_dns_stat").innerHTML=allmsg_tmp[3];
+	    }else
+	    {
+	        allmsg_tmp[3]="NA";
+	         document.getElementById("ipv4_m_dns_stat").innerHTML=allmsg_tmp[3];
+	    }
+	    
+	    if(allmsg_tmp[4].length>0)
+	    {
+	      document.getElementById("ipv4_dns_stat").innerHTML=allmsg_tmp[4];
+	    }else
+	    {
+	        allmsg_tmp[4]="NA";
+	         document.getElementById("ipv4_dns_stat").innerHTML=allmsg_tmp[4];
+	    }
+	    
+	    if(allmsg_tmp[6].length>0)
+	    {
+	      document.getElementById("ipv6_stat").innerHTML=allmsg_tmp[6];
+	    }else
+	    {
+	        allmsg_tmp[6]="NA";
+	         document.getElementById("ipv6_stat").innerHTML=allmsg_tmp[6];
+	    }
+	    
+	    
+	    if(allmsg_tmp[5].length>0)
+	    {
+	      document.getElementById("ipv6_link_stat").innerHTML=allmsg_tmp[5];
+	    }else
+	    {
+	        allmsg_tmp[5]="NA";
+	         document.getElementById("ipv6_link_stat").innerHTML=allmsg_tmp[5];
+	    }
+	    
+	    
+	    if(allmsg_tmp[9].length>0)
+	    {
+	      document.getElementById("ipv6_m_dns_stat").innerHTML=allmsg_tmp[9];
+	    }else
+	    {
+	        allmsg_tmp[9]="NA";
+	         document.getElementById("ipv6_m_dns_stat").innerHTML=allmsg_tmp[9];
+	    }
+	    
+	    
+	    if(allmsg_tmp[10].length>0)
+	    {
+	      document.getElementById("ipv6_dns_stat").innerHTML=allmsg_tmp[10];
+	    }else
+	    {
+	        allmsg_tmp[9]="NA";
+	         document.getElementById("ipv6_dns_stat").innerHTML=allmsg_tmp[10];
+	    }
+	}
+	
+    setTimeout("showtime();", 1000); //设定函数自动执行时间为 1000 ms(1 s)
+}
+
+$(document).ready(function(){ 
+//do something 
+
+showtime();
+})
+function showWan()
+{
+		
+var wantype="<% getInfo("leadcorewantype"); %>";
+
+var pdp="<% getstatusInfo("statusInfo"); %>";
+
+		allmsg_tmp=pdp.split('|');
+
+var allmsg=new Array();
+	//var content_status=window.parent.title.all_content;
+//	allmsg=content_status.split('*');
+	//content_status=allmsg[6];
+	//var content_status_tmp= new String(content_status);
+	//allmsg_tmp=content_status_tmp.split('|');
+	
+	// if(typeof(allmsg[1])!=undefined)
+	
+	//console.warn(typeof(content_status)!=String);
+	//	console.warn(typeof(content_status));
+	
+allmsg[5]="<% getInfo("lc_sms_status"); %>";
+allmsg[1]="<% getInfo("lc_network_status"); %>";
+allmsg[0]="<% getInfo("lc_pdp_activate_status"); %>";
+	if(1)
+	{
+	   if(wanv=="0")
+	   {
+	     var content_status_tmp_net=allmsg[1];
+	     var content_status_tmp_net_r= new String(content_status_tmp_net);
+	     allmsg_r_tmp=content_status_tmp_net_r.split('-');
+	     
+	     if(allmsg[5]=="0"||allmsg[5]=="2"||allmsg[5]=="3"||allmsg_r_tmp[0]!="1"||allmsg[0]=="0")
+	     {
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+	       sim_flag=1;
+	       
+	     }
+	     
+	     if(allmsg_tmp[0].length>3)
+	     {
+	        var content_status_tmp_ip=allmsg_tmp[0];
+	        var content_status_tmp_ip_r= new String(content_status_tmp_ip);
+	        allmsg_r_ip=content_status_tmp_ip_r.split('.');
+	        allmsg_tmp[2]=allmsg_r_ip[0]+"."+allmsg_r_ip[1]+"."+allmsg_r_ip[2]+"."+"1";
+	     }
+	     
+	     
+	   }
+  } else
+{
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+}
+
+if(debug==3)
+{
+console.warn("20150924"+"  allmsg  "+allmsg[5]+"   in");
+}
+
+if(allmsg[5]=="1")//apn info 
+{
+//var allmsg=new Array();
+//	var content_status=window.parent.title.all_content_1;
+//	allmsg=content_status.split('*');
+
+
+
+    var apn_select_html;
+    //"0[,]jack[,]123456[,]cmnet[,]name[;]1[,]john[,]1234[,]cmwap[,]name[;]"//til_request_query_apn_profile
+    var current_profile=<% getInfo("apn_cur_profile"); %>;//til_request_query_current_apn_profile
+    var index=current_profile;
+     content=content_apntop.split("[;]");
+    
+    //alert(content.length    +  "    "+content[0]+"     "+content[1]+"     "+content[2]);
+    
+    apn_select_html="<select name=\"lc_system_profile_type\" id=\"lc_system_profile_type\" onChange=\"changeSelected();\" >";
+
+    
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][j]+" init  "+content_inner[j]);
+           }
+  
+
+           if(j==0)
+           {
+              apn_select_html+="<option value='"+i+"'>"+i+"</option>";
+              rel_sel[i]=content_inner[j];
+              if(current_profile==content_inner[j])
+              {
+              	current_profile=i;
+              }
+           }
+           
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+
+           }
+    }
+
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+apn_info=images[index][5];
+
+if(debug==3)
+{
+console.warn("20150924"+"   "+apn_info+"   in");
+}
+}//apn info 
+
+
+if(apn_info==0) //ipv4
+{
+allmsg_tmp[6]="NA";
+allmsg_tmp[5]="NA";
+allmsg_tmp[9]="NA";
+allmsg_tmp[10]="NA";
+}else if(apn_info==1)//ipv6
+{
+allmsg_tmp[0]="NA";
+allmsg_tmp[2]="NA";
+allmsg_tmp[3]="NA";
+allmsg_tmp[4]="NA";
+
+
+}else if(apn_info==2)//ipv4 & ipv6
+{
+var Cts = allmsg_tmp[0];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[0]="NA";
+} 
+
+ Cts = allmsg_tmp[2];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[2]="NA";
+} 
+
+ Cts = allmsg_tmp[3];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[3]="NA";
+} 
+
+
+ Cts = allmsg_tmp[4];
+if(Cts.indexOf(":") > 0 ){
+    allmsg_tmp[4]="NA";
+} 
+}
+
+if(wanv=="0")
+{
+if(allmsg[0]=="0")
+{
+	       allmsg_tmp[0]="NA";
+	       allmsg_tmp[2]="NA";
+	       allmsg_tmp[3]="NA";
+	       allmsg_tmp[4]="NA";
+	       allmsg_tmp[6]="NA";
+	       allmsg_tmp[5]="NA";
+	       allmsg_tmp[9]="NA";
+	       allmsg_tmp[10]="NA";
+}
+
+}
+if(debug==3)
+{
+console.warn("20150924"+"   "+allmsg_tmp[0]+ "  "+allmsg_tmp[1]+"   123");
+}
+
+if(1)
+{
+
+
+		//allmsg[0] = allmsg[0].replace(/[\r\n]/g,"");
+	  //	allmsg[1] = allmsg[1].replace(/[\r\n]/g,"");
+	  //	allmsg[2] = allmsg[2].replace(/[\r\n]/g,"");
+
+//console.warn(allmsg[1] + allmsg[2]);
+if(wantype=="0")
+{
+    if(typeof(pdp)!="undefined")
+    {
+	     if(allmsg[0].length>3)
+	     {
+	        var content_status_tmp_ip=allmsg_tmp[0];
+	        var content_status_tmp_ip_r= new String(content_status_tmp_ip);
+	        allmsg_r_ip=content_status_tmp_ip_r.split('.');
+	        allmsg_tmp[2]=allmsg_r_ip[0]+"."+allmsg_r_ip[1]+"."+allmsg_r_ip[2]+"."+"1";
+	     }
+	   }
+}
+
+allmsg[0]="<span id=\"ipv4_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[0]+"</span>";
+allmsg[2]="<span id=\"ipv4_netgate_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[2]+"</span>";
+allmsg[3]="<span id=\"ipv4_m_dns_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[3]+"</span>";
+allmsg[4]="<span id=\"ipv4_dns_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[4]+"</span>";
+allmsg[6]="<span id=\"ipv6_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[6]+"</span>";
+allmsg[5]="<span id=\"ipv6_link_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[5]+"</span>";
+allmsg[9]="<span id=\"ipv6_m_dns_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[9]+"</span>";
+allmsg[10]="<span id=\"ipv6_dns_stat\" width=\"100%\" align=\"right\">"+allmsg_tmp[10]+"</span>";
+
+		document.write('\
+		 <tr>\
+		 <td width=100% colspan=2 bgcolor="#008000"><font color="#FFFFFF" size=2><b>WAN状态信息</b></font></td>\
+	  </tr>');
+
+	  document.write('<tr bgcolor="#EEEEEE">\
+	    <td width=40%><font size=2><b>WAN IP地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[0]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#DDDDDD">\
+	    <td width=40%><font size=2><b>WAN 网关IP地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[2]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#EEEEEE">\
+	    <td width=40%><font size=2><b>WAN 主DNS IP地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[3]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#DDDDDD">\
+	    <td width=40%><font size=2><b>WAN 辅DNS IP地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[4]+'</td>\
+	  </tr>\
+     <tr bgcolor="#EEEEEE">\
+	    <td width=40%><font size=2><b>IPV6地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[6]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#DDDDDD">\
+	    <td width=40%><font size=2><b>IPV6本地链路地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[5]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#EEEEEE">\
+	    <td width=40%><font size=2><b>IPV6 主DNS 地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[9]+'</td>\
+	  </tr>\
+	  <tr bgcolor="#DDDDDD">\
+	    <td width=40%><font size=2><b>IPV6 辅DNS 地址</b></td>\
+	    <td width=60%><font size=2>'+allmsg[10]+'</td>\
+	  </tr>');	
+
+
+	}
+	   
+}
+</script>
+
+</head>
+<body>
+<blockquote>
+
+
+
+
+<h2><b><font color="#0000FF">系统信息</font></b></h2>
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+<!--table border=0 width="400" cellspacing=0 cellpadding=0>
+<tr><td><font size=2>
+
+</font></td></tr>
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<tr><td><hr size=1 noshade align=top><br></td></tr>
+</table-->
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+
+
+<table width=400 border=0">
+  <tr>
+    <td width=100% colspan="2" bgcolor="#008000"><font color="#FFFFFF" size=2><b>版本信息</b></font></td>
+  </tr>
+  <!--tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>运行时间</b></td>
+    <td width=60%><font size=2><% getInfo("uptime"); %></td>
+  </tr-->
+  <tr bgcolor="#EEEEEE">
+    <td width=40%><font size=2><b>硬件版本</b></td>
+    <td width=60%><font size=2><% getstatusInfo("hardwareversion"); %></td>
+  </tr>
+  <tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>软件版本</b></td>
+    <td width=60%><font size=2><% getInfo("fwVersion"); %></td>
+  </tr>
+  <script>
+
+</script>
+
+<SCRIPT>
+
+		showWan();
+</SCRIPT>
+  <tr>
+    <td width=100% colspan="2" bgcolor="#008000"><font color="#FFFFFF" size=2><b>家庭网关状态信息</b></font></td>
+  </tr>
+
+  <tr bgcolor="#EEEEEE">
+    <td width=40%><font size=2><b>家庭网关MAC地址</b></td>
+    <td width=60%><font size=2><% getstatusInfo("statusbr0mac"); %></td>
+  </tr>
+
+  <tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>家庭网关局域网IP地址</b></td>
+    <td width=60%><font size=2><% getInfo("ip"); %></td>
+  </tr>
+  <tr bgcolor="#EEEEEE">
+    <td width=40%><font size=2><b>子网掩码</b></td>
+    <td width=60%><font size=2>255.255.255.0</td>
+  </tr>
+  <tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>家庭网关运行时间</b></td>
+    <td width=60%><font size=2><span id="time_stat" width="100%" align="right"></span></td>
+  </tr>
+
+
+
+
+
+
+
+  <tr>
+    <td width=100% colspan="2" bgcolor="#008000"><font color="#FFFFFF" size=2><b>产品信息</b></font></td>
+  </tr>
+  <!--tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>运行时间</b></td>
+    <td width=60%><font size=2><% getInfo("uptime"); %></td>
+  </tr-->
+  <tr bgcolor="#EEEEEE">
+    <td width=40%><font size=2><b>IMEI</b></td>
+    <td width=60%><font size=2><% getInfo("imeino"); %></td>
+  </tr>
+  <tr bgcolor="#DDDDDD">
+    <td width=40%><font size=2><b>SN</b></td>
+    <td width=60%><font size=2><% getInfo("serialno"); %></td>
+  </tr>
+  <tr bgcolor="#EEEEEE">
+    <td width=40%><font size=2><b>产品名称</b></td>
+    <td width=60%><font size=2>leadcore smart mifi</td>
+  </tr>
+</table>
+
+<br>
+<br>
+<br>
+
+<div id="frameBox1">
+<iframe id="lan_status_frame" name="lan_status_frame" src="/chn/dhcptbl_chn.htm" width="100%"	height="800px" FRAMEBORDER='0' SCROLLING='no'  onload="" ></iframe>
+</div>
+
+<!--table width=800 >
+		<iframe id="lan_status_frame" name="lan_status_frame" src="/chn/dhcptbl_chn.htm" width="100%" 
+			hspace="0" vspace="0" marginwidth=0 MARGINHEIGHT=0 FRAMEBORDER='0' SCROLLING='auto' align="center"></iframe>
+	</table-->
+<br>
+
+
+</blockquote>
+</body>
+</html>

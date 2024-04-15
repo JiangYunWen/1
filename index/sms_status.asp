@@ -1,0 +1,1 @@
+<% getsmsInfo("sms_recv_new_sms"); %>*<% getsmsInfo("sms_recv_new_sms_ack"); %>

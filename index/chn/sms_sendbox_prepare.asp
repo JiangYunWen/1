@@ -1,0 +1,1 @@
+<% getsmsInfo("sendbox_file_exist"); %>

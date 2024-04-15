@@ -1,0 +1,16 @@
+.TemplateInput
+{
+    border:1px solid #7f9db9;
+    font-size:12px;
+    font-family: 微软雅黑;
+}
+.TemplateInput input
+{
+    border:0px solid #ccc;
+    font-size:12px;
+    font-family: 微软雅黑;
+    height:18px;
+    width:30px;
+    background:transparent;
+    text-align:center;
+}

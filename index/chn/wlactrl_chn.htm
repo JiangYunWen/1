@@ -1,0 +1,772 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>无线访问控制</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"> </script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<style type="text/css">
+.but0{
+	
+ display: block;
+ position: absolute;
+ 
+ left: 300px;
+
+
+}
+.but1{
+	
+ display: block;
+ position: absolute;
+ width:100px;
+ left: 200px;
+
+
+}
+
+.but2{
+	
+position: absolute;
+width:100px;
+ left: 320px;
+
+
+
+}
+
+.sel0{
+	
+position: absolute;
+ left: 200px;
+
+
+
+}
+
+
+.txt0{
+	
+position: absolute;
+ left: 200px;
+width:160px;
+
+
+}
+
+</style>
+
+<script>
+	
+
+
+function SetSSIDSettingOption()
+{	
+	var mode = <% getIndex("wlanMode");%>;
+	var mssid_num=<%getIndex("wlan_mssid_num");%>;
+	
+	if (mode != 1) {	
+		var ssid="<% getInfo("ssid"); %>";
+		var val="Root AP - " + ssid;
+		if(mode != 5) {/*MESH mode do not have ROOT AP option*/
+			var disable=new Array()
+			disable[0] = 0;		
+			disable[1] = <% getVirtualIndex("wlanDisabled", "1"); %>;
+			disable[2] = <% getVirtualIndex("wlanDisabled", "2"); %>;
+			disable[3] = <% getVirtualIndex("wlanDisabled", "3"); %>;
+			disable[4] = <% getVirtualIndex("wlanDisabled", "4"); %>;
+			
+			for (i=0; i<=mssid_num; i++) {	
+				if (!disable[i]) {
+					document.write("<option value=\"" + i + "\"><font face=\"Arial\" style=\"font-size: 8pt\">");
+					document.write(val);
+					document.write("</font></option>");
+				}
+				if (i != 4 && !disable[i+1]) {
+					id =  i+1;
+					if (id == 1)	
+						ssid =  " - <% getVirtualInfo("ssid", "1"); %>";
+					else if (id == 2)	
+						ssid =  " - <% getVirtualInfo("ssid", "2"); %>";
+					else if (id == 3)	
+						ssid =  " - <% getVirtualInfo("ssid", "3"); %>";
+					else
+					ssid =  " - <% getVirtualInfo("ssid", "4"); %>";	
+					val = "AP" + id + ssid;
+				}		
+			}
+		}
+		
+	}
+	
+	var wlProfileEnable=new Array();
+	var wlProfileSSID=new Array();
+	
+	wlProfileEnable[0]="<% getWlProfileInfo("wlProfileTblEnable", "1"); %>"*1;
+	wlProfileEnable[1]="<% getWlProfileInfo("wlProfileTblEnable", "2"); %>"*1;
+	wlProfileEnable[2]="<% getWlProfileInfo("wlProfileTblEnable", "3"); %>"*1;
+	wlProfileEnable[3]="<% getWlProfileInfo("wlProfileTblEnable", "4"); %>"*1;
+	wlProfileEnable[4]="<% getWlProfileInfo("wlProfileTblEnable", "5"); %>"*1;
+	
+	wlProfileSSID[0]="<% getWlProfileInfo("wlProfileSSID", "1"); %>"
+	wlProfileSSID[1]="<% getWlProfileInfo("wlProfileSSID", "2"); %>"
+	wlProfileSSID[2]="<% getWlProfileInfo("wlProfileSSID", "3"); %>"
+	wlProfileSSID[3]="<% getWlProfileInfo("wlProfileSSID", "4"); %>"
+	wlProfileSSID[4]="<% getWlProfileInfo("wlProfileSSID", "5"); %>"
+
+	var select=<% getIndex("mssid_idx"); %>;
+	document.formWlAcAdd.MSSID_index.selectedIndex = select;	
+}
+
+function addClick()
+{
+  var str = document.formWlAcAdd.mac.value;
+
+  if (document.formWlAcAdd.wlanAcEnabled.selectedIndex == 0)
+	{
+send();
+ 	return true;
+}
+
+	// WPS2DOTX  ; 4.2.7
+    wlanMode = <% write(getIndex("wlanMode")); %>;	
+	if(wlanMode==0 || wlanMode==3){
+      //if (document.formWlAcAdd.wlanAcEnabled.selectedIndex == 1){	
+	    //if(!confirm("如果ACL白名单功能开启; WPS2.0将被禁用。")){
+		   //return false;
+	    //}
+     //}
+   }
+   
+	
+  if ( str.length == 0)
+{
+send();
+ 	return true;
+}
+
+  if ( str.length < 17&&str.length != 0) {
+	alert("输入MAC地址不完整。");
+	document.formWlAcAdd.mac.focus();
+	return false;
+  }
+
+if(checkMac(document.formWlAcAdd.mac.value))
+{
+send();
+}
+
+
+
+  return true;
+}
+function send()
+{
+
+var temp="/boafrm/formWlAc";
+
+var wlanAcEnabled=document.getElementById("wlanAcEnabled").value;
+var macv=document.getElementById("mac").value;
+var commentv="";
+
+macv=macv.replace(/:/gm, "");
+var param="wlanAcEnabled="+wlanAcEnabled+"&mac="+macv+"&comment="+commentv+"&addFilterMac=Apply+Changes";
+
+if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+{
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+      
+       //document.body.innerHTML=result;
+
+//result_fun();
+send_reboot();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+  }
+}
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function send_reboot()
+{
+  ShowModalDialog("/chn/info.htm","");
+ var tmp="/boafrm/formreboot";
+$.ajax({
+type: "POST",
+
+	url: tmp,
+	cache: false,
+  data:"formreboot=1",
+
+	success: function(result) {
+
+	},
+	  
+	complete: function(xmlHttpHeader, textStatus) {
+		xmlHttpHeader = null;
+	  	
+
+	}
+
+});
+
+}
+function  result_fun()
+{
+var html_body=
+"<html><body><blockquote><h4>修改成功!</h4>你的修改已经保存。路由器必须重启配置才能生效。<br> 你可以现在立即重启, 或者稍后重启。<form action=/boafrm/formRebootCheck method=POST name='rebootForm'><input type='hidden' value='/chn/wlactrl_chn.htm' name='submit-url'><input id='restartNow' type='submit' value='立即重启' onclick='return true' />&nbsp;&nbsp;<input id='restartLater' type='button' value='稍后重启' OnClick=window.location.replace('/chn/wlactrl_chn.htm')></form></blockquote></body></html>";
+
+document.body.innerHTML=html_body;
+}	
+function checkMac(macStr)
+	{
+
+var tableDom = document.getElementById("tb0");
+  var rows = tableDom.rows;
+  
+
+// console.warn(rows.length);	
+  var row_tmp=document.getElementById("tb0").rows[2];
+  
+    //console.warn(row_tmp.cells[0].innerHTML);	
+  
+  if(rows.length>22||rows.length==22)
+  {
+  	
+  	alert("已达到最大条目数，不能添加！");
+		return false;
+  }
+  
+    for(i=2 ; i < rows.length ; i++){
+
+				//console.warn(document.formWlAcDel.rows[i].cells[0]	);	
+				 var row_tmp=document.getElementById("tb0").rows[i];		
+				 //console.warn(row_tmp.cells[0].innerHTML.search(macStr) +"    "+macStr);
+				 macStr=macStr.toUpperCase();
+				 if(row_tmp.cells[0].innerHTML.search(macStr)!=-1)
+				 {
+				 	
+				 	  	alert("不能添加重复的MAC地址！");
+		          return false;
+				 }
+
+    }
+
+
+	var pattern = /^\s*([A-Fa-f0-9]{2}(\-|\:)){5}[A-Fa-f0-9]{2}\s*$/;
+	var patternMulti = /^\s*[0-9A-Fa-f]{1}[13579bdfBDF]{1}((\-|\:)[A-Fa-f0-9]{2}){5}\s*$/;;
+	var patternBroadcast = /^\s*(((FF)|(ff))(\-|\:)){5}((FF)|(ff)){1}\s*$/;
+	var patternZero = /^\s*(((00)|(00))(\-|\:)){5}((00)|(00)){1}\s*$/;
+	var flag;
+	var arr;
+
+	var alertflag;
+	if(typeof arguments[1] == "undefined" || arguments[1] == true)alertflag = true;
+	else alertflag = false;
+//	if(0 == macStr.length)
+//	{
+//		if(alertflag)alert(js_input_mac="Input MAC address is not complete.");
+//		return false;
+//	}
+	if(macStr.length !=17&&macStr.length !=0)
+	{
+		alert("您输入的MAC地址非法,请重新输入！");
+		return false;
+	}
+	flag = pattern.test(macStr);
+	if(!flag)
+	{
+		if(alertflag)alert(js_invalid_mac="您输入的MAC地址非法,请重新输入！");
+		return false;
+	}
+
+	flag = patternBroadcast.test(macStr);
+	if(flag)
+	{
+		if(alertflag)alert(js_broadcast_mac="您输入的MAC地址非法（广播MAC地址），请重新输入！");
+		return false;
+	}
+
+	flag = patternMulti.test(macStr);
+	if(flag)
+	{
+		if(alertflag)alert(js_multicast_mac="您输入的MAC地址非法（多播MAC地址），请重新输入！");
+		return false;
+	}
+
+	flag = patternZero.test(macStr);
+	if(flag)
+	{
+		if(alertflag)alert(js_zero_mac="您输入的MAC地址非法（全零MAC），请重新输入！");
+		return false;
+	}
+	return true;
+}
+
+function GetCheckedItems_inner()
+{
+	var listItems;
+	if (navigator.appName == "Microsoft Internet Explorer")
+	{ 
+      if(!-[1,]==false)
+      {
+      //IE9+
+              var reg = /9\.0/; 
+              var reg2=/11\.0/; 
+      
+              var str = navigator.userAgent; 
+              //reg.test(str); 
+              if (reg.test(str)) { 
+                 // alert("ie9"); 
+                 listItems = document.getElementsByName("tb0");
+              }else if(reg2.test(str))
+              {
+      
+                // alert("ie11"); 
+                listItems = document.getElementsByName("tb0");
+              }else
+              {
+                // alert("ie10"); 
+                 listItems = document.getElementsByName("tb0");
+                // console.warn( listItems.length );
+
+              }
+      
+      
+      
+      }else
+      {
+      //IE8
+      //alert("ie8"); 
+         listItems = document.getElementsByName("tb0");
+      }
+	}
+	else
+	{
+		listItems = document.getElementsByName("tb0");
+	}
+	return listItems;
+}
+function deleteClick(ap_index)
+{
+
+var selCount=0;
+var tableDom = document.getElementById("tb0");
+  var rows = tableDom.rows;
+  
+
+// console.warn(rows.length);	
+  var row_tmp=document.getElementById("tb0").rows[2];
+  
+    //console.warn(row_tmp.cells[0].innerHTML);	
+  
+
+  
+    for(i=2 ; i < rows.length ; i++){
+
+
+				 var row_tmp=document.getElementById("tb0").rows[i];	
+
+
+//console.warn(row_tmp.cells[1]);	
+			
+				 row_tmp=row_tmp.cells[1].innerHTML;
+
+var checkbox1 = document.getElementById("tb0").rows[i].cells[1].firstChild;// 
+
+//console.warn(row_tmp.charCodeAt(30));	
+//console.warn(checkbox1);	
+				 if(checkbox1.checked==true)
+         {
+
+//console.warn("123");	
+            selCount++;
+         }
+
+    }
+
+if(selCount>0)
+{
+
+
+
+
+	var acl_num=0;
+	switch (ap_index) {
+	case 0:
+			acl_num = <% getIndex("wlanAcNum", "0"); %> ;
+			break;
+
+	}
+  delNum = 0 ;
+  for(i=1 ; i <= acl_num ; i++){
+  		switch (ap_index) {
+		case 0:
+				if(document.formWlAcDel.elements["select"+i].checked)
+  					delNum ++ ;
+				break;
+
+		}
+  }
+  if(document.formWlAcAdd.wlanAcEnabled.selectedIndex==1 && delNum==acl_num){
+		if ( confirm('删除所有条目将导致所有客户端无法连接到AP。确定删除吗?') )
+		{
+			if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+			{
+				send_del();
+			}
+			
+		}
+			
+   }
+  else if ( confirm('你真的想删除所有被选中的条目吗?') ) {
+  	
+  		if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+			{
+				send_del();
+			}
+
+  }
+  else
+	return true;
+}else
+{
+alert("请先选择要删除的条目!");
+}
+}
+function  send_del()
+{
+	
+	var temp="/boafrm/formWlAc";
+
+//var wlanAcEnabled=document.getElementById("wlanAcEnabled").value;
+//var macv=document.getElementById("mac").value;
+var commentv="";
+
+
+
+	var acl_num=0;
+
+			acl_num = <% getIndex("wlanAcNum", "0"); %> ;
+
+  delNum = 0 ;
+  for(i=1 ; i <= acl_num ; i++){
+
+				if(document.formWlAcDel.elements["select"+i].checked)
+  				{	
+  					delNum ++ ;
+  					
+  					commentv+="select"+i+"=ON&";
+  				}
+
+  }
+  
+  commentv=commentv+"deleteSelFilterMac=+%C9%BE%B3%FD%D2%D1%D1%A1%D6%D0+";
+
+		$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:commentv,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+      
+       //document.body.innerHTML=result;
+
+//result_fun();
+send_reboot();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+	
+}
+
+function  send_all_del()
+{
+	
+	var temp="/boafrm/formWlAc";
+
+//var wlanAcEnabled=document.getElementById("wlanAcEnabled").value;
+//var macv=document.getElementById("mac").value;
+var commentv="deleteAllFilterMac=Delete+All";
+
+
+
+
+
+		$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:commentv,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+      
+       //document.body.innerHTML=result;
+
+//result_fun();
+send_reboot();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+	
+}
+
+function deleteAllClick()
+{
+   if(document.formWlAcAdd.wlanAcEnabled.selectedIndex==1){
+	if ( confirm('删除所有条目将导致所有客户端无法连接到AP。确定删除吗?') )
+				if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+			{
+				send_all_del();
+			}
+  }else if ( confirm('你真的想删除所有条目吗?') ) {
+			if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+			{
+				send_all_del();
+			}
+  }
+  else
+	return true;
+}
+
+
+function disableDelButton(ap_index){
+
+				disableButton(document.formWlAcDel.deleteSelFilterMac);
+				disableButton(document.formWlAcDel.deleteAllFilterMac);
+
+}
+
+function enableAc()
+{
+  enableTextField(document.formWlAcAdd.mac);
+ // enableTextField(document.formWlAcAdd.comment);
+}
+
+function disableAc()
+{
+  disableTextField(document.formWlAcAdd.mac);
+  //disableTextField(document.formWlAcAdd.comment);
+  document.getElementById("mac").value="";
+}
+
+function updateState(filed)
+{
+  wlanDisabled = <% getIndex("wlanDisabled"); %> ;
+  wlanMode = <% getIndex("wlanMode"); %>;
+  var wlanState="<%getScheduleInfo("wlan_state");%>";
+  if(wlanDisabled || wlanMode == 1 || wlanMode ==2 || wlanState=='Disabled'){
+	disableDelButton();
+
+
+	disableButton(document.formWlAcAdd.addFilterMac);
+	//document.getElementById("mac").value="";
+  	disableTextField(document.formWlAcAdd.wlanAcEnabled);
+  	disableAc();
+  } 
+  else{
+  if (filed.selectedIndex > 0)
+ 	enableAc();
+  else
+  	disableAc();
+  }
+
+}
+
+function resetForm()
+{
+	document.formWlAcAdd.wlanAcEnabled.selectedIndex = <% getIndex("wlanAcEnabled", "0"); %> ;
+	document.formWlAcAdd.mac.value="";
+	document.formWlAcAdd.comment.value="";
+}
+
+function AclApSSIDSelected(index)
+{
+
+
+	if (document.formWlAcAdd.wlanAcEnabled.selectedIndex > 0) 
+			enableAc();
+  	else
+  			disableAc();
+
+	// window.location.reload();
+}
+
+function ACLModeOption(){
+	document.write("<option value=\"0\" >禁用</option>");
+	document.write("<option value=\"1\" selected >白名单</option>");
+        document.write(" <option value=\"2\" >黑名单</option>");
+
+	document.formWlAcAdd.wlanAcEnabled.selectedIndex = <% getIndex("wlanAcEnabled", "0"); %> ;
+}
+
+function DisableDeleteButton(ap_index){
+
+			switch (ap_index) {
+		case 0:
+				if ( <% getIndex("wlanAcNum", "0"); %> == 0 )
+					disableDelButton(0);
+				break;
+
+		}
+		updateState(document.formWlAcAdd.wlanAcEnabled, ap_index);
+}
+$(function(){ 
+var tableDom = document.getElementById("tb0");
+  var rows = tableDom.rows;
+  
+
+// console.warn(rows.length);	
+  var row_tmp=document.getElementById("tb0").rows[2];
+  
+    //console.warn(row_tmp.cells[0].innerHTML);	
+  
+  if(rows.length>22||rows.length==22)
+  {
+  	
+  	//alert("已达到最大条目数，不能添加！");
+		return false;
+  }
+  
+    for(i=2 ; i < rows.length ; i++){
+
+				//console.warn(document.formWlAcDel.rows[i].cells[0]	);	
+				 var row_tmp=document.getElementById("tb0").rows[i];		
+				 //console.warn(row_tmp.cells[0].innerHTML.search(macStr) +"    "+macStr);
+				 row_tmp=row_tmp.cells[0].innerHTML;
+				 row_tmp=row_tmp.toUpperCase();
+				// if(row_tmp.cells[0].innerHTML.search(macStr)!=-1)
+				// {
+				 	
+				 	  	//alert("不能添加重复的MAC地址！");
+		    //      return false;
+				// }
+				document.getElementById("tb0").rows[i].cells[0].innerHTML=row_tmp;
+    }
+}); 
+
+
+</script>
+</head>
+<body>
+<blockquote>
+<h2><font color="#0000FF">
+<script type="text/javascript">
+
+	document.write("无线访问控制</p>");
+</script>
+</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><font size=2>
+
+</font></tr>
+</table>
+
+<form action=/boafrm/formWlAc method=POST name="formWlAcAdd">
+
+<!--
+<tr><font size=2><b>
+   <input type="checkbox" name="wlanAcEnabled" value="ON" <% if (getIndex("wlanAcEnabled")) write("checked");
+   %> onclick="updateState()">&nbsp;&nbsp;Enable Wireless Access Control</b>
+</tr>
+-->
+
+<tr><hr size=1 noshade align=top><br>
+<!--td bgcolor="#FFFFFF" height="20" class="MainTD"><font size="2"><b>选择SSID:&nbsp;&nbsp;</b>
+<select name="MSSID_index" id="MSSID_index" onChange="AclApSSIDSelected( this.selectedIndex )">
+	<script>
+	SetSSIDSettingOption()
+	</script>
+</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</td-->
+</tr>
+
+
+<tr> <font size=2><b>
+   	无线网络访问模式: &nbsp;&nbsp;&nbsp;&nbsp;
+	<select class="sel0" size="1" name="wlanAcEnabled" id="wlanAcEnabled" onChange="updateState(this)">
+	<script>
+	ACLModeOption()
+	</script>
+        </select></font></b>
+	</tr>
+<tr><td>
+
+     <p><font size=2><b>MAC地址: </b> <input class="txt0" type="text" name="mac" id="mac" size="17" maxlength="17">&nbsp;&nbsp;
+   	<!--b><font size=2>说明: </b> <input type="text" name="comment" id="comment" size="16" maxlength="20"></font-->
+     
+<p><span>MAC地址输入示例:EE:87:FC:D8:7C:9F</span></p>
+     <p><input class="but0" type="button" value=" 确定 " name="addFilterMac" onClick="addClick()">&nbsp;&nbsp;
+        <!--input type="button" value=" 重设 " name="reset" onClick="resetForm();"-->&nbsp;&nbsp;&nbsp;
+        <!--input type="hidden" value="/chn/wlactrl_chn.htm" name="submit-url"-->
+     </p>
+  </form>
+
+<form action=/boafrm/formWlAc method=POST name="formWlAcDel" >
+	  <table border="0" width=440  id="tb0" name="tb0">
+	  <tr><font size=2><b>当前访问控制列表:</b></font></tr>
+			<% wlAcList("0"); %>
+	  </table>
+	  <br>
+	  <input class="but1" type="button" value=" 删除已选中 " name="deleteSelFilterMac" onClick="return deleteClick(0)">&nbsp;&nbsp;
+	  <input class="but2" type="button" value=" 全部删除 " name="deleteAllFilterMac" onClick="return deleteAllClick()">&nbsp;&nbsp;&nbsp;
+
+	  <!--input type="hidden" value="/chn/wlactrl_chn.htm" name="submit-url-"-->
+	 <script>
+			DisableDeleteButton(0);
+	 </script>
+</form>
+
+
+
+</blockquote>
+</body>
+</html>

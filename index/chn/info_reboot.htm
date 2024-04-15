@@ -1,0 +1,114 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<html>
+<head>
+<title></title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script language="JavaScript" src="../res/jquery.js"></script>
+<!--link rel="stylesheet" href="../style/iframe.css" type="text/css"-->
+
+
+</head>
+
+<SCRIPT language=javascript>
+
+var time=null;
+function checkwifisetresult()
+{
+
+var parm1="wifi_rsult.asp";
+	$.ajax({
+		url: parm1,
+		cache: false,
+
+		success: function(result) {
+		 	if (result.length !== 0)
+			{
+           //var allmsg = result.replace(/\s/gm, "").split(';');
+					_checkwifisetresult(result);
+
+
+			}
+		},
+		 
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+	});
+	
+	 time=setTimeout("checkwifisetresult()",3000);
+
+}
+var count=0;
+function _checkwifisetresult(result)
+{
+    count=count+1;
+    if(result==null||result.length==0)
+    {
+
+
+          return;
+    }else
+    {
+
+      var tmp_revs= parseInt(result,10);
+
+     // console.warn( result);
+      if(tmp_revs>0)
+      {
+        document.getElementById("set_ok").style.display="block";   
+        document.getElementById("set_res").innerHTML =" 设置成功。";
+      }
+
+    }
+
+   if(count>20)
+   {
+      document.getElementById("set_ok").style.display="block";   
+      document.getElementById("set_res").innerHTML =" 设置超时。";
+
+   }
+
+}
+function init()
+{
+
+  checkwifisetresult();
+	//document.getElementById("set_ok").style.display="block";
+
+}
+
+
+function close_the_page()
+{
+
+wifisetHideModalDialog();
+}
+
+function wifisetHideModalDialog()
+{
+	window.top.tb_remove();
+
+}
+
+
+
+
+</script>
+<body onLoad="" onunload="">
+<div class="wrap"> 
+<div style="text-align:center">
+<table style="margin:auto;width:80%">
+<tr><div id="upload_title" align="center" style="font-family: 微软雅黑;"><span id="set_res"  width="100%" align="right">成功</span></div></tr>
+
+<tr><div id="set_ok" align="center"  style="position: absolute; left: 40%; top:70%;display:block;"><input type="button" name="back" value="确定" onClick="close_the_page()"/></div></tr>
+
+</table>
+</div>
+</body>
+</html>

@@ -1,0 +1,877 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var pin_status_top;
+var objTimeOut = "";
+function system_sim_status_init(){
+	document.sim_status_form.reset();
+	var pinorpuk = pinorpuk_top;
+//var pinorpuk = "<% aspSyOEMCfg("lc_sim_status");%>";
+	
+	var pin_openorclose = document.getElementById("lc_pin_setting").selectedIndex;
+
+	if (pinorpuk == 0) 
+	{
+		if(pin_openorclose =="0")
+		{
+			document.getElementById("sim_status_text").innerHTML = "(U)SIM卡正常";
+			
+			pin_change_old_pin_text.innerHTML="";
+			pin_change_new_pin_text.innerHTML="";
+			pin_change_confirm_pin_text.innerHTML="";
+
+
+      $('#lc_pin_change_old_pin').hide();
+      $('#lc_pin_change_new_pin').hide();
+      $('#lc_pin_change_confirm_new_pin').hide();
+      $('#pin_change_apply').hide();
+			
+
+		}
+		else
+		{
+			document.getElementById("sim_status_text").innerHTML = "(U)SIM卡正常";
+		}	
+	} 
+	else if (pinorpuk == 1)
+	{
+		document.getElementById("sim_status_text").innerHTML = "(U)SIM卡不存在!";
+		
+		pin_change_old_pin_text.innerHTML="";
+		pin_change_new_pin_text.innerHTML="";
+		pin_change_confirm_pin_text.innerHTML="";
+		
+
+
+    $('#lc_pin_change_old_pin').hide();
+    $('#lc_pin_change_new_pin').hide();
+    $('#lc_pin_change_confirm_new_pin').hide();
+    $('#pin_change_apply').hide();
+
+
+		 $('#pin_puk_code').hide();
+     $('#pin_code').hide();
+
+
+
+	} 
+	else if (pinorpuk == 2)
+	{
+		document.getElementById("sim_status_text").innerHTML = "(U)SIM卡异常!";
+		
+		pin_change_old_pin_text.innerHTML="";
+		pin_change_new_pin_text.innerHTML="";
+		pin_change_confirm_pin_text.innerHTML="";
+
+
+
+    $('#lc_pin_change_old_pin').hide();
+    $('#lc_pin_change_new_pin').hide();
+    $('#lc_pin_change_confirm_new_pin').hide();
+    $('#pin_change_apply').hide();
+    
+    $('#pin_puk_code').hide(); 
+    $('#pin_code').hide();
+
+		
+	}
+	else if (pinorpuk == 4)
+	{
+		document.getElementById("sim_status_text").innerHTML = "请输入PIN码!";
+		
+		pin_change_old_pin_text.innerHTML="";
+		pin_change_new_pin_text.innerHTML="";
+		pin_change_confirm_pin_text.innerHTML="";
+
+    $('#lc_pin_change_old_pin').hide();
+    $('#lc_pin_change_new_pin').hide();
+    $('#lc_pin_change_confirm_new_pin').hide();
+    $('#pin_change_apply').hide();	
+    $('#pin_code').hide();	
+
+	
+	}
+	else if (pinorpuk == 5)
+	{
+		document.getElementById("sim_status_text").innerHTML = "PIN码被锁，需PUK码解锁";
+		
+
+		pin_change_old_pin_text.innerHTML="";
+		pin_change_new_pin_text.innerHTML="";
+		pin_change_confirm_pin_text.innerHTML="";
+
+    $('#lc_pin_change_old_pin').hide();
+    $('#lc_pin_change_new_pin').hide();
+    $('#lc_pin_change_confirm_new_pin').hide();
+    $('#pin_change_apply').hide();
+    $('#pin_code').hide();
+
+
+	}
+	else
+	{
+	
+	}
+	
+	if (pinorpuk == 0)
+	{
+		document.getElementById("sim_status_text").style.color="green";
+	}
+	else
+	{
+	  document.getElementById("sim_status_text").style.color="red";
+	}
+	
+	if (pinorpuk == "4" || pinorpuk == "5")
+	{		
+
+	
+ $("#pin_puk_code").removeAttr("disabled");
+		if (pinorpuk == "4")
+		{
+	
+
+
+ $('#lc_new_pin_input').hide();
+ $('#lc_pin_puk_input').show();
+
+
+			show_pin_text.innerHTML="请输入PIN码(4-8位):";
+			show_new_pin_text.innerHTML="";
+		}else
+		{
+			show_pin_text.innerHTML="请输入PUK码(8位):";
+			show_new_pin_text.innerHTML="请输入新PIN码(4-8位):";
+
+
+ $('#lc_new_pin_input').show();
+		}		
+	}
+	else
+	{	
+		show_pin_text.innerHTML="";
+		show_new_pin_text.innerHTML="";
+
+
+
+ $('#pin_puk_code').hide();
+ $('#lc_new_pin_input').hide();
+ $('#lc_pin_puk_input').hide();
+
+
+$("#pin_puk_code").attr({"disabled":"disabled"});
+
+	}
+
+//--------------------------------------------------
+	
+
+	//	pin_change_old_pin_text.innerHTML="Please enter the old code:";
+	//	pin_change_new_pin_text.innerHTML="Please enter a new PIN code:";
+	//	pin_change_confirm_pin_text.innerHTML="Please enter a new PIN code again:";
+ //     $('#lc_pin_change_old_pin').show();
+ //     $('#lc_pin_change_new_pin').show();
+ //     $('#lc_pin_change_confirm_new_pin').show();
+  //    $('#pin_change_apply').show();
+}
+function pin_change_init()
+{
+	document.pin_change_form.reset();
+	var pin_status = pin_s_top;
+	var pinorpuk = pinorpuk_top;
+
+
+
+	if (pinorpuk == 4) //PIN被锁
+	{
+		if (pin_status == 0) 
+		{
+			document.getElementById("pin_status_text").innerHTML = "PIN码校验关闭";
+			document.getElementById("pin_status_text").style.color = "red";
+			
+			pin_change_old_pin_text.innerHTML="";
+			pin_change_new_pin_text.innerHTML="";
+			pin_change_confirm_pin_text.innerHTML="";
+			
+			
+			
+			document.getElementById("lc_pin_change_old_pin").style.display="none";
+			document.getElementById("lc_pin_change_new_pin").style.display="none";
+			document.getElementById("lc_pin_change_confirm_new_pin").style.display="none";
+			document.getElementById("pin_change_apply").style.display="none";
+			
+
+		} 
+		else if (pin_status == 1)
+		{
+			pin_change_old_pin_text.innerHTML="";
+			pin_change_new_pin_text.innerHTML="";
+			pin_change_confirm_pin_text.innerHTML="";
+			document.getElementById("pin_status_text").innerHTML = "PIN码未校验";
+		} 
+	}
+	else 
+	{
+		if (pinorpuk == 0)
+		{ if (pin_status == 1)
+			  document.getElementById("pin_status_text").innerHTML = "PIN码已校验";
+			else
+				document.getElementById("pin_status_text").innerHTML = "PIN码校验关闭";
+		}
+		else if (pinorpuk == 1) 
+		{
+			document.getElementById("pin_status_text").innerHTML = "(U)SIM卡不存在!";
+			document.getElementById("pin_status_text").style.color = "red";
+		}
+		else if (pinorpuk == 2) 
+		{
+			document.getElementById("pin_status_text").innerHTML = "(U)SIM卡异常!";
+			document.getElementById("pin_status_text").style.color = "red";
+		}
+		else if (pinorpuk == 5) 
+		{
+			document.getElementById("pin_status_text").innerHTML = "PIN码被锁，需PUK码解锁!";
+			pin_change_old_pin_text.innerHTML="";
+			pin_change_new_pin_text.innerHTML="";
+			pin_change_confirm_pin_text.innerHTML="";
+			document.getElementById("pin_status_text").style.color = "red";
+		}
+	}
+
+}
+function pin_setting_form_submit()
+{
+	if (document.getElementById("lc_pin_input").value.length != 0 )
+	{
+		if (document.getElementById("lc_pin_input").value.length < 4  ||  document.getElementById("lc_pin_input").value.length > 8)
+		{
+			alert("请输入4到8位的PIN码！");
+			document.all.pin_setting_form.lc_pin_input.focus();
+			return false;
+		}
+		else if ( !isdigit(document.getElementById("lc_pin_input").value))
+		{
+			alert("请输入类型为数字的PIN码！");
+			document.all.pin_setting_form.lc_pin_input.focus();
+			return false;
+		}
+	}
+	else
+	{
+		alert("PIN码不能为空！");
+		document.all.pin_setting_form.lc_pin_input.focus();
+		return false;
+	}
+	
+	//if (0 == document.all.pin_setting_form.lc_pin_setting.value && 
+	//    0 == <% getInfo("lc_pin_enable"); %>)
+	{
+		//alert("PIN code has been closed, no need to repeat off");
+	  //  return false;
+	}
+	
+	//if (1 == document.all.pin_setting_form.lc_pin_setting.value && 
+	//    1 == <% getInfo("lc_pin_enable"); %>)
+	{
+		///alert("PIN code has been opened, no need to repeat the opening");
+	  //  return false;
+	}
+
+	param = "";
+    param +="lc_pin_enable=";
+	param += document.all.pin_setting_form.lc_pin_setting.value + "&" +"lc_pin_input="+ document.all.pin_setting_form.lc_pin_input.value;
+//alert(param);
+disableTextField(document.getElementById("pin_code"));
+send_pin(param);
+}
+function pin_setting_result_get()
+{ 
+	var simstatus = pinorpuk_top;
+	
+	if (simstatus == 1)
+	{
+		 //alert("SIM卡不存在");
+	   closeIntervals();
+	} 
+	else
+	{
+		$.ajax({
+		url: "../lcData_pin.asp",
+		cache: false,
+
+		success: function(result) {
+		allmsg=result.split('*');
+		allmsg[0] = allmsg[0].replace(/[\r\n]/g,"");
+	  	allmsg[1] = allmsg[1].replace(/[\r\n]/g,"");
+	  	allmsg[2] = allmsg[2].replace(/[\r\n]/g,"");
+	 	allmsg[3] = allmsg[3].replace(/[\r\n]/g,"");
+
+enableTextField(document.getElementById("pin_change_apply"));
+enableTextField(document.getElementById("pin_puk_code"));
+
+		
+		if (allmsg[2] == "incorrect_puk_passwd")
+		{
+			var puk_count = allmsg[3];
+
+			//PUK码最多允许错误10次
+			if (puk_count == 0)
+				alert("(U)SIM异常!");
+			else if (puk_count > 0)
+				alert("PUK码错误，剩余" + puk_count + "次");
+
+			//获取到puk码信息，关闭定时器
+			closeIntervals();
+
+			location.reload();
+		}
+	  	else if (allmsg[2] == "success")
+		{
+			alert("PIN码已解锁!"); 
+
+			closeIntervals();
+
+			location.reload();
+		}
+		else if (allmsg[0] == "incorrect_pin_passwd")
+		{
+			var pin_count = allmsg[1];
+
+			//PIN码最多允许错误2次
+			if (pin_count == 0)
+				alert("PIN码错误，PIN码已锁!");
+			else if (pin_count > 0)
+				alert("PIN码错误，剩余" + pin_count + "次");
+
+			//获取到pin码信息，关闭定时器
+			closeIntervals();
+
+			location.reload();
+		}
+		else if (allmsg[0] == "success")
+		{
+			closeIntervals();
+			
+			location.reload();
+		}
+		else
+		{
+			openIntervals();
+		}
+		},	 
+
+		complete: function(xmlHttpHeader, textStatus) {
+		 	xmlHttpHeader = null;
+		}
+		});
+	}
+}
+
+// 打开定时器
+function openIntervals()
+{
+	if (objTimeOut == null || objTimeOut=="")
+	{
+		objTimeOut= setInterval('pin_setting_result_get()',2000);
+	}
+}
+//关闭定时器
+function closeIntervals()
+{
+	clearInterval(objTimeOut);
+	objTimeOut=null;
+}
+function send_pin( param)
+{
+
+
+var temp="/boafrm/formpinwansetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        openIntervals();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+function send_new_pin( param)
+{
+
+disableTextField(document.getElementById("pin_change_apply"));
+
+var temp="/boafrm/formnewpinsetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        openIntervals();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+function send_puk( param)
+{
+
+disableTextField(document.getElementById("pin_puk_code"));
+var temp="/boafrm/formpuksetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        openIntervals();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+function sim_status_submit()
+{
+	if ($('#lc_new_pin_input').is(':visible'))
+	{
+		if(document.all.sim_status_form.lc_pin_puk_input.value.length != 0)
+		{
+			if( !isdigit(document.all.sim_status_form.lc_pin_puk_input.value))
+			{
+				alert("请输入类型为数字的PUK码！");
+				document.all.sim_status_form.lc_pin_puk_input.focus();
+				return false;			
+			}			
+			else if (document.all.sim_status_form.lc_pin_puk_input.value.length != 8)
+			{
+				alert("请输入8位的PUK码！");
+				document.all.sim_status_form.lc_pin_puk_input.focus();
+				return false;
+			}
+
+			if(document.all.sim_status_form.lc_new_pin_input.value.length != 0)
+			{
+				if( !isdigit(document.all.sim_status_form.lc_new_pin_input.value))
+				{
+					alert("请输入类型为数字的PIN码！");
+					document.all.sim_status_form.lc_new_pin_input.focus();
+					return false;			
+				}			
+				else if (document.all.sim_status_form.lc_new_pin_input.value.length < 4  ||  document.all.sim_status_form.lc_new_pin_input.value.length > 8)
+				{
+					alert("请输入4到8位的PIN码！");
+					document.all.sim_status_form.lc_new_pin_input.focus();
+					return false;
+				}	
+			}	
+			else
+			{
+				alert("PIN码不能为空！");
+				document.all.sim_status_form.lc_new_pin_input.focus();
+				return false;			
+			}			
+		}
+		else
+		{
+			alert("PUK码不能为空！");
+			document.all.sim_status_form.lc_pin_puk_input.focus();
+			return false;			
+		}
+	}
+	else
+	{
+		if (document.all.sim_status_form.lc_pin_puk_input.value.length != 0 )
+		{
+			if(!isdigit(document.all.sim_status_form.lc_pin_puk_input.value))
+			{
+				alert("请输入类型为数字的PIN码！");
+				document.all.sim_status_form.lc_pin_puk_input.focus();
+				return false;				
+			}
+			else if (document.all.sim_status_form.lc_pin_puk_input.value.length < 4  ||  document.all.sim_status_form.lc_pin_puk_input.value.length > 8)
+			{
+				alert("请输入4到8位的PIN码！");
+				document.all.sim_status_form.lc_pin_puk_input.focus();
+				return false;
+			}
+		}
+		else
+		{
+			alert("PIN码不能为空！");
+			document.all.sim_status_form.lc_pin_puk_input.focus();
+			return false;
+		}	
+	}
+
+	param = "";
+    param +="lc_pin_puk_input=";
+//    if (document.all.sim_status_form.lc_new_pin_input.style.display=="block")
+  if ($('#lc_new_pin_input').is(':visible'))
+	{
+		param += document.all.sim_status_form.lc_pin_puk_input.value + "&" + "lc_new_pin_input="+document.all.sim_status_form.lc_new_pin_input.value;
+	}
+	else
+	{
+		param += document.all.sim_status_form.lc_pin_puk_input.value ;
+	}
+   // $.get('/goform/formSyWebCfg?oem_cfg=changed&action=Apply&'+param,function(r){ });
+   
+   send_puk(param);
+    
+
+
+
+}
+
+
+
+function pin_change_submit()
+{
+	//输入当前PIN
+	if (document.all.pin_change_form.lc_pin_change_old_pin.value.length != 0 )
+	{
+		if (document.all.pin_change_form.lc_pin_change_old_pin.value.length < 4  ||  document.all.pin_change_form.lc_pin_change_old_pin.value.length > 8)
+		{
+			alert("请输入4到8位的PIN码！");
+			document.all.pin_change_form.lc_pin_change_old_pin.focus();
+			return false;
+		}
+		else if ( !isdigit(document.all.pin_change_form.lc_pin_change_old_pin.value))
+		{
+			alert("请输入类型为数字的PIN码！");
+			document.all.pin_change_form.lc_pin_change_old_pin.focus();
+			return false;
+		}
+	}
+	else
+	{
+	    alert("PIN码或PUK码不能为空！");
+		document.all.pin_change_form.lc_pin_change_old_pin.focus();
+		return false;
+	}
+	
+	//输入新PIN
+	if (document.all.pin_change_form.lc_pin_change_new_pin.value.length != 0 )
+	{
+		if (document.all.pin_change_form.lc_pin_change_new_pin.value.length < 4  ||  document.all.pin_change_form.lc_pin_change_new_pin.value.length > 8)
+		{
+			alert("请输入4到8位的PIN码！");
+			document.all.pin_change_form.lc_pin_change_new_pin.focus();
+			return false;
+		}
+		else if ( !isdigit(document.all.pin_change_form.lc_pin_change_new_pin.value))
+		{
+			alert("请输入类型为数字的PIN码！");
+			document.all.pin_change_form.lc_pin_change_new_pin.focus();
+			return false;
+		}
+	}
+	else
+	{
+		alert("PIN码或PUK码不能为空！");
+		document.all.pin_change_form.lc_pin_change_new_pin.focus();
+		return false;
+	}
+
+	//再次确认新PIN
+	if (document.all.pin_change_form.lc_pin_change_confirm_new_pin.value.length != 0 )
+	{
+		if (document.all.pin_change_form.lc_pin_change_confirm_new_pin.value.length < 4  ||  document.all.pin_change_form.lc_pin_change_confirm_new_pin.value.length > 8)
+		{
+			alert("请输入4到8位的PIN码！");
+			document.all.pin_change_form.lc_pin_change_confirm_new_pin.focus();
+			return false;
+		}
+		else if ( !isdigit(document.all.pin_change_form.lc_pin_change_confirm_new_pin.value))
+		{
+			alert("请输入类型为数字的PIN码！");
+			document.all.pin_change_form.lc_pin_change_confirm_new_pin.focus();
+			return false;
+		}
+	}
+	else
+	{
+		alert("PIN码或PUK码不能为空！");
+		document.all.pin_change_form.lc_pin_change_new_pin.focus();
+		return false;
+	}
+	
+	if (document.all.pin_change_form.lc_pin_change_new_pin.value != document.all.pin_change_form.lc_pin_change_confirm_new_pin.value)
+	{
+		alert("两次PIN码输入不一致!");
+		document.all.pin_change_form.lc_pin_change_new_pin.value = "";
+		document.all.pin_change_form.lc_pin_change_confirm_new_pin.value = "";
+
+		document.all.pin_change_form.lc_pin_change_new_pin.focus();
+		return false;
+	}
+
+	param = "";
+	param +="lc_pin_change_input=";
+
+	param += document.all.pin_change_form.lc_pin_change_old_pin.value + "&" + "lc_pin_change_new_input="+document.all.pin_change_form.lc_pin_change_confirm_new_pin.value;
+	//$.get('/goform/formSyWebCfg?oem_cfg=changed&action=Apply&'+param,function(r){ });
+	
+	//刷定时器获取pin码校验结果
+	//openIntervals();
+//location.reload();
+send_new_pin(param);
+
+}
+var pinorpuk_top;
+var pin_s_top;
+function init()
+{
+var sim_status=<% getInfo("lc_sms_status"); %>;
+var pin_s_top_1=<% getInfo("lc_sim_pin_enable"); %>;
+//0：TIL_CARDSTATE_ABSENT   卡不存在
+// 1：TIL_PIN_AUTH_READY  SIM PIN1校验已通过
+// 2:TIL_PIN_AUTH_SIM_PIN 需要输入SIM PIN1
+// 3:TIL_PIN_AUTH_SIM_PUK 已输入SIM PIN1 3次均失败，需要输入SIM PUK1解锁
+if(sim_status==0)
+{
+
+}else
+{
+pin_s_top=1;
+
+}
+
+if(sim_status==1)
+{
+pin_s_top=1;
+}
+pin_s_top=pin_s_top_1;
+if(sim_status==0)
+{
+pinorpuk_top=1;
+//pin_s_top=0;
+}else if(sim_status==1)
+{
+pinorpuk_top=0;
+//pin_s_top=1;
+
+}else if(sim_status==2)
+{
+pinorpuk_top=4;
+//pin_s_top=1;
+
+}else if(sim_status==3)
+{
+pinorpuk_top=5;
+//pin_s_top=1;
+
+}
+document.getElementById("lc_pin_setting").selectedIndex=pin_s_top;
+
+
+//var pin_s_top=0;
+//0  PIN码校验关闭  1PIN码校验打开
+
+//var pinorpuk_top=0;
+//0 卡正常 1卡不存在 2SIM卡异常 4请输入PIN码  5 PIN码被锁，需PUK码解锁
+
+system_sim_status_init();
+
+pin_change_init();
+//document.getElementById("pin_code").disable=true;
+disableTextField(document.getElementById("pin_code"));
+pin_status_top=pin_s_top;
+
+}
+function lc_pin_setting_change()
+{
+if(document.getElementById("lc_pin_setting").value!=pin_status_top)
+{
+
+enableTextField(document.getElementById("pin_code"));
+}else
+{
+disableTextField(document.getElementById("pin_code"));
+}
+//pin_code
+
+}
+</script>
+</head>
+<blockquote>
+<h2><font color="#0000FF">(U)SIM卡</font></h2>
+
+<body onload="init()">
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+
+
+
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+
+  </tr>
+
+<h2><font size="2" weight="bold" ><b>(U)SIM卡状态</b></font></h2>
+
+
+
+<form name="sim_status_form">
+    <table>
+      <tr>
+          <td width ="25%"><font size="2" weight="bold" ><b>(U)SIM卡状态:</b></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><span id="sim_status_text"></span></font></td> 
+      </tr>
+
+	  <tr>
+          <td width ="25%"><font size="2" weight="bold" ><span id="show_pin_text" ><b></b></span></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><input type="text"  name="lc_pin_puk_input" maxlength="15" size="20" id="lc_pin_puk_input" ></font></td> 
+      </tr>
+
+      <tr>
+          <td width ="25%"><font size="2" weight="bold" ><span id="show_new_pin_text" ><b>新PIN码:</b></span></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><input type="text" class="txt1"  name="lc_new_pin_input" maxlength="15" size="20" id="lc_new_pin_input" ></font></td> 
+	  </tr>
+
+
+    </table>
+</form>
+
+
+
+</table>
+ <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" id="pin_puk_code" value="确定" name="save" onClick="sim_status_submit();">
+
+<h2><font size="2" weight="bold" ><b>PIN码设置</b></font></h2>
+
+<form id="pin_setting_form" name="pin_setting_form">
+  <input type="hidden" name="oem_cfg" value="changed" >
+  <table>
+    <tr> 
+      <td><font size="2" weight="bold" ><b>PIN码开关:</b></font></td>
+      <td ><font size="2" weight="bold" >
+	    <select name="lc_pin_setting" id="lc_pin_setting" onchange="lc_pin_setting_change();">
+          <option value='0'>关闭</option>
+          <option value='1'>开启</option>
+        </select> </font></td>
+    </tr>
+    <tr> 
+      <td ><font size="2" weight="bold" ><b>请输入PIN码:</b></font></td>
+      <td> <font size="2" weight="bold" ><input type="text"   name="lc_pin_input" maxlength="15" size="20" id="lc_pin_input" ></font></td>
+	</tr>
+
+  </table>
+</form>
+
+</table>
+ <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="确定" id="pin_code"  onClick="pin_setting_form_submit();">
+
+
+
+<h2><font size="2" weight="bold" >PIN码修改(需要开启PIN码)</font></h2>
+
+<form name="pin_change_form">
+    <table>
+    <tr>
+          <td width ="25%"><font size="2" weight="bold"><b>PIN码开关状态:</b></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><span id="pin_status_text"></span></font></td> 
+      </tr>
+	  <tr>
+          <td width ="25%"><font size="2" weight="bold" ><b><span id="pin_change_old_pin_text" >请输入原PIN码(4-8位):</span></b></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><input type="text" class="txt1"  name="lc_pin_change_old_pin" maxlength="15" size="20" id="lc_pin_change_old_pin"></font></td> 
+      </tr>
+
+      <tr>
+          <td width ="25%"><font size="2" weight="bold" ><b><span id="pin_change_new_pin_text" >请输入新PIN码(4-8位):</span></b></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><input type="text" class="txt1"  name="lc_pin_change_new_pin" maxlength="15" size="20" id="lc_pin_change_new_pin"></font></td> 
+      </tr>
+
+	  <tr>
+          <td width ="25%"><font size="2" weight="bold" ><b><span id="pin_change_confirm_pin_text" >请再次输入新PIN码(4-8位):</b></span></font></td>
+          <td width ="75%"><font size="2" weight="bold" ><input type="text" class="txt1"  name="lc_pin_change_confirm_new_pin" maxlength="15" size="20" id="lc_pin_change_confirm_new_pin" ;></font></td> 
+	  </tr>
+
+
+    </table>
+</form>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="确定" name="pin_change_apply"  id="pin_change_apply" onClick="pin_change_submit();">
+
+
+</body>
+</blockquote>
+</html>
+
+

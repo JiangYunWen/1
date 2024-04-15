@@ -1,0 +1,1 @@
+<% getInfo("lc_plmn_afert_select_result"); %>

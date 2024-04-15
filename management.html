@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
+<title>management</title>
+<link rel="stylesheet" href="lx.css">
+<style>
+body {
+    background-color: #397a39;
+}
+
+#login-box {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#login-box input[type="text"],
+#login-box input[type="password"],
+#login-box button {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#login-box button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#login-box button:hover {
+    background-color: #0056b3;
+}
+
+#login-title {
+    color: #000; /* 设置标题颜色为白色 */
+    font-size: 24px; /* 设置标题字体大小 */
+}
+</style>
+</head>
+<body onload="setCodeValuelogin()">
+<div class="box" id="login-box">
+<div id="login-title">NMS-88</div>
+<div id="content">
+<br><br>
+<p align="center">管理员账号: <input id="uname" type="text" name="user"></p>
+<br>
+<p align="center">管理员密码: <input id="upass" type="password" name="psw"></p>
+<div id="error_box"><br></div>
+<div id="text1">用户名请输入6-20位字符</div>
+<div id="text2">用户名首字符必须为字母</div>
+<div id="text3">用户名必须为字母跟数字组成</div>
+<div id="text4">密码请输入6-20位字符</div>
+<div id="text5">当前浏览器不支持ActiveXObject</div>
+<div id="text6">用户名或密码不正确，请重试</div>
+<style>
+#text1{display: none;}
+#text2{display: none;}
+#text3{display: none;}
+#text4{display: none;}
+#text5{display: none;}
+#text6{display: none;}
+</style>
+<button onclick="button_management_login()" class="btn btn-info">登录</button>
+</div>
+<i>Powered by @2024</i>
+<div align="center" valign="middle">
+<script language='javascript' src='zh.js'></script>
+<script type="text/javascript" src="load_login.js"></script>
+<p style="text-align:center;">
+<a href="javascript:zh_tran('s');" class="zh_click" id="zh_click_s" onclick="setCookieValuemanagement('s')">简体</a>
+<a href="javascript:englishrefresh();" class="zh_click" id="zh_click_s" onclick="setEngilshmanagement()">Engilsh</a>
+</p>
+</div>
+</div>
+</body>
+</html>
+<script>
+function button_management_login() {
+ var oUname = document.getElementById("uname");
+ var oUpass = document.getElementById("upass");
+ var oError = document.getElementById("error_box");
+ var isError = true;
+    if (oUname.value.length > 20 || oUname.value.length < 6) {
+        document.getElementById("text1").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text1").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+        }else if((oUname.value.charCodeAt(0)>=48) && (oUname.value.charCodeAt(0)<=57)){
+        document.getElementById("text2").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text2").style.display = "none";
+        }, 3000);
+        return;
+    }else for(var i=0;i<oUname.value.charCodeAt(i);i++){
+        if((oUname.value.charCodeAt(i)<48)||(oUname.value.charCodeAt(i)>57) && (oUname.value.charCodeAt(i)<97)||(oUname.value.charCodeAt(i)>122)){
+        document.getElementById("text3").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text3").style.display = "none";
+        }, 3000);
+        return;
+        }
+    } 
+    if (oUpass.value.length > 20 || oUpass.value.length < 6) {
+        document.getElementById("text4").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text4").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+    }
+     if(oUname.value=="admin123"&&oUpass.value=="admin123"){
+        setCookie('user_choose', 'block', zh_expires);
+        self.location.href="index/index.htm";
+     }else{
+        document.getElementById("text6").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text6").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+     }
+}
+</script>

@@ -1,0 +1,356 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Pragma" content="no-cache">
+<meta HTTP-equiv="Cache-Control" content="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="Mon, 01 Jan 1990 00:00:01 GMT">
+
+
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+<style type="text/css">
+.txt1{
+	
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	padding: 0;
+	margin:0;
+width:180px;
+
+}
+
+.button1{
+	
+ display: block;
+ position: absolute;
+ top: 280px;
+ left: 200px;
+
+
+}
+.button2{
+	
+ display: block;
+ position: absolute;
+ top: 230px;
+ left: 270px;
+
+
+}
+</style>
+<title>apn configuration</title>
+
+<script language="JavaScript" type="text/javascript">
+var debug=0;
+var images=new Array(); //apn信息
+var ASCIIStrValid = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz' + '0123456789' +  '-_';
+function checkASC(keyval,place)
+{
+         var j, k, flag;
+         for ( k=0; k<keyval.value.length; k++ ){                  
+                   for(j=0;j<ASCIIStrValid.length;j++){
+                            flag = false;
+                            if(keyval.value.charAt(k) ==  ASCIIStrValid.charAt(j)){
+                                     flag = true;
+                                     break;
+                            }
+                   }
+                   if(flag == false){
+                       alert("输入中含有非法字符，请您重新输入！\r"+
+"(请不要输入字母、数字、中划线、下划线以外的字符。)");                            
+                            keyval.value=keyval.defaultValue;
+                            keyval.focus();
+                            return false;
+                   }
+         }
+         return true;
+}
+function includeSpace(str)
+{
+  for (var i=0; i<str.length; i++) {
+  	if ( str.charAt(i) == ' ' ) {
+	  return true;
+	}
+  }
+  return false;
+}
+
+function saveChanges()
+{
+
+
+
+
+  return true;
+}
+function saveClick()
+{
+if(document.getElementById("apn_profile_name").value.length==0)
+{
+
+alert("配置文件名称不能为空!");
+return false;
+}
+
+
+
+
+var index=document.getElementById("lc_system_profile_type").value;
+var temp="/boafrm/formapn";
+//param="username="+document.getElementById("username").value+"&newpass="+document.getElementById("newpass").value+"&confpass="+document.getElementById("confpass").value+"&submit-url=%2Fchn%2Fstatus_chn.htm&save=%C8%B7%B6%A8";
+param="lc_system_profile_type="+rel_sel[index]+"&";
+param+="apn_profile_name="+document.getElementById("apn_profile_name").value+"&";
+param+="apn_name="+document.getElementById("apn_name").value+"&";
+param+="apn_user="+document.getElementById("apn_user").value+"&";
+param+="apn_pass="+document.getElementById("apn_pass").value+"&";
+param+="apn_type="+document.getElementById("apn_type").value;
+
+if(1)
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         alert("设置成功！");
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+}
+//document.getElementById("apn_con").innerHTML = "(U)SIM卡正常";
+}
+function changeSelected()
+{
+  var index=document.getElementById("lc_system_profile_type").value;
+
+var content="<% getInfo("apn_profile_info"); %>";
+content=content.split("[;]");
+index=rel_sel[index];
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][0]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j+"   "+index);
+           }
+ 
+
+
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+//console.warn(images[i][j]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j);
+           }
+    }
+    
+    var p_tmp=document.getElementById("lc_system_profile_type").value;
+    index=p_tmp;
+
+  document.getElementById("apn_profile_name").value=images[index][1];
+  document.getElementById("apn_name").value=images[index][4];
+  document.getElementById("apn_user").value=images[index][2];
+  document.getElementById("apn_pass").value=images[index][3];
+  //document.getElementById("apn_type").value=images[index][5];
+
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+ document.getElementById("apn_type").value=images[index][5];
+//alert(typeof(images[index][5]));
+//alert(images[index][5].length);
+           if(debug==1)
+           {
+               console.warn(images[0][1]+"   "+images[0][2]+"  0720 "+i  +"   "+images[index][5]);
+           }
+
+}
+var content="<% getInfo("apn_profile_info"); %>";
+var rel_sel=new Array();
+function init()
+{
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+//alert(allmsg[0]+"   "+allmsg[1]+"   "+allmsg[2]+"   "+allmsg[3]+"   "+allmsg[4]+"   ");
+
+if(allmsg[5]=="0")
+{
+
+document.getElementById("table_sim").style.display="none";
+
+document.getElementById("button_sim").style.display="none";
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">没有(U)SIM卡或(U)SIM卡无效时不能修改APN,请检查(U)SIM卡.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+
+return 0;
+}else if(allmsg[5]=="2")
+{
+document.getElementById("table_sim").style.display="none";
+
+document.getElementById("button_sim").style.display="none";
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PIN码开启时不能修改APN,请进入移动网络->(U)SIM卡页面输入PIN码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}else if(allmsg[5]=="3")
+{
+document.getElementById("table_sim").style.display="none";
+
+document.getElementById("button_sim").style.display="none";
+
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PUK码开启时不能修改APN,请进入移动网络->(U)SIM卡页面输入PUK码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}
+
+    var apn_select_html;
+    //"0[,]jack[,]123456[,]cmnet[,]name[;]1[,]john[,]1234[,]cmwap[,]name[;]"//til_request_query_apn_profile
+    var current_profile=<% getInfo("apn_cur_profile"); %>;//til_request_query_current_apn_profile
+    var index=current_profile;
+     content=content.split("[;]");
+    
+    //alert(content.length    +  "    "+content[0]+"     "+content[1]+"     "+content[2]);
+    
+    apn_select_html="<select name=\"lc_system_profile_type\" id=\"lc_system_profile_type\" onChange=\"changeSelected();\" >";
+
+    
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][j]+" init  "+content_inner[j]);
+           }
+  
+
+           if(j==0)
+           {
+              apn_select_html+="<option value='"+i+"'>"+i+"</option>";
+              rel_sel[i]=content_inner[j];
+              if(current_profile==content_inner[j])
+              {
+              	current_profile=i;
+              }
+           }
+           
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+//console.warn(images[i][j]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j);
+           }
+    }
+    apn_select_html+="</select>";
+    document.getElementById("apn_con").innerHTML =apn_select_html;
+document.getElementById("lc_system_profile_type").value=current_profile;
+  document.getElementById("apn_profile_name").value=images[index][1];
+  document.getElementById("apn_name").value=images[index][4];
+  document.getElementById("apn_user").value=images[index][2];
+  document.getElementById("apn_pass").value=images[index][3];
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+  document.getElementById("apn_type").value=images[index][5];
+
+}
+</SCRIPT>
+</head>
+
+<body onload=init()>
+<blockquote>
+<h2><font color="#0000FF">APN配置</font></h2>
+
+<form action=/boafrm/formNtp method=POST name="password">
+ <table id="table_sim" border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+    <tr>
+      <td width="20%"><font size=2><b>选择APN配置:</b></td>
+      <td width="50%"><font size=2><span id="apn_con"></span></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>配置文件名称:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_profile_name" id="apn_profile_name" class="txt1"  size="15" maxlength="15" value="" onblur="checkASC(this,'user name')"></td>
+    </tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>PDP类型:</b></td>
+      <td width="50%"><font size=2>
+						<select name="apn_type" id="apn_type" class="txt1">
+							<option value="0">IPv4</option>
+							<option value="1">IPv6</option>
+              <option value="2">IPv4 & IPv6</option>
+						</select>
+      </td>
+    </tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>APN:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_name" id="apn_name" class="txt1"  size="15" maxlength="15" value="" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>用户名:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_user" id="apn_user" class="txt1"  size="15" maxlength="15" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>密码:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_pass"  id="apn_pass" class="txt1"  size="15" maxlength="15" onblur="checkASC(this,'user name')"></td>
+    </tr>
+  </table>
+   <input type="hidden" value="/chn/status_chn.htm" name="submit-url">
+  <p><input type="button" class="button1" value="确定" name="save" id="button_sim" onClick="saveClick()">&nbsp;&nbsp;
+  <!--input type="reset" class="button2" value="清除" name="reset"--></p>
+</form>
+
+
+			<table width="800px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="left"><span id="sim_stat_warring" style="display:none" width="100%" align="left"></span></td></tr>
+			</table>
+
+<blockquote>
+</body>
+</html>
+
+

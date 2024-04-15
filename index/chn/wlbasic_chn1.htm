@@ -1,0 +1,175 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>WLAN基础配置</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"> </script>
+<style>
+.on {display:on}
+.off {display:none}
+</style>
+<SCRIPT>
+
+function Data_country(country_code,abb,idx_5g,idx_2g,fullname) 
+{
+
+}
+
+function Data_regdomain(regdomain,channelsetnumber,regdomainarea) 
+{
+
+}
+
+function initData()
+{
+
+		
+}
+
+function showCountry(form,wlan_id)
+{
+
+}
+
+function updateCountry(form,wlan_id)
+{	
+
+}
+
+function showMacClick(form, url)
+{
+
+}
+
+function showMultipleAP(form, url)
+{	
+
+}
+
+function updateState(form, wlan_id)
+{
+
+}
+
+function updateRepeaterState(form, wlan_id)
+{   
+
+}
+
+function updateMode_basic(form, wlan_id)
+{
+
+}
+
+function updateType_basic(form, wlan_id)
+{
+
+	
+}
+function checkTurboState()
+{
+}
+function Set_SSIDbyBand(form, wlan_id, band, index)
+{
+
+}
+function Set_onChangeBand(form, wlan_id, band, index){
+
+}
+
+function updateDateRate()
+{
+
+}
+
+function ShowChannelInVxdMode()
+{
+
+}
+
+function LoadSetting()
+ {
+
+}
+
+function resetForm()
+{
+
+}
+</SCRIPT>
+</head>
+
+<body onload="LoadSetting();initData()">
+<blockquote>
+<h2><font color="#0000FF">
+<script type="text/javascript">
+var wlan_num =  <% getIndex("wlan_num"); %>;
+if (wlan_num > 1) {
+	var wlan_idx_ = <% getIndex("wlan_idx"); %> + 1;
+	document.write("无线基本设置-wlan" + wlan_idx_ + "</p>");
+}
+else
+	document.write("无线基本设置</p>");
+</script>
+</font></h2>
+
+<form action=/boafrm/formWlanSetup method=POST name="wlanSetup">
+
+
+<table border=0 width="500" cellspacing=4>
+  <tr><font size=2>
+ 本页面设置无线路由器的基本参数。
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+  <tr>
+      <td width="100%" colspan=2><font size=2><b>
+   	<input type="checkbox" name="wlanDisabled<% getIndex("wlan_idx"); %>" value="ON" ONCLICK="updateState(document.wlanSetup, wlan_idx)">&nbsp;&nbsp;禁用本地无线网</b>
+      </td>
+  </tr>
+
+
+
+  <tr style="display:none">
+      <td width="26%"><font size=2><b>模式:</b></td>
+      <td width="74%"><font size=2><select size="1" name="mode<% getIndex("wlan_idx"); %>"	onChange="updateMode_basic(document.wlanSetup, wlan_idx)">
+	<%  getModeCombobox(); %>   
+	 </select>
+
+
+	  
+      </td>
+  </tr>
+
+
+
+
+
+<tr>
+      <td width="26%"><font size=2><b>SSID广播:</b></td>
+      <td width="74%"><font size=2><select size="1" name="hiddenSSID<% getIndex("wlan_idx"); %>"	onChange="">
+      	  	<option value="1">关闭</option>
+   	  	<option value="0">开启</option>
+	 </select>
+      </td>
+  </tr>
+  
+
+
+
+
+
+  </table>
+  </span>
+  <br>
+  
+  
+
+  <br>
+
+
+</blockquote>
+</body>
+
+</html>

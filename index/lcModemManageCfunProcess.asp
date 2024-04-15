@@ -1,0 +1,1 @@
+<% getInfo("ModemGetInfoCfunExecResult"); %>*<% getInfo("ModemGetInfoCfunParamFun"); %>

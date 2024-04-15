@@ -1,0 +1,267 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Pragma" content="no-cache">
+<meta HTTP-equiv="Cache-Control" content="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="Mon, 01 Jan 1990 00:00:01 GMT">
+<META http-equiv="Content-Type" content="text/html; charset=GBK">
+<script type="text/javascript" src="../res/jquery.js"></script>
+</head>
+
+<SCRIPT language=javascript>
+function init()
+{
+   var b_v="<% getInfo("cmcc_test_mode"); %>";
+   
+   if(b_v=="1")
+   {
+      // enableTextField(document.getElementById("mifi_mode"));
+      //disableTextField(document.getElementById("mifi_mode_acm"));
+     //$("#mifi_mode").attr({"disabled":"disabled"});
+ $("#mifi_mode_acm").attr({"disabled":"disabled"});
+     $("#mifi_mode").removeAttr("disabled");
+
+   }else
+   {
+     // enableTextField(document.getElementById("mifi_mode_acm"));
+     // disableTextField(document.getElementById("mifi_mode"));
+
+
+      $("#mifi_mode").attr({"disabled":"disabled"});
+      $("#mifi_mode_acm").removeAttr("disabled");
+   
+   }
+
+
+var tai="<% getInfo("cmcc_test_modeforinstrument"); %>";
+
+   if(tai=="0")
+   {
+      // enableTextField(document.getElementById("mifi_mode"));
+      //disableTextField(document.getElementById("mifi_mode_acm"));
+     //$("#mifi_mode").attr({"disabled":"disabled"});
+ $("#mifi_mode_instrument").attr({"disabled":"disabled"});
+     $("#mifi_mode_acm_instrument").removeAttr("disabled");
+
+   }else if(tai=="1")
+   {
+     // enableTextField(document.getElementById("mifi_mode_acm"));
+     // disableTextField(document.getElementById("mifi_mode"));
+
+
+      $("#mifi_mode_acm_instrument").attr({"disabled":"disabled"});
+      $("#mifi_mode_instrument").removeAttr("disabled");
+   
+   }
+}
+
+
+function changeMode()
+{
+var temp="/boafrm/formcmcctestmode";
+
+var param="testmode=0";
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+				window.top.open('','_self');
+				window.top.close();  
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+}
+}
+
+function changeMode_acm()
+{
+	// 
+
+var temp="/boafrm/formcmcctestmode";
+
+var param="testmode=1";
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+				window.top.open('','_self');
+				window.top.close();  
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+}
+}
+
+function changeMode_acm_instrument()
+{
+var temp="/boafrm/formcmcctestmodeforinstrument";
+
+var param="testmodeforinstrument=1";
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+				window.top.open('','_self');
+				window.top.close();  
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+}
+}
+
+function changeMode_instrument()
+{
+	// 
+
+var temp="/boafrm/formcmcctestmodeforinstrument";
+
+var param="testmodeforinstrument=0";
+if(confirm("重启后设置才能生效,是否保存当前设置并重启?"))
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+				window.top.open('','_self');
+				window.top.close();  
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+
+}
+}
+
+</script>
+<body onLoad="init()">
+<LEFT> 
+
+<table width=780 align="left" border="1"  cellSpacing=0 cellPadding=0 bordercolor="#000000" style="border-collapse:collapse;"> 
+
+
+	<!--hr width="100%"-->
+	<!--h2 align=left>工作模式设置</h2-->
+
+	<table width=750 border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th width="53%" align="left" nowrap>设置为MIFI模式</th>
+			<td width="47%">
+				<input type="button" id="mifi_mode" VALUE="设置为MIFI模式" onclick="changeMode();">
+			</td>
+		</tr>
+		<tr>
+			<th width="53%" align="left" nowrap>设置为MODEM模式</th>
+			<td width="47%">
+				<input type="button" id="mifi_mode_acm" VALUE="设置为MODEM模式" onclick="changeMode_acm();">
+			</td>
+		</tr>
+	</table>
+
+
+</table>
+
+<table width=780 align="left" border="1"  cellSpacing=0 cellPadding=0 bordercolor="#000000" style="border-collapse:collapse;"> 
+
+
+	<!--安利测试 1代表安奈特测试  hr width="100%"-->
+	<!--h2 align=left>工作模式设置</h2-->
+
+	<table width=750 border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<th width="53%" align="left" nowrap>设置为安利测试模式</th>
+			<td width="47%">
+				<input type="button" id="mifi_mode_instrument" VALUE="设置为安利测试模式" onclick="changeMode_instrument();">
+			</td>
+		</tr>
+		<tr>
+			<th width="53%" align="left" nowrap>设置为安奈特测试模式</th>
+			<td width="47%">
+				<input type="button" id="mifi_mode_acm_instrument" VALUE="设置为安奈特测试模式" onclick="changeMode_acm_instrument();">
+			</td>
+		</tr>
+	</table>
+
+
+</table>
+<P>&nbsp;</P>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+cp -f /data/data/com.android.mms/files/sms_draftbox.xml /system/web/sms_draftbox.xml

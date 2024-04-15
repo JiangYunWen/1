@@ -1,0 +1,1 @@
+<% getInfo("wps_status"); %>

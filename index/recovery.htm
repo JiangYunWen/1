@@ -1,0 +1,72 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>recovery</title>
+<script type="text/javascript" src="/res/jquery.js"></script>
+<% language=javascript %>
+</head>
+
+<script>
+function send_submit()
+{
+if(confirm("Whether to restart to recovery?\nDuring the restart the browser will automatically shut down, restart time takes about minutes, do not power off"))
+{
+var param="formrecovery=1";
+var temp="/boafrm/formrecovery";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+alert("success!");
+
+       				window.top.open('','_self');
+				window.top.close();  
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+}
+}
+</script>
+<BODY >
+<blockquote>
+<h2><font color="#0000FF">Recovery</font></h2>
+<form action=/boafrm/formrecovery method=POST name="recover">
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+  <tr><font size=2>
+   
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+  <tr>
+      <td ><font size=3><b></b></td>
+  </tr>
+  <tr height=3>
+  </tr>
+  <tr>
+      <td ><font size=2>
+        <input type="button" value="Recovery" name="recover"  onclick="send_submit();">
+      </td>
+  </tr>
+</table>
+<input type="hidden" value="/recovery.htm" name="return-url">
+</form>
+<blockquote>
+</body>
+</html>
+
+

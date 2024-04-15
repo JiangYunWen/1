@@ -1,0 +1,211 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../util_web_en.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script type="text/javascript"> 
+
+function parseQueryString(url1){
+	var url=location.href; 
+    var obj = {};
+    var start = url.indexOf("?")+1;
+    var str = url.substr(start);
+    var arr = str.split("&");
+    for(var i = 0 ;i < arr.length;i++){
+          var arr2 = arr[i].split("=");
+           obj[arr2[0]] = arr2[1];
+    }
+return obj[url1];
+}
+function getparm1() 
+{ 
+var url=location.href; 
+
+var tmp1=url.split("?")[1]; 
+var tmp2=tmp1.split("&")[0]; 
+var tmp3=tmp2.split("=")[1]; 
+var parm1=tmp3; 
+alert(parm1); 
+return parm1;
+} 
+function getparm2() 
+{ 
+var url=location.href; 
+var tmp1=url.split("?")[1]; 
+var tmp2=tmp1.split("&")[1]; 
+var tmp3=tmp2.split("=")[1]; 
+var parm2=tmp3; 
+alert(parm2); 
+return parm2;
+} 
+</script> 
+<script>
+var objTimeOut = "";
+
+function openIntervals_reportmonitor()
+{
+	if (objTimeOut == null || objTimeOut=="")
+	{
+		objTimeOut= setInterval('FormAtcmd_Submit()',1*1000);
+	}
+}
+function stop_reportmonitor()
+{
+    clearInterval(objTimeOut);
+}
+function start_reportmonitor()
+{
+    objTimeOut= setInterval('FormAtcmd_Submit()',1*1000);
+}
+
+function SetLabelText(Labelid,Text)
+{
+    document.getElementById(Labelid).innerHTML=(Text);
+}
+
+
+function AjaxTest1(param)
+{
+    var xhr = createXHR();
+	xhr.ontimeout = function (e) 
+	{
+		clearInterval(objTimeOut);
+		objTimeOut=null;
+//		closediv(DivCloseMode_None);
+		showdiv("TimeOut，Please Refresh，Check WEB is normal",DivCloseMode_Alert);
+	};
+    xhr.onreadystatechange = function () 
+	{
+//		document.getElementById('out').innerHTML =xhr.readyState;
+		if (xhr.readyState == 4) 
+		{
+			try
+			{
+				if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304)
+				{
+				    var mydate;
+					var year;
+					var month;
+					var date;
+					var hours;
+					var minutes;
+					var seconds;
+					var TimestampStr="";
+
+					mydate = new Date();
+					year=mydate.getFullYear();
+					month=mydate.getMonth()+1;
+					date =mydate.getDate(); 
+					hours = mydate.getHours();
+					minutes = mydate.getMinutes();
+					seconds = mydate.getSeconds();
+					if(month<10)
+						month="0"+month;
+					if(date<10)
+						date="0"+date;
+
+					TimestampStr=""+year+"-"+month+"-"+date+":"+hours+":"+minutes+":"+seconds+":"
+					
+					
+					document.getElementById('out').innerHTML =TimestampStr +"<br>"+ xhr.responseText.replace(/[\r\n]/g,"<br>") +document.getElementById('out').innerHTML;
+//					document.getElementById('out').innerHTML +=xhr.responseText.replace(/[\r\n]/g,"<br>");
+	
+	            }
+	            else 
+				{
+					clearInterval(objTimeOut);
+					objTimeOut=null;				
+//					closediv(DivCloseMode_None);
+	                alert("Request was unsuccessful:" + xhr.status);
+					document.getElementById('out').innerHTML ="Request was unsuccessful:" + xhr.status;
+	            }
+			}
+			catch(ex)
+			{
+				clearInterval(objTimeOut);
+				objTimeOut=null;			
+			}
+        }
+    };
+    //必须在调用open()之前指定onreadystatechange事件处理程序,才能确保跨浏览器兼容性.
+    //xhr.open("get", "test.txt", true);
+    //xhr.send(null);
+	xhr.open("POST", "/boafrm/formCpReportMonitor", true);
+	xhr.timeout = 3*1000;//35s	
+    xhr.send(param);
+}
+         
+
+
+
+function FormAtcmd_Submit()
+{
+	param = "";
+    param +="DdtcType=1";
+	AjaxTest1(param);
+}
+
+
+
+function init()
+{
+	openIntervals_reportmonitor();
+}
+</script>
+</head>
+<blockquote>
+<h3><font color="#0000FF">Active Escalation Check</font></h3>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<body  onLoad="setCodeValue();">
+    <td >      
+    <input type="button" value="Open" id="FormReport_Button_Open"   onClick="start_reportmonitor();"> 
+    <input type="button" value="Close" id="FormReport_Button_Close"  onClick="stop_reportmonitor();"> 
+    </td> 
+    <table border="0" cellspacing="0" width="550">
+    <tr><hr size=1 noshade align=top></tr>
+    </table>
+    
+    <div id=idDivenglish style="display:block">
+    <table border=0 width="550" cellspacing=0 cellpadding=0>
+    
+    <font size="2" weight="bold" >Active Escalation Check:</font>
+    <div style="width:2000px;overflow:auto;word-break:break-all;word-wrap:break-word;background:gray">
+    <pre id='out'><br><br><br></pre>
+    </div>
+    </table>
+</body>
+</blockquote>
+</html>

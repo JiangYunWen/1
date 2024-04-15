@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>[insert your title here]</title>
+<% getIndex("no-cache"); %>
+<script type="text/javascript">
+// Framebuster script to relocate browser when MSIE bookmarks this
+// page instead of the parent frameset.  Set variable relocateURL to
+// the index document of your website (relative URLs are ok):
+var debug="0";
+var relocateURL = "/";
+var language="<% getInfo("languagevalue"); %>";//后续修改为接口  0  英语  1  中文
+
+var state="normal";
+var pocketRouter_Mode="<% getInfo("pocketRouter_Mode"); %>"*1;
+var POCKETROUTER_GATEWAY = 3;
+var POCKETROUTER_BRIDGE_AP = 2;
+var POCKETROUTER_BRIDGE_CLIENT = 1;
+
+var is_ulinker="<% getInfo("is_ulinker"); %>"*1;
+var ulinker_opMode="<% getIndex("ulinker_opMode"); %>"*1; //0:AP; 1:Client; 2:Router; 3:RPT
+
+    if(debug==1)
+    {
+       console.warn("code.htm language:"+ language);
+    }
+
+if(is_ulinker == 1)
+{
+	if(ulinker_opMode == 0 || ulinker_opMode == 3)
+		pocketRouter_Mode = POCKETROUTER_BRIDGE_AP;
+	else if(ulinker_opMode == 1) 
+		pocketRouter_Mode = POCKETROUTER_BRIDGE_CLIENT;
+	else if(ulinker_opMode == 2) 
+		pocketRouter_Mode = POCKETROUTER_GATEWAY;
+}
+	
+	
+	
+var isAP = <% getIndex("isPureAP"); %>;
+
+if(parent.frames.length == 0) {
+  if(document.images) {
+    location.replace(relocateURL);
+  } else {
+    location = relocateURL;
+  }
+}
+</script>
+
+<script type="text/javascript" src="mtmcode.js">
+</script>
+
+<script type="text/javascript">
+// Morten's JavaScript Tree Menu
+// version 2.3.2-macfriendly, dated 2002-06-10
+// http://www.treemenu.com/
+
+// Copyright (c) 2001-2002, Morten Wang & contributors
+// All rights reserved.
+
+// This software is released under the BSD License which should accompany
+// it in the file "COPYING".  If you do not have this file you can access
+// the license through the WWW at http://www.treemenu.com/license.txt
+
+// Nearly all user-configurable options are set to their default values.
+// Have a look at the section "Setting options" in the installation guide
+// for description of each option and their possible values.
+
+MTMDefaultTarget = "view";
+
+/******************************************************************************
+* User-configurable list of icons.                                            *
+******************************************************************************/
+
+var MTMIconList = null;
+MTMIconList = new IconList();
+MTMIconList.addIcon(new MTMIcon("menu_link_external.gif", "http://", "pre"));
+MTMIconList.addIcon(new MTMIcon("menu_link_pdf.gif", ".pdf", "post"));
+
+/******************************************************************************
+* User-configurable menu.                                                     *
+******************************************************************************/
+
+// Main menu.
+var menu = null;
+menu = new MTMenu();
+if(language==0)
+{
+//WDL menu.addItem("Status", "status.htm", "", "Display current status");
+}else
+{
+//WDL menu.addItem("系统信息", "chn/status_chn.htm", "", "系统信息");
+}
+if(language==0)
+{
+	alert("language =0")
+//menu.addItem("Status", "status.htm", "", "Display current status");
+menu.addItem("自组网节点配置1", "modemmanage_chn.htm1", "", "自组网节点配置1");
+menu.makeLastSubmenu(menu);
+}else
+{
+menu.addItem("自组网节点配置", "modemmanage_chn.htm", "", "自组网节点配置");
+//menu.makeLastSubmenu(menu);
+}
+if(0)
+{
+
+}
+else
+{
+//WDL 
+	/*
+	if(language==1)
+	{
+	manage.addItem("用户账户设置", "chn/password_chn.htm", "", "用户账户设置");
+	manage.addItem("时间设置", "chn/ntp_chn.htm", "", "时间设置");
+	manage.addItem("重启设备", "chn/reboot_chn.htm", "", "重启设备");
+	manage.addItem("恢复出厂设置", "chn/recovery_chn.htm", "", "恢复出厂设置");
+	manage.addItem("固件更新", "chn/upload_chn.htm", "", "固件更新");
+	manage.addItem("系统日志", "chn/syslog_chn.htm", "", "日志");
+	menu.makeLastSubmenu(manage);
+	}else
+	{
+	manage.addItem("Password", "password.htm", "", "Setup access password");
+	manage.addItem("Time Setting", "ntp.htm", "", "Setup Time Zone");
+	manage.addItem("Reboot", "reboot.htm", "", "reboot");
+	manage.addItem("Recovery", "recovery.htm", "", "Recovery");
+	manage.addItem("Upgrade Firmware", "upload.htm", "", "Update firmware image");
+	manage.addItem("Log", "syslog.htm", "", "System Log");
+	menu.makeLastSubmenu(manage);
+	}
+*/
+
+}
+
+if(language==1)
+{
+//WDL 
+/*
+menu.addItem("帮助", "chn/help_chn.htm", "", "帮助");
+
+userName= '<% getInfo("userName"); %>' ;
+if(userName != "")
+        menu.addItem("退出", "chn/logout_chn.htm", "", "Logout");
+
+*/
+}else
+{
+//WDL 
+/*
+menu.addItem("Help", "help.htm", "", "Help");
+userName= '<% getInfo("userName"); %>' ;
+if(userName != "")
+        menu.addItem("Logout", "logout.htm", "", "Logout");
+*/
+}
+</script>
+</head>
+<body onload="MTMStartMenu(true)" bgcolor="#000033" text="#ffffcc" link="yellow" vlink="lime" alink="red">
+</body>
+</html>

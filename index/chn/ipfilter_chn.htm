@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>IP Filtering</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script>
+function addClick()
+{
+  if (!document.formFilterAdd.enabled.checked)
+  	return true;
+
+  if (document.formFilterAdd.ip.value=="" && document.formFilterAdd.comment.value=="" )
+	return true;
+
+  if ( checkIpAddr(document.formFilterAdd.ip, 'Invalid IP address') == false )
+	    return false;
+  return true;
+}
+
+
+function deleteClick()
+{
+  if ( !confirm('确定删除已选中吗?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+function deleteAllClick()
+{
+   if ( !confirm('确定删除所有条目?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+
+function disableDelButton()
+{
+	disableButton(document.formFilterDel.deleteSelFilterIp);
+	disableButton(document.formFilterDel.deleteAllFilterIp);
+}
+
+function updateState()
+{
+  if (document.formFilterAdd.enabled.checked) {
+ 	enableTextField(document.formFilterAdd.ip);
+	enableTextField(document.formFilterAdd.protocol);
+	enableTextField(document.formFilterAdd.comment);
+  }
+  else {
+ 	disableTextField(document.formFilterAdd.ip);
+  	disableTextField(document.formFilterAdd.protocol);
+	disableTextField(document.formFilterAdd.comment);
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("ipFilterEnabled"); %> )
+		document.formFilterAdd.enabled.checked = true;
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">IP过滤</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><td><font size=2>
+</font></td></tr>
+
+<tr><td><hr size=1 noshade align=top></td></tr>
+
+<form action=/boafrm/formFilter method=POST name="formFilterAdd">
+<tr><td><font size=2><b>
+   	<input type="checkbox" name="enabled" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;开启IP过滤</b><br>
+    </td>
+</tr>
+
+<tr><td>
+     <p><font size=2><b>本地IP地址: </b> <input type="text" name="ip" size="10" maxlength="15">&nbsp;&nbsp;
+  	<b><font size=2>协议:</b> <select name="protocol">
+    		<option select value="0">Both</option>
+    		<option value="1">TCP</option>
+    		<option value="2">UDP</option>
+    		</select></font>&nbsp;&nbsp
+  	<b><font size=2>说明: </b> <input type="text" name="comment" size="12" maxlength="20"></font>
+     </p>
+     <p><input type="submit" value="提交" name="addFilterIp" onClick="return addClick()">&nbsp;&nbsp;
+        <input type="reset" value="重设" name="reset">
+        <input type="hidden" value="/chn/ipfilter_chn.htm" name="submit-url">
+     </p>
+   </td></tr>
+  <script> updateState(); </script>
+</form>
+</table>
+
+<br>
+<form action=/boafrm/formFilter method=POST name="formFilterDel">
+  <table border="0" width=500>
+  <tr><font size=2><b>当前过滤列表:</b></font></tr>
+  <% ipFilterList(); %>
+  </table>
+  <br>
+  <input type="submit" value="删除已选中" name="deleteSelFilterIp" onClick="return deleteClick()">&nbsp;&nbsp;
+  <input type="submit" value="全部删除" name="deleteAllFilterIp" onClick="return deleteAllClick()">&nbsp;&nbsp;&nbsp;
+  <input type="reset" value="重设" name="reset">
+  <input type="hidden" value="/chn/ipfilter_chn.htm" name="submit-url">
+ <script>
+	if ( <% getIndex("ipFilterNum"); %> == 0 )
+		disableDelButton();
+ </script>
+</form>
+
+</blockquote>
+</body>
+</html>

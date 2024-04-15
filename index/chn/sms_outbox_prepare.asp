@@ -1,0 +1,1 @@
+<% getsmsInfo("outbox_file_exist"); %>

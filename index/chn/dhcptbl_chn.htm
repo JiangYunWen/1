@@ -1,0 +1,32 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>已连接设备列表</title>
+</head>
+
+<body>
+
+<h2><font color="#0000FF">已连接设备列表</font></h2>
+
+
+
+
+<form action=/boafrm/formReflashClientTbl method=POST name="formClientTbl">
+<table border='1' width="50%">
+<tr bgcolor=#7f7f7f><td width="40%"><font size=2><b>主机名</b></td>
+ <td width="20%"><font size=2><b>IP地址</b></td>
+<td width="20%"><font size=2><b>MAC地址</b></td>
+<td width="20%"><font size=2><b>连接时间(s)</b></td></tr>
+<% dhcpClientList(); %>
+</table>
+
+<input type="hidden" value="/chn/dhcptbl_chn.htm" name="submit-url">
+  <p><input type="submit" value="刷新" name="refresh">&nbsp;&nbsp;
+  <!--input type="button" value=" 关闭 " name="close" onClick="javascript: window.close();"--></p>
+</form>
+
+</body>
+
+</html>

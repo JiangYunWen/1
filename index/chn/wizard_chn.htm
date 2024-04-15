@@ -1,0 +1,2514 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>Setup Wizard</title>
+<script type="text/javascript" src="../util_gw_chn.js"></script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<style>
+.on {display:on}
+.off {display:none}
+
+label {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;   
+    font-style: normal;
+    font-weight:lighter;
+    font-size: 12px;
+
+} 
+input[type=radio] {  
+  display: none;    
+} 
+label:before {  
+    content: "";  
+    display: inline-block;  
+  
+    width: 16px;  
+    height: 16px;  
+  
+    margin-right: 10px;  
+    position: absolute;  
+    left: 0;  
+    bottom: 1px;  
+	background-image: url("../graphics/radio0.png");
+	background-repeat: no-repeat;
+
+}  
+.radio label:before {  
+    border-radius: 8px;  
+
+
+}  
+input[type=radio]:checked + label:before {  
+    content: "";  
+    color: #fff;  
+    font-size: 10px;  
+    text-align: center;  
+    line-height: 18px;  
+	background-image: url("../graphics/radio1.png");
+	background-repeat: no-repeat;
+}  
+.txt1{
+	
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	padding: 0;
+	margin:0;
+width:180px;
+
+
+}
+</style>
+<script>
+var debug=0;
+var images=new Array(); //apn信息
+//for wlan1 page
+var wlan_channel=new Array();
+var wlan_idx=<% getIndex("wlan_idx"); %> ;
+var wlan_num=<% getIndex("show_wlan_num"); %> ;
+var opmode=<% getIndex("opMode"); %> ;
+var wispWanId = <% getIndex("wispWanId"); %> ;
+var WiFiTest=<% getIndex("WiFiTest"); %> ;
+var isMeshDefined = <% getIndex("isMeshDefined"); %> ;
+var isNewMeshUI =  <% getIndex("isNewMeshUI"); %> ;
+var defPskLen=new Array();
+var defPskFormat=new Array();
+var init_bound=new Array();
+var init_sideband=new Array();
+var wlanBand2G5G=new Array();
+
+//For wapi
+var defWapiAuth=new Array();
+var defWapiPskFormat=new Array();
+var defWapiPskValue=new Array();
+var defWapiASIP=new Array();
+var defWapiCertSel=new Array();
+
+var autoconf=new Array();
+var regDomain=new Array();
+var defaultChan=new Array();
+var lastBand=new Array();
+var lastRegDomain=new Array();
+var usedBand=new Array();
+var RFType=new Array();
+var APMode=new Array();
+var bandIdx=new Array();
+var bandIdxAP=new Array();
+var bandIdxClient=new Array();
+var startChanIdx=new Array();
+var disableSSID=new Array();
+var wlanDisabled=new Array();
+var networkType=new Array();
+var keyinstall=new Array();
+var ssid=new Array();
+var encrypt=new Array();
+var wep=new Array();
+var defaultKeyId=new Array();
+var wpaCipher=new Array();
+var wpa2Cipher=new Array();
+var pskValue=new Array();
+var macClone=new Array();
+var addProfile=new Array();
+
+var keyType=new Array();
+var autoCfgWlanMode=new Array();
+
+
+var mode_index = "<% getIndex("wlanMode"); %>";
+var nettype_index = "<% getIndex("networkType"); %>";
+/*
+autoconf[wlan_idx]= 0;
+*/
+lastBand[wlan_idx] = 0;
+lastRegDomain[wlan_idx] = 0;
+bandIdxAP[wlan_idx] = -1;
+bandIdxClient[wlan_idx] = -1;
+startChanIdx[wlan_idx] = 0;
+disableSSID[wlan_idx] = 0;
+var dynamicWanIP=1;
+
+// for WPS ------------------------------------------------>>
+var wps_disabled=<% getIndex("wscDisable");%>;
+var wps_ssid_old='<% getInfo("ssid"); %>';
+var wps_mode_old=<% getIndex("wlanMode"); %>;
+var wps_config_by_registrar=<% getIndex("wps_by_reg"); %>;
+var wps_encrypt_old=<% getIndex("encrypt"); %>;
+var wps_wpaCipher_old=<% getIndex("wpaCipher");%>;
+var wps_wpa2Cipher_old=<% getIndex("wpa2Cipher");%>;
+var wps_psk_old='<% getInfo("pskValue");%>';
+var wps_psk_unmask_old='<% getInfo("pskValueUnmask");%>';
+var wps_type_old=<% getIndex("networkType");%>;
+var wps_enable1x=<% getIndex("enable1X");%>;
+var wps_wpa_auth=<% getIndex("wpaAuth");%>;
+var wps_wizard=1;
+//<<------------------------------------------------- for WPS
+
+var isPocketRouter="<% getInfo("isPocketRouter"); %>"*1;
+var pocketRouter_Mode="<% getInfo("pocketRouter_Mode"); %>"*1;
+var POCKETROUTER_GATEWAY = 3;
+var POCKETROUTER_BRIDGE_AP = 2;
+var POCKETROUTER_BRIDGE_CLIENT = 1;
+
+var is_ulinker="<% getInfo("is_ulinker"); %>"*1;
+var is_wan_link="<% getInfo("is_wan_link"); %>"*1;
+var ulinker_opMode="<% getIndex("ulinker_opMode"); %>"*1; //0:AP; 1:Client; 2:Router; 3:RPT
+var wlan_channelbound=new Array();
+var isWDSDefined = <% getIndex("isWDSDefined"); %> ;
+var isAP = <% getIndex("isPureAP"); %>;
+var wlan_support_92D =  <% getIndex("wlan_support_92D"); %> ;
+var wlan_support_92D_concurrent =  <% getIndex("wlan_support_92D_concurrent"); %> ; //0:no; 1:yes; 2:force concurrent
+function wan_pptp_use_dynamic_carrier_selector(form, index, mode){
+
+}
+
+function wan_l2tp_use_dynamic_carrier_selector(form,index, mode){
+
+}
+
+function saveChanges_lan(form)
+{
+
+}
+
+function disable_all(form, wlan_id)
+{
+  disableTextField(form.elements["method"+wlan_id]);
+  disableTextField(form.elements["pskFormat"+wlan_id]);
+  disableTextField(form.elements["pskValue"+wlan_id]);
+}
+var ASCIIStrValid = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz' + '0123456789' +  '-_';
+function checkASC(keyval,place)
+{
+
+if(keyval.value.length==0)
+{
+//alert("SSID不能为空！");
+return false;
+}
+
+         var j, k, flag;
+         for ( k=0; k<keyval.value.length; k++ ){                  
+                   for(j=0;j<ASCIIStrValid.length;j++){
+                            flag = false;
+                            if(keyval.value.charAt(k) ==  ASCIIStrValid.charAt(j)){
+                                     flag = true;
+                                     break;
+                            }
+                   }
+                   if(flag == false){
+                       alert("输入中含有非法字符，请您重新输入！\r"+
+"(请不要输入字母、数字、中划线、下划线以外的字符。)");                            
+                            keyval.value=keyval.defaultValue;
+                            keyval.focus();
+                            return false;
+                   }
+         }
+         return true;
+}
+function includeSpace(str)
+{
+  for (var i=0; i<str.length; i++) {
+  	if ( str.charAt(i) == ' ' ) {
+	  return true;
+	}
+  }
+  return false;
+}
+function lc_wifi_security_type_change()
+{
+
+   if(document.getElementById("lc_wifi_security_type").value==0)
+   {
+  // disableTextField(document.getElementById("lc_wifi_security_type"));
+     disableTextField(document.getElementById("lc_wifi_password"));
+     document.getElementById("lc_wifi_security_type").value=0;
+     document.getElementById("lc_wifi_password").value="";
+   }else
+   {
+   //enableTextField(document.getElementById("lc_wifi_security_type"));
+    // document.getElementById("lc_wifi_password").disable=false;
+     enableTextField(document.getElementById("lc_wifi_password"));
+     document.getElementById("lc_wifi_password").value=sec_password;
+    //console.warn( "lc_wifi_security_type_change");
+   }
+}
+function saveChanges()
+{
+   if ( document.getElementById("username").value.length  == 0 &&document.getElementById("newpass").value.length  == 0) {
+	if ( !confirm('用户名为空。\n是否确认不需要密码保护？ ') ) {
+		document.getElementById("username").focus();
+		return false;
+  	}
+	else
+		return true;
+  }
+
+  if (  document.getElementById("username").value.length == 0 &&
+  		document.getElementById("newpass").value.length > 0 ) {
+	alert('用户名不能为空！');
+	document.getElementById("newpass").focus();
+	return false;
+  }
+
+
+
+  if ( document.getElementById("username").value.length > 0 &&
+  		document.getElementById("newpass").value.length == 0 ) {
+	alert('新密码不能为空！');
+	document.getElementById("newpass").focus();
+	return false;
+  }
+
+  if ( includeSpace(document.getElementById("username").value)) {
+	alert('用户名不能包含空格!');
+	document.getElementById("username").focus();
+	return false;
+  }
+
+  if ( includeSpace(document.getElementById("newpass").value)) {
+		alert('新密码不能包含空格!');
+	document.getElementById("newpass").value.focus();
+	return false;
+  }
+
+  return true;
+}
+function checkIpAddr_chn(field, msg)
+{
+
+    str =field.value ;
+    var dot_count=0;
+    for (var i=0; i<str.length; i++) {
+    	if ( str.charAt(i) == '.' )
+      {
+         dot_count++;
+
+       }
+
+    }	
+
+   if(dot_count>3)
+   {
+        alert("IP地址无效!");
+        return false;
+   }
+
+  if (field.value=="") {
+	alert("IP地址不能为空! ");
+	field.value = field.defaultValue;
+	field.focus();
+	return false;
+  }
+   if ( validateKey(field.value) == 0) {
+      alert(msg + ' 必须是数字和"."');
+      field.value = field.defaultValue;
+      field.focus();
+      return false;
+   }
+   if ( !checkDigitRange(field.value,1,1,223) ) {
+      alert(msg+'. IP地址第一段必须在（1-223）之间');
+      field.value = field.defaultValue;
+      field.focus();
+      return false;
+   }
+   if ( !checkDigitRange(field.value,2,0,255) ) {
+      alert(msg + '. IP地址第二段必须在（0-225）之间.');
+      field.value = field.defaultValue;
+      field.focus();
+      return false;
+   }
+   if ( !checkDigitRange(field.value,3,0,255) ) {
+      alert(msg + '. IP地址第三段必须在（0-225）之间.');
+      field.value = field.defaultValue;
+      field.focus();
+      return false;
+   }
+   if ( !checkDigitRange(field.value,4,1,254) ) {
+      alert(msg + '. IP地址第四段必须在（1-254）之间.');
+      field.value = field.defaultValue;
+      field.focus();
+      return false;
+   }
+   return true;
+}
+function checkState(wlan_id)
+{
+
+}
+
+function updateFormat(form, wlan_id)
+{
+
+}
+function setDhcpRange()
+{
+
+
+}
+/*-- keith: add l2tp support. 20080515  */
+function wanTypeSelection(field)
+{
+
+}
+
+function wizardHideDiv()
+{
+
+	show_div(false, "opmode_div");
+	show_div(false, "top_div");
+	show_div(false, "lan_div");
+	show_div(false, "ntp_div");
+	show_div(false, "wan_div");
+	show_div(false, "wlan_band_mode_div");
+
+	show_div(false, "wlan1_div0");
+	show_div(false, "wlan2_div0");
+	if (wlan_support_92D) {
+		show_div(false, "wlan1_div1");
+		show_div(false, "wlan2_div1");
+	}
+
+show_div(false, "pocket_wlan_band_mode_div");
+
+         show_div(false, "pocket_wlan_name_div");
+  show_div(false, "pocket_wlan1_ssid_div");
+         
+	show_div(false, "pocket_wlan_security_div");
+	show_div(false, "pocket_wan_setting_div");
+
+	show_div(false, "pocket_wlan1_security_div");
+	show_div(false,("pocket_wpa_div1"));	
+	show_div(false,("pocket_wep_div1"));
+	show_div(false,("otg_auto_div"));
+show_div(false,("password_div"));
+show_div(false,("apn_div"));
+show_div(false,("leadcorewlan_div"));
+	
+  }
+function lc_wifi_ssid_check()
+{
+    var oNum = document.all("lc_wifi_ssid");
+if(oNum.value.length==0)
+{
+//alert("SSID不能为空！");
+return false;
+}
+
+    var Input=document.getElementById("lc_wifi_ssid").value;
+    for(var i=0;i<Input.length;i++){
+
+		    var top=parseInt(Input.split("")[i].charCodeAt(0),10);
+		    var s=48;
+		    var l=57;		
+				      if(top==43||top==92||top==47||top==96||top==38||top==34||top==32)
+			        {
+                           
+                        alert("存在非法字符,请重新输入.");
+		                oNum.focus();
+		                oNum.value="<% getInfo("ssid"); %>";
+ 	                    return false;
+                    }
+    }
+      var bottom_check_v=parseInt(Input.split("")[0].charCodeAt(0),10);
+      //console.warn( bottom_check_v );
+      
+      if(bottom_check_v==45)
+      {
+      
+        alert("SSID首字符不能为'-',请重新输入.");
+        return false;
+      }
+
+   return   lc_wifi_ssid_text_change();      
+              
+}
+function lc_wifi_ssid_text_change()
+{
+	var oNum = document.all("lc_wifi_ssid");
+
+if(oNum.value.length==0)
+{
+//alert("SSID不能为空！");
+return false;
+}
+
+   var  Input = document.getElementById("lc_wifi_ssid").value;
+   var flag=0;
+   var ascnum=0;
+   var tmp=0;
+   for(var i=0;i<Input.length;i++)
+   {
+	    var top=parseInt(Input.split("")[i].charCodeAt(0),10);
+	    if(top>128)
+	    {
+	      // document.getElementById("lc_wifi_ssid").maxLength=10;
+	        flag=flag+1;
+	       // alert("汉字");
+	    }else
+	    {
+	    		
+	    		ascnum=ascnum+1;
+	    }
+	
+	}
+
+	tmp=flag*3+ascnum;
+	if(0)
+	{
+//     console.warn( "lc_wifi_ssid_text_change:"+Input.getBytes()+"|"+ tmp);
+  }
+  if(tmp>32)
+  {
+
+              alert("输入的ssid字符数已超过最大可输入范围，请重新输入!");
+              oNum.focus();
+		          oNum.value="<% getInfo("ssid"); %>";
+ 	            return false;
+  }
+  return true;
+}
+function wlancheck_password()
+{
+
+		if (document.getElementById("lc_wifi_ssid").value.length == 0)
+		{
+			alert("请输入SSID！");
+			document.getElementById("lc_wifi_ssid").focus();
+			return false;
+		}
+
+var rsl=lc_wifi_ssid_check();
+if(rsl!=true)
+{
+return false;
+}
+
+
+		
+		if(debug==1)
+    {
+
+     console.warn("jiami "+document.getElementById("lc_wifi_security_type").value);
+    }
+		switch (parseInt(document.getElementById("lc_wifi_security_type").value))
+		{
+		case 0:
+			document.getElementById("lc_wifi_password").value="";
+			break;
+
+		case 1:
+		case 5:
+			if (document.getElementById("lc_wifi_password").value.length != 5)
+		    {
+				alert("请输入长度为5位的密码！");
+				document.getElementById("lc_wifi_password").focus();
+				return false;
+		    }
+			break;
+
+		case 2:
+		case 6:
+			if (document.getElementById("lc_wifi_password").value.length != 13)
+		    {
+				alert("请输入长度为13位的密码！");
+				document.getElementById("lc_wifi_password").focus();
+				return false;
+		    }
+			break;
+
+		case 3:
+		case 7:
+			checkHex(document.getElementById("lc_wifi_password"),'user name');
+		    if (document.getElementById("lc_wifi_password").value.length != 10)
+		    {
+				alert("请输入长度为10位的密码！");
+				document.getElementById("lc_wifi_password").focus();
+				return false;
+		    }
+			break;
+
+		case 4:
+		case 8:
+			checkHex(document.getElementById("lc_wifi_password"),'user name');	
+		    if (document.getElementById("lc_wifi_password").value.length != 26)
+		    {
+				alert("请输入长度为26位的密码！");
+				document.getElementById("lc_wifi_password").focus();
+				return false;
+		    }
+			break;
+
+		default:
+			if (document.getElementById("lc_wifi_password").value.length < 8 || document.getElementById("lc_wifi_password").value.length > 16)
+		    {
+				alert("请输入长度大于7位小于16位的密码！");
+				document.getElementById("lc_wifi_password").focus();
+				return false;
+		    }
+		    break;
+		}
+
+return true;
+
+}
+function ShowModalDialog(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+//alert("123");
+	window.top.tb_show("", url, null);
+}
+function saveleadcorewlan_apn(next){
+	form =  document.wizard;
+	
+	if(next)
+  {	 
+     if(wlancheck_password())
+     {
+
+        if (confirm("重启后设置才能生效,是否保存当前设置并重启?")) 
+        {
+          ShowModalDialog("/countDownPage.htm","");
+
+          //sub_all_info();
+
+          setTimeout(function() {sub_all_info();},4000);
+       }   
+     }
+	
+  }
+	else
+	{  
+     wizardHideDiv();
+     show_div(true, ("apn_div"));    
+	}
+}
+function  sub_all_info()
+{
+if(debug==1)
+{
+
+console.log("name"+document.getElementById("username").value);
+console.log("newpass"+document.getElementById("newpass").value);
+console.log("ntp_flag_Sel"+document.getElementById("ntp_flag_Sel").value);
+console.log("year"+document.getElementById("year").value);
+console.log("month"+document.getElementById("month").value);
+console.log("day"+document.getElementById("day").value);
+console.log("hour"+document.getElementById("hour").value);
+console.log("minute"+document.getElementById("minute").value);
+console.log("second"+document.getElementById("second").value);
+console.log("timeZone"+document.getElementById("timeZone").value);
+console.log("ntpServerId_radio1"+document.getElementById("ntpServerId_radio1").checked);
+console.log("ntpServerIp1"+document.getElementById("ntpServerIp1").value);
+console.log("ntpServerId_radio2"+document.getElementById("ntpServerId_radio2").checked);
+
+console.log("lan_ip"+document.getElementById("lan_ip").value);
+console.log("dhcpRangeStart"+document.getElementById("dhcpRangeStart").value);
+console.log("dhcpRangeEnd"+document.getElementById("dhcpRangeEnd").value);
+
+console.log("wan_mode0"+document.getElementById("wan_mode0").checked);
+
+console.log("apname"+document.getElementById("apname").value);
+console.log("apnusrname"+document.getElementById("apnusrname").value);
+console.log("apnpassword"+document.getElementById("apnpassword").value);
+
+
+console.log("lc_wifi_ssid"+document.getElementById("lc_wifi_ssid").value);
+console.log("lc_wifi_ssid_broadcast"+document.getElementById("lc_wifi_ssid_broadcast").value);
+console.log("lc_wifi_security_type"+document.getElementById("lc_wifi_security_type").value);
+console.log("lc_wifi_security_type"+document.getElementById("lc_wifi_password").value);
+
+}
+
+//send_password();
+send_ntp();
+
+}
+function  send_password()
+{
+var temp="/boafrm/formPasswordSetup";
+param="username="+document.getElementById("username").value+"&newpass="+document.getElementById("newpass").value+"&confpass="+document.getElementById("newpass").value+"&submit-url=%2Fchn%2Fstatus_chn.htm&save=%C8%B7%B6%A8";
+if(saveChanges())
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+        // alert("设置成功！");
+        send_ntp();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+return true;
+}
+}
+function  send_ntp()
+{
+var temp="/boafrm/formNtp";
+param="";
+var radio="";
+if(document.getElementById("ntpServerId_radio1").checked)
+{
+  radio=0;
+}else
+{
+  radio=1;
+}
+
+var test=document.getElementById("ntp_flag_Sel").value;
+if(test==0)
+{
+param="year="+document.getElementById("year").value+"&month="+document.getElementById("month").value+"&day="+document.getElementById("day").value+"&hour="+document.getElementById("hour").value+"&minute="+document.getElementById("minute").value+"&second="+document.getElementById("second").value+"&submit-url=%2Fchn%2Fntp_chn.htm&save=%B1%A3%B4%E6%C9%E8%D6%C3";
+}else
+{
+  if(radio==1)
+{
+param="year="+document.getElementById("year").value+"&month="+document.getElementById("month").value+"&day="+document.getElementById("day").value+"&hour="+document.getElementById("hour").value+"&minute="+document.getElementById("minute").value+"&second="+document.getElementById("second").value+"&timeZone="+document.getElementById("timeZone").value+"&enabled=ON"+"&ntpServerIp1="+document.getElementById("ntpServerIp1").value+"&ntpServerId="+radio+"&ntpServerIp2="+document.getElementById("ntpServerIp2").value+"&submit-url=%2Fchn%2Fntp_chn.htm&save=%B1%A3%B4%E6%C9%E8%D6%C3";
+
+}else
+{
+
+param="year="+document.getElementById("year").value+"&month="+document.getElementById("month").value+"&day="+document.getElementById("day").value+"&hour="+document.getElementById("hour").value+"&minute="+document.getElementById("minute").value+"&second="+document.getElementById("second").value+"&timeZone="+document.getElementById("timeZone").value+"&enabled=ON"+"&ntpServerId="+radio+"&ntpServerIp1="+document.getElementById("ntpServerIp1").value+"&ntpServerIp2="+document.getElementById("ntpServerIp2").value+"&submit-url=%2Fchn%2Fntp_chn.htm&save=%B1%A3%B4%E6%C9%E8%D6%C3";
+}
+
+}
+//document.getElementById("ntp_flag_Sel").value
+if(saveChanges(document.time))
+{
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         //alert("设置成功！");
+         //location.reload();
+         send_lan();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+}
+		return true;
+}
+function send_lan()
+{
+
+	param = "";
+	param += "lan_ip="+document.getElementById("lan_ip").value+"&lan_mask=255.255.255.0&lan_gateway="+document.getElementById("lan_ip").value;
+  param += "&dhcp=2&dhcpRangeStart="+document.getElementById("dhcpRangeStart").value+"&dhcpRangeEnd="+document.getElementById("dhcpRangeEnd").value+"&"+"domainName=Realtek&stp=0&lan_macAddr=000000000000&save=Apply+Changes&submit-url=%2Ftcpiplan.htm";
+	
+
+    	$.ajax({
+    type: "POST",
+    
+    		url: "/boafrm/formTcpipSetup",
+    		cache: false,
+        data:param,
+    
+    
+		// ajax请求成功
+		success: function(result) {
+			//location.reload();
+     // alert("设置成功!");
+     //  send_reboot();
+       send_opmode_1();
+		},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+
+}
+function send_opmode_1()
+{
+  var leadcorewantype;
+  if(document.getElementById("wan_mode0").checked)
+  {
+    leadcorewantype=0;
+  }else if(document.getElementById("wan_mode1").checked)
+  {
+    leadcorewantype=1;
+  }else if(document.getElementById("wan_mode2").checked)
+  {
+    leadcorewantype=2;
+  }
+
+var param="leadcorewantype="+leadcorewantype;
+var temp="/boafrm/formleadcorewanSetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+send_opmode_2();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+ return true;
+
+}
+function send_opmode_2()
+{
+var param=document.getElementById("wan_mode1").checked;
+var temp="/boafrm/formOpMode";
+if(param)
+{
+if(debug==1)
+{
+console.warn("wan_type1 checked");
+}
+param="opMode=2&submit-url=%2Fopmode.htm&apply=Apply+Change";
+}else
+{
+if(debug==1)
+{
+console.warn("not wan_type1 checked");
+}
+param="opMode=0&submit-url=%2Fopmode.htm&apply=Apply+Change";
+}
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+         //document.body.innerHTML=result;
+
+         //send_reboot();
+send_apn();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+ return true;
+
+}
+function send_apn()
+{
+var index=document.getElementById("lc_system_profile_type").value;
+var temp="/boafrm/formapn";
+//param="username="+document.getElementById("username").value+"&newpass="+document.getElementById("newpass").value+"&confpass="+document.getElementById("confpass").value+"&submit-url=%2Fchn%2Fstatus_chn.htm&save=%C8%B7%B6%A8";
+param="lc_system_profile_type="+rel_sel[index]+"&";
+param+="apn_profile_name="+document.getElementById("apn_profile_name").value+"&";
+param+="apn_name="+document.getElementById("apn_name").value+"&";
+param+="apn_user="+document.getElementById("apn_user").value+"&";
+
+param+="apn_pass="+document.getElementById("apn_pass").value+"&";
+param+="apn_type="+document.getElementById("apn_type").value;
+
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         send_wlan_1();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+}
+function send_wlan_1()
+{
+
+			var param = "";
+			param += "ssid0=" + document.getElementById("lc_wifi_ssid").value + "&";
+			param += "hiddenSSID0=" + document.getElementById("lc_wifi_ssid_broadcast").value;
+
+var temp="/boafrm/formWlanSetupleadcore_convenient";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+         //document.body.innerHTML=result;
+
+         //send_reboot();
+          send_wlan_2();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+}
+function send_wlan_2()
+{
+var temp="/boafrm/formWlEncrypt";
+var sel=document.getElementById("lc_wifi_security_type").value;
+if(sel==0)  //关闭加密
+{
+
+  if(debug==1)
+  {
+  console.warn("关闭加密");
+  }
+  param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=0&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=*************&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fchn%2Fwlsecurity_chn.htm";
+}
+else if(sel==16)//WAPI-PSK
+{
+   if(debug==1)
+   {
+   console.warn("16 WAPI-PSK");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=7&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=**************************&pskFormat0=0&pskValue0=pppppppppp&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}
+else if(sel==13) //'13'>WPA/WPA2-PSK
+{
+   if(debug==1)
+   {
+   console.warn("13 WPA/WPA2-PSK");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=tkip&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=6&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=**************************&pskFormat0=0&pskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=yyyyynnnnnmmmmmm&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+   
+}else if(sel==14) //'14'>WPA/WPA2-PSK(TKIP)</option>
+{
+   if(debug==1)
+   {
+   console.warn("14>WPA/WPA2-PSK(TKIP)</option>");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=6&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=**************************&pskFormat0=0&pskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=yyyyynnnnnmmmmmm&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==15) //'15'>WPA/WPA2-PSK(AES)</option>
+{
+  if(debug==1)
+  {
+  console.warn("15>WPA/WPA2-PSK(AES)</option>");
+  }
+  param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=6&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=**************************&pskFormat0=0&pskValue0=";
+  param += document.getElementById("lc_wifi_password").value;
+  param += "&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=yyyyynnnnnmmmmmm&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==11) //'11'>WPA2(TKIP)</option>
+{
+
+  if(debug==1)
+  {
+  console.warn("11>WPA2(TKIP)</option>");
+  }
+  param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=tkip&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=4&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=*************&pskFormat0=0&pskValue0=";
+  param += document.getElementById("lc_wifi_password").value;
+  param += "&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fchn%2Fwlsecurity_chn.htm";
+
+}else if(sel==12) //'12'>WPA2(AES)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("12>WPA2(AES)</option>");
+   }
+   
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=4&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=*************&pskFormat0=0&pskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fchn%2Fwlsecurity_chn.htm";
+
+}
+else if(sel==10) //'10'>WPA(AES)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("10>WPA(AES)</option>");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=2&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=*************&pskFormat0=0&pskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fchn%2Fwlsecurity_chn.htm";
+
+}else if(sel==9) //'9'>WPA(TKIP)</option>
+{
+   if(debug==1)
+   {
+   console.warn("9>WPA(TKIP)</option>");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=2&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=*************&pskFormat0=0&pskValue0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fchn%2Fwlsecurity_chn.htm";
+
+}else if(sel==1) //'1'>WEP(开放系统/ASCII/64)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("1>WEP(开放系统/ASCII/64)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=open&wepKeyLen0=wep64&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=1&format0=1&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==2) //'2'>WEP(开放系统/ASCII/128)</option>
+{
+   if(debug==1)
+   {
+   console.warn("2>WEP(开放系统/ASCII/128)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=open&wepKeyLen0=wep64&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==3) //'3'>WEP(开放系统/十六进制/64)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("3>WEP(开放系统/十六进制/64)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=open&wepKeyLen0=wep64&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=1&format0=2&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==4) //'4'>WEP(开放系统/十六进制/128)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("4>WEP(开放系统/十六进制/128)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=open&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==5) //'5'>WEP(共享密钥/ASCII/64)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("5>WEP(共享密钥/ASCII/64)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=tkip&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=1&format0=1&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=123456789012345678901&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==6) //'6'>WEP(共享密钥/ASCII/128)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("6>WEP(共享密钥/ASCII/128)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=shared&wepKeyLen0=wep128&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=1&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==7) //'7'>WEP(共享密钥/十六进制/64)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("7>WEP(共享密钥/十六进制/64)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=aes&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=shared&wepKeyLen0=wep64&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=1&format0=2&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=12345678901234567890&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}else if(sel==8) //'8'>WEP(共享密钥/十六进制/128)</option>
+{
+
+   if(debug==1)
+   {
+   console.warn("8>WEP(共享密钥/十六进制/128)");
+   }
+   param="SSID_Setting=0&wpaAuth0=psk&ciphersuite0=tkip&wpa2ciphersuite0=aes&wapiAuth0=psk&wps_clear_configure_by_reg0=0&wlan_ssid=0&wlan_ssid_id=0&method0=1&authType=shared&wepKeyLen0=wep64&wlan_wepkeyfmt=&wlan_wepdefaultkey=&wlan_wepkey=&wepEnabled0=ON&length0=2&format0=2&key0=";
+   param += document.getElementById("lc_wifi_password").value;
+   param += "&pskFormat0=0&pskValue0=31313131313131313131313131&preAuth0=&radiusIP0=&radiusPort0=1812&radiusPass0=&use1x0=OFF&eapType0=0&eapInsideType0=0&eapUserId0=&radiusUserName0=&radiusUserPass0=&radiusUserCertPass0=&wapiPskFormat0=0&wapiPskValue0=1234567890&wapiASIP0=&wapiCertSel0=0&submit-url=%2Fwlsecurity.htm";
+
+}
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+       // send_security();
+         // alert("设置成功！");
+         send_reboot();
+       //  send_password();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+}
+function send_reboot()
+{
+  // ShowModalDialog("/chn/info.htm","");
+	$.ajax({
+  type: "POST",
+
+		url: "/boafrm/formreboot",
+		cache: false,
+    data:"formreboot=1",
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+       // send_security();
+          
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+  });
+
+}
+function ShowModalDialog_123(pageUrl, pageArgs)
+{
+	var url = pageUrl;
+	url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+	url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+	window.top.tb_show("", url, null);
+}
+function saveClick_opmode(next){
+	form =  document.wizard;
+	wizardHideDiv();
+	if(next)
+		show_div(true, ("ntp_div"));
+	else
+	{
+		show_div(true, "top_div");
+		if(is_ulinker == 1)
+			show_div(true,("otg_auto_div"));
+	}
+}
+function saveClick_password(next){
+if(saveChanges())
+{
+	form =  document.wizard;
+	wizardHideDiv();
+	if(next)
+		show_div(true, ("ntp_div"));
+	else
+	{
+		show_div(true, "top_div");
+		
+	}
+}
+}
+function saveClick_ntp(next){
+	form =  document.wizard;
+
+	if(next)
+	{
+    if(ntpsaveClick())
+    {
+	   wizardHideDiv();
+	   show_div(true, ("lan_div"));
+    }else
+    {
+     wizardHideDiv();
+     show_div(true, ("ntp_div"));
+    }
+  }
+	else
+  {
+     wizardHideDiv();
+		show_div(true, "top_div");
+   }
+} 
+
+function saveClick_lan(next){
+
+
+	form =  document.wizard;
+
+ $('#ntpServerId_radio1').show();
+ $('#ntpServerId_radio2').show();
+	
+	if(next)
+  {  
+    if(lansaveChanges())
+    {
+     wizardHideDiv();
+		 show_div(true, ("wan_div"));
+    }
+
+
+  }
+	else
+  {
+    wizardHideDiv();
+		show_div(true, "ntp_div");	
+
+  }
+}
+function saveClick_wan(next){
+	form =  document.wizard;
+
+		wizardHideDiv();
+		if(next)
+		{
+
+					show_div(true, ("apn_div"));
+
+		}else
+    {
+
+			show_div(true, ("lan_div"));
+    }
+	
+}
+function saveClick_apn(next){
+	form =  document.wizard;
+
+if(document.getElementById("apn_profile_name").value.length==0)
+{
+
+alert("配置文件名称不能为空!");
+return false;
+}
+
+
+
+
+		wizardHideDiv();
+		if(next)
+		{
+
+					show_div(true, ("leadcorewlan_div"));
+
+		}else
+    {
+
+			show_div(true, ("wan_div"));
+    }
+	
+}
+function saveClick_wlan1(next, wlan_id){
+
+	
+	
+		
+}
+
+function Set_onChangeBand(form, wlan_id, band, index){
+
+
+
+}
+
+
+function cancelClick(){
+	
+	window.location="/chn/wizard_chn.htm" ;
+}
+function saveClick_wlan2(next, wlan_id)
+{
+
+
+}
+function opModeClick(mode)
+{
+
+
+}
+function updateWISPWan()
+{
+
+}
+
+//wizard wapi
+function show_wizard_wapi_settings(wlan_id, index)
+{
+
+
+}
+function updateModeChangeSecurity(wlan_id)
+{
+
+}
+function changeSelected()
+{
+  var index=document.getElementById("lc_system_profile_type").value;
+
+var content="<% getInfo("apn_profile_info"); %>";
+content=content.split("[;]");
+index=rel_sel[index];
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][0]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j+"   "+index);
+           }
+ 
+
+
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+//console.warn(images[i][j]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j);
+           }
+    }
+    
+    var p_tmp=document.getElementById("lc_system_profile_type").value;
+    index=p_tmp;
+
+  document.getElementById("apn_profile_name").value=images[index][1];
+  document.getElementById("apn_name").value=images[index][4];
+  document.getElementById("apn_user").value=images[index][2];
+  document.getElementById("apn_pass").value=images[index][3];
+  //document.getElementById("apn_type").value=images[index][5];
+
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+ document.getElementById("apn_type").value=images[index][5];
+//alert(typeof(images[index][5]));
+//alert(images[index][5].length);
+           if(debug==1)
+           {
+               console.warn(images[0][1]+"   "+images[0][2]+"  0720 "+i  +"   "+images[index][5]);
+           }
+
+}
+var rel_sel=new Array();
+function Load_Setting()
+{
+
+	var content_status=window.parent.title.all_content;
+	allmsg=content_status.split('*');
+//alert(allmsg[0]+"   "+allmsg[1]+"   "+allmsg[2]+"   "+allmsg[3]+"   "+allmsg[5]+"   ");
+
+if(allmsg[5]=="0")
+{
+//show_div(false, "top_div");
+
+document.getElementById("nexttop").disabled=true;
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">没有(U)SIM卡或(U)SIM卡无效时不能进行快速设置,请检查(U)SIM卡.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+
+return 0;
+}else if(allmsg[5]=="2")
+{
+//show_div(false, "top_div");
+
+document.getElementById("nexttop").disabled=true;
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PIN码开启时不能进行快速设置,请进入移动网络->(U)SIM卡页面输入PIN码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}else if(allmsg[5]=="3")
+{
+//show_div(false, "top_div");
+
+document.getElementById("nexttop").disabled=true;
+err_info = "<font style=\"color: red ;font-family:微软雅黑\">PUK码开启时不能进行快速设置,请进入移动网络->(U)SIM卡页面输入PUK码.</font>";
+
+document.getElementById("sim_stat_warring").style.display="block";
+document.getElementById("sim_stat_warring").innerHTML =err_info;
+return 0;
+}
+
+//----------------------apn------------------------
+
+
+    var apn_select_html;
+    var content="<% getInfo("apn_profile_info"); %>";//"0[,]jack[,]123456[,]cmnet[,]name[;]1[,]john[,]1234[,]cmwap[,]name[;]"//til_request_query_apn_profile
+    var current_profile=<% getInfo("apn_cur_profile"); %>;//til_request_query_current_apn_profile
+    var index=current_profile;
+     content=content.split("[;]");
+    
+    //alert(content.length    +  "    "+content[0]+"     "+content[1]+"     "+content[2]);
+    
+    apn_select_html="<select name=\"lc_system_profile_type\" id=\"lc_system_profile_type\" onChange=\"changeSelected();\" >";
+
+    
+    for(var i=0;i<content.length-1;i++){ //一维长度为10
+        images[i]=new Array(); //在声明二维
+       // images[i]=content[i];
+        
+        var content_inner=content[i].split("[,]");
+        for(var j=0;j<content_inner.length;j++){ //二维长度为20
+
+           images[i][j]=content_inner[j];
+           if(debug==1)
+           {
+               console.warn(images[i][j]+" init  "+content_inner[j]);
+           }
+  
+
+           if(j==0)
+           {
+              apn_select_html+="<option value='"+i+"'>"+i+"</option>";
+              rel_sel[i]=content_inner[j];
+              if(current_profile==content_inner[j])
+              {
+              	current_profile=i;
+              }
+           }
+
+        }
+          if(images[i][0]==index)
+           {
+             index=i;
+//console.warn(images[i][j]+" init changeSelected "+content_inner[j]+"  "+i+"  "+j);
+           }
+    }
+    apn_select_html+="</select>";
+    document.getElementById("apn_con").innerHTML =apn_select_html;
+document.getElementById("lc_system_profile_type").value=current_profile;
+  document.getElementById("apn_profile_name").value=images[index][1];
+  document.getElementById("apn_name").value=images[index][4];
+  document.getElementById("apn_user").value=images[index][2];
+  document.getElementById("apn_pass").value=images[index][3];
+
+if(images[index][5].length==0)
+{
+  images[index][5]="2";
+}
+ document.getElementById("apn_type").value=images[index][5];
+//----------------ntp --------------
+	var cf = document.time;
+	var ntpEnabled = <%getIndex("ntpEnabled");%>;
+	var DaylightSave = <%getIndex("DaylightSave");%>;
+	var ntpServerId = <%getIndex("ntpServerId");%>;
+
+//    	if(ntpEnabled) 
+//        	cf.enabled.checked = true;
+ //       else
+ //       	cf.enabled.checked = false;
+
+//	if(DaylightSave)
+//        	cf.dlenabled.checked = true;
+//        else
+//        	cf.dlenabled.checked = false;
+//        	
+	if(ntpServerId == 0)
+  {
+		//cf.ntpServerId[0].checked = true;
+    document.getElementById("ntpServerId_radio1").checked = true;
+  }
+	else if(ntpServerId == 1)
+  { 
+      //  	cf.ntpServerId[1].checked = true;
+     document.getElementById("ntpServerId_radio2").checked = true;
+  }
+       // updateState(document.time);
+
+
+  document.getElementById("ntp_flag_Sel").value=ntpEnabled;
+		setTimeZone(document.getElementById("timeZone"), "<% getInfo("ntpTimeZone"); %>");
+		setNtpServer(document.getElementById("ntpServerIp1"), "<% getInfo("ntpServerIp1"); %>");	
+   ntpflagchange();
+//----------------ntp --------------
+
+//-------------------wan type-----------
+	    var wanv="<% getInfo("leadcorewantype"); %>";
+//document.getElementById("leadcorewantype").value="<% getInfo("leadcorewantype"); %>";
+   if(wanv==0)
+   {
+     document.getElementById("wan_mode0").checked=true;
+
+   }else if(wanv==1)
+   {
+     document.getElementById("wan_mode1").checked=true;
+
+   }else if(wanv==2)
+   {
+     document.getElementById("wan_mode2").checked=true;
+
+   }
+//-------------------wan type-----------
+
+//--------------wlan s-------
+var isRptConfig=<% getIndex("wscRptConfig"); %>;
+var wpsRpt_auth=<% getIndex("wpsRpt_auth"); %>;
+var wpsRpt_enc=<% getIndex("wpsRpt_enc"); %>;
+var wpsRpt_key="<%getInfo("wpsRpt_key");%>";
+
+var encrypt_rpt=<% getIndex("encrypt_rpt");%>; //ENCRYPT_DISABLED=0, ENCRYPT_WEP=1, ENCRYPT_WPA=2, ENCRYPT_WPA2=4, ENCRYPT_WPA2_MIXED=6 ,ENCRYPT_WAPI=7				
+var enable1x_rpt=<% getIndex("enable1x_rpt");%>;
+var wpa_auth_rpt=<% getIndex("wpa_auth_rpt");%>; //WPA_AUTH_AUTO=1, WPA_AUTH_PSK=2
+
+
+var wpsRpt_key="<%getInfo("meshPskValue");%>";//meshPskValue
+var wpsRpt_key="<%getInfo("pskValue");%>";//pskValue
+
+
+var value="<% getIndex("wlanDisabled"); %>";
+ //var lc_wifi_security_type_switch="<% getVirtualIndex("encrypt", "0") %>";
+var value1="<% getIndex("hiddenSSID"); %>";
+
+		mode = <% getVirtualIndex("encrypt", "0") %>;
+		enable_1x = <% getVirtualIndex("enable1X", "0") %>;
+		wlan_auth = <% getVirtualIndex("authType", "0") %>;
+		wpa_auth = <% getVirtualIndex("wpaAuth", "0") %>;
+		wapi_auth = <% getVirtualIndex("wapiAuth", "0") %>;
+		wepmode = <% getVirtualIndex("wep", "0") %>;
+		wep_key_fmt = <% getVirtualIndex("keyType", "0") %>;
+		wpa_cipher = <% getVirtualIndex("wpaCipher", "0") %>;
+		wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "0") %>;
+		psk_fmt = <% getVirtualIndex("pskFormat", "0") %>;
+		wapi_psk_fmt = <% getVirtualIndex("wapiPskFormat", "0") %>;
+		
+		tmp_eap_type = <% getVirtualIndex("eapType", "0") %>;
+		tmp_eap_inside_type = <% getVirtualIndex("eapInsideType", "0") %>;
+
+var sercurity_key;
+if(mode==7)
+{
+  sercurity_key=16;
+}else if(mode==6)
+{
+   if(wpa_cipher==1&&wpa2_cipher==2)
+   {
+     sercurity_key=15;
+   }
+
+   if(wpa_cipher==2&&wpa2_cipher==2)
+   {
+     sercurity_key=14;
+   }
+
+   if(wpa_cipher==2&&wpa2_cipher==1)
+   {
+     sercurity_key=13;
+   }
+}else if(mode==4)
+{
+   if(wpa2_cipher==2)
+   {
+     sercurity_key=12;
+   }
+
+   if(wpa2_cipher==1)
+   {
+     sercurity_key=11;
+   }
+}else if(mode==2)
+{
+   if(wpa_cipher==2)
+   {
+     sercurity_key=10;
+   }
+
+   if(wpa_cipher==1)
+   {
+     sercurity_key=9;
+   }
+}else if(mode==0)
+{
+    sercurity_key=0;
+}else if(mode==1)
+{
+    sercurity_key=<% getInfo("lc_wifi_security_type"); %>;
+    
+}
+
+if(mode==1)
+{
+
+      // console.warn( "lc_wifi_security_type init:"+sercurity_key);
+       document.getElementById("lc_wifi_security_type").value=sercurity_key;
+       var wpsRpt_key="<%getInfo("wps_key");%>";
+
+      var key="<% getInfo("lc_wifi_password"); %>";
+     if(sercurity_key==6||sercurity_key==2)
+     {
+       key=key.substr(0,13);
+     }else if(sercurity_key==3||sercurity_key==7)
+     {
+       key=key.substr(0,10);
+     }else if(sercurity_key==1||sercurity_key==5)
+     {
+       key=key.substr(0,5);
+     }else if(sercurity_key==8)
+     {
+       key=key.substr(0,26);
+     }
+
+     if(sercurity_key==4)
+     {
+       lens=wpsRpt_key.length;
+       if(lens>26)
+       {
+         wpsRpt_key=wpsRpt_key.substr(0,26);
+       }
+       key=wpsRpt_key;
+     }
+     
+     document.getElementById("lc_wifi_password").value=key;
+}else if(mode==6)
+{
+ // console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  document.getElementById("lc_wifi_security_type").value=sercurity_key;
+  document.getElementById("lc_wifi_password").value="<% getInfo("lc_wifi_password"); %>";
+
+}else if(mode==2)
+{
+ // console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  document.getElementById("lc_wifi_security_type").value=sercurity_key;
+  document.getElementById("lc_wifi_password").value="<% getInfo("lc_wifi_password"); %>";
+
+}else if(mode==4)
+{
+ // console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  document.getElementById("lc_wifi_security_type").value=sercurity_key;
+  document.getElementById("lc_wifi_password").value="<% getInfo("lc_wifi_password"); %>";
+
+}
+else if(mode==7)
+{
+  //console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  document.getElementById("lc_wifi_security_type").value=16;
+  document.getElementById("lc_wifi_password").value="<% getInfo("lc_wifi_password"); %>";
+
+}else if(mode==0)
+{
+  //console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  //document.getElementById("lc_wifi_security_type_switch").value=1;
+  document.getElementById("lc_wifi_security_type").value=0;
+  document.getElementById("lc_wifi_password").value="";
+     disableTextField(document.getElementById("lc_wifi_security_type"));
+     disableTextField(document.getElementById("lc_wifi_password"));
+
+
+}
+else
+{
+//  console.warn( "lc_wifi_security_type init:"+sercurity_key);
+  document.getElementById("lc_wifi_security_type").value=sercurity_key;
+  document.getElementById("lc_wifi_password").value="<%getInfo("wps_key");%>";
+}
+
+sec_type_top=document.getElementById("lc_wifi_security_type").value;
+sec_password=document.getElementById("lc_wifi_password").value;
+//lc_wifi_password-----------------------------------------------------------------
+document.getElementById("lc_wifi_ssid_broadcast").value=value1;
+
+
+
+
+
+
+//----------------------------------
+}
+function checkClientRange(start,end)
+{
+  start_d = getDigit(start,4);
+  start_d += getDigit(start,3)*256;
+  start_d += getDigit(start,2)*256;
+  start_d += getDigit(start,1)*256;
+
+  end_d = getDigit(end,4);
+  end_d += getDigit(end,3)*256;
+  end_d += getDigit(end,2)*256;
+  end_d += getDigit(end,1)*256;
+
+  if ( start_d < end_d )
+	return true;
+
+  return false;
+}
+function lansaveChanges()
+{
+
+  if ( checkIpAddr(document.getElementById("lan_ip"), '无效的IP地址! ') == false )
+	    return false;
+
+
+
+
+  	if ( checkIpAddr(document.getElementById("dhcpRangeStart"), 'DHCP地址范围起始地址值无效!') == false )
+	    return false;
+
+	if ( !checkSubnet(document.getElementById("lan_ip").value,document.getElementById("lan_ip").value,document.getElementById("dhcpRangeStart").value)) {
+		alert('网关IP地址和DHCP地址范围不在同一个网段范围内。');
+		//document.tcpip.dhcpRangeStart.value = document.tcpip.dhcpRangeStart.defaultValue;
+		document.getElementById("dhcpRangeStart").focus();
+		return false;
+	}
+  	if ( checkIpAddr(document.getElementById("dhcpRangeEnd"), 'DHCP地址范围结束地址值无效! ') == false )
+	    return false;	
+
+	if ( !checkSubnet(document.getElementById("lan_ip").value,document.getElementById("lan_ip").value,document.getElementById("dhcpRangeEnd").value)) {
+		alert('网关IP地址和DHCP地址范围不在同一个网段范围内。');
+		//document.tcpip.dhcpRangeEnd.value = document.tcpip.dhcpRangeEnd.defaultValue;
+		//document.tcpip.dhcpRangeEnd.focus();
+    document.getElementById("dhcpRangeEnd").focus();
+		return false;
+	}
+        if ( !checkClientRange(document.getElementById("dhcpRangeStart").value,document.getElementById("dhcpRangeEnd").value) ) {
+		alert('DHCP地址范围值无效!\n结束地址必须大于起始地址。');
+		document.getElementById("dhcpRangeStart").focus();
+		return false;
+        }
+
+
+ var  lan_ip_d = getDigit(document.getElementById("lan_ip").value, 4);
+ var  dhcpRangeStart_d = getDigit(document.getElementById("dhcpRangeStart").value, 4);
+ var  dhcpRangeEnd_d = getDigit(document.getElementById("dhcpRangeEnd").value, 4);
+
+   if(lan_ip_d>dhcpRangeStart_d&&lan_ip_d<dhcpRangeEnd_d)
+   {
+     alert("DHCP地址范围不能包含网关IP地址。");
+     return false;  
+   }
+
+   if(lan_ip_d==dhcpRangeStart_d||lan_ip_d==dhcpRangeEnd_d)
+   {
+     alert("DHCP地址范围不能包含网关IP地址。");
+     return false;  
+   }
+
+
+
+
+ // if(!checkFieldDigitRange(document.getElementById("dhcpLeaseTime"),1,10080,"无效的租约时间!租约时间必须在1~10080之间。"))
+//  	return false;  
+
+
+  return true;
+}
+function checkEmpty(field){
+	if(field.value.length == 0){
+var name_field="";
+if(field.name=="year")
+{
+name_field="年";
+}else if(field.name=="month")
+{
+
+name_field="月";
+}else if(field.name=="day")
+{
+
+name_field="日";
+}else if(field.name=="hour")
+{
+
+name_field="小时";
+}else if(field.name=="minute")
+{
+
+name_field="分钟";
+}else if(field.name=="second")
+{
+
+name_field="秒";
+}
+
+    alert(name_field + "输入框不能为空！\n");
+		//alert(field.name + " field can't be empty\n");
+		field.value = field.defaultValue;
+		field.focus();
+		return false;
+	}
+	else
+		return true;
+}
+function checkNumber(field){
+    str =field.value ;
+    for (var i=0; i<str.length; i++) {
+    	if ( (str.charAt(i) >= '0' && str.charAt(i) <= '9'))
+                        continue;
+	field.value = field.defaultValue;
+        alert("无效输入!");
+        return false;
+    }	
+	return true;
+}
+function ntpsaveClick()
+{
+
+
+  var Year_num;
+	var Month_num;
+	var Day_num;
+	var Hour_num;
+	var Min_num;
+	var Sec_num;
+ var test=document.getElementById("ntp_flag_Sel").value;
+
+if(test==0)
+{
+	if((checkEmpty(form.year)& checkEmpty(form.month) & checkEmpty(form.hour)
+	 & checkEmpty(form.day) &checkEmpty(form.minute) & checkEmpty(form.second))== false)
+	 	return false;
+
+	if((checkNumber(form.year)& checkNumber(form.month) & checkNumber(form.hour)
+	 & checkNumber(form.day) &checkNumber(form.minute) & checkNumber(form.second))== false)
+	 	return false;
+	if(form.month.value == '0'){
+		form.month.value = form.month.defaultValue;
+        	alert("无效的月份！");
+		return false;
+	}
+  Year_num =parseInt(form.year.value, 10);
+	Month_num =parseInt(form.month.value, 10);
+	Day_num =parseInt(form.day.value, 10);
+	Hour_num =parseInt(form.hour.value, 10);
+	Min_num =parseInt(form.minute.value, 10);
+	Sec_num =parseInt(form.second.value, 10);
+
+   if(Year_num <2014 || Year_num >2037)
+   {
+			 alert("无效时间!");
+		   return false;
+
+   }
+
+   if(Month_num==4||Month_num==6||Month_num==9||Month_num==11)
+   {
+     if(Day_num>31||Day_num==31)
+     {
+			 alert("无效时间!");
+		   return false;
+
+     }
+   }
+   if(Month_num == 2)
+   {
+       if(!isNaN(Year_num)){
+          if((Year_num%4==0 && Year_num%100!=0)||(Year_num%100==0 && Year_num%400==0)){
+             //window.alert(pYear+"是闰年！");
+                    if(Day_num > 29)
+                    {
+			                 alert("无效时间!");
+		                   return false;
+
+                    }
+           }else{
+              //window.alert(pYear+"不是闰年！");
+                    if(Day_num > 28)
+                    {
+			                 alert("无效时间!");
+		                   return false;
+
+                    }
+          }
+       }else{
+         // window.alert("请输入正确年份！");
+			                 alert("无效时间!");
+		                   return false;
+       }
+     
+
+   }
+	if((Month_num<=0) || (Month_num > 12) || (Day_num <= 0) || (Day_num > 31) || (Hour_num < 0)  || (Hour_num > 23) || (Min_num < 0) || (Min_num > 59) || (Sec_num < 0) || (Sec_num > 59)){
+			alert("无效时间!");
+		return false;
+	}
+ }
+	if (test==1) {
+		if(form.ntpServerId[1].checked == true){ 
+			if(form.ntpServerIp2.value != ""){
+				if ( checkIpAddr_chn(form.ntpServerIp2, '无效的IP地址') == false )
+			    	return false;
+			}
+			else{
+				//form.ntpServerIp2.value = "0.0.0.0" ;	
+				alert("无效的NTP服务器IP地址! ");
+				return false; 
+			}
+		}
+	}	
+	return true;
+
+}
+function wizardTopClick()
+{
+	wizardHideDiv();
+	
+ $('#ntpServerId_radio1').show();
+ $('#ntpServerId_radio2').show();
+			show_div(true, "ntp_div");
+
+	
+	
+}
+
+
+function saveClick_bandMode(next){
+
+
+	
+}
+function ntpflagchange()
+{
+    var temp=document.getElementById("ntp_flag_Sel").value;
+	if(temp=="1")
+	{
+
+		$("#lc_time1_span").hide();
+		$("#timezone_server").show();
+    $("#timezone_server1").show();
+		$("#timezone_span").show();
+    $("#timeZone_tr").show();
+
+	}
+	else
+	{
+
+		$("#timezone_server").hide();
+    $("#timezone_server1").hide();
+		$("#timezone_span").hide();
+		$("#lc_time1_span").show();
+    $("#timeZone_tr").hide();
+	}
+}
+function wlanBandModeSelection(selValue)
+{
+
+}
+</script>
+</head>
+<body onload="Load_Setting();">
+<body >
+<blockquote>
+
+
+<form action=/boafrm/formWizard method=POST name="wizard">
+<!-- for WPS -->
+<INPUT type=hidden name=wps_clear_configure_by_reg0 value=0>
+<INPUT type=hidden name=wps_clear_configure_by_reg1 value=0>
+<INPUT type=hidden name=Band2G5GSupport value=<% getIndex("Band2G5GSupport"); %>>
+<INPUT type=hidden name=dsf_enable value=<% getIndex("dsf_enable"); %>>
+<INPUT type=hidden name=wlBandMode value=<% getIndex("wlanBand2G5GSelect"); %>>
+<INPUT type=hidden name=wlan1_phyband value="<% getIndex("wlan1_phyband"); %>">
+<INPUT type=hidden name=wlan2_phyband value="<% getIndex("wlan2_phyband"); %>">
+<INPUT type=hidden name=leadcorewantype value="<% getIndex("leadcorewantype"); %>">
+<INPUT type=hidden name=wlan_support_8812e value=<% getIndex("wlan_support_8812e"); %>>
+
+<span id = "top_div" class = "on" >
+<h2><b><font color="#0000FF">快速设置 (1/6)</font></b></h2>
+<tr><td><font size=2>
+此设置向导，将向您展示如何以安全的方式建立网关，继续请点击"下一步"。
+</font></td></tr>
+
+			<table width="800px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="left"><span id="sim_stat_warring" style="display:none" width="100%" align="left"></span></td></tr>
+			</table>
+
+<table  border=0 width="500" cellspacing=4 >
+
+
+<tr><hr size=1 noshade align=top></tr>
+
+<tr ><td colspan="2"> 
+<font size=2> <b>
+<br> 
+<script>
+	if(is_ulinker==1)
+	{
+		var wan_type=<% getIndex("wanDhcp"); %>;
+		document.write('<br>ULinker Mode : ');
+		if(pocketRouter_Mode==POCKETROUTER_GATEWAY)
+		{
+			document.write('Router');
+			if(wan_type == 0)
+			{
+				wanTypeStr="FixedIP";				
+			}
+			else if(wan_type == 1)
+			{
+				wanTypeStr="AutoIP";
+			}
+			else if(wan_type == 3)
+			{
+				wanTypeStr="PPPoE";
+			}
+			else if(wan_type == 4)
+			{
+				wanTypeStr="PPTP";
+			}
+			else if(wan_type == 6)
+			{
+				wanTypeStr="L2TP";
+			}
+			document.write(' '+wanTypeStr);	
+		}
+		else if(pocketRouter_Mode==POCKETROUTER_BRIDGE_AP)
+		{
+			//ulinker_opMode="3"*1; //0:AP; 1:Client; 2:Router; 3:RPT			
+			if(ulinker_opMode == 3)
+				document.write('Repeater');
+			else
+			document.write('AP');
+		}
+		else if(pocketRouter_Mode==POCKETROUTER_BRIDGE_CLIENT)
+			document.write('Client');
+		
+		document.write('<br>');
+	}
+</script>
+<br>注意：
+</b></font>
+</td></tr> 
+<tr height=10> <td> </td></tr>
+<tr ><td> <font size=2>
+		<ol>
+		<script>
+
+		document.write('通过此向导，可以设置基本参数，如需进行高级设置，请进入其他相应页面。');
+		
+
+		</script>
+		</ol>
+	</font></td> 
+</tr>
+
+</td></tr>
+</table>
+<div>  
+<table border=0 width="350" cellspacing=4 cellpadding=0 >
+<tr>
+  <td colspan="2" align=right> 
+
+	<input type="button" style=" display: block; position: absolute; left:460px;" value="  下一步>>" name="next" id="nexttop" onClick='wizardTopClick();'>
+
+  </td>
+</tr>
+
+
+ 
+</table>
+</div>
+</span>
+
+<span id = "otg_auto_div" class = "off" >
+	<table border=0 width="500" cellspacing=0 cellpadding=0>
+		<tr><td colspan="2"><hr size=1 noshade align=top></td></tr>
+		
+		<tr>
+       <td width="30%" ><font size=2>自动模式: <SPAN id=otg_auto_span> </td>
+    </tr>
+  <tr><td height="6"></td></tr>  
+		<tr>
+		  <td align=left> 
+			<input type="button" value="" id="otg_auto_btn" name="otg_auto_btn" onClick='return otg_auto_Click();'>
+		 		
+		  </td>
+		</tr>
+	</table>
+</span>
+
+
+
+<span id = "password_div" class = "off" >
+ <tr><td colspan="2"><h2><font color="#0000FF">快速设置（1/7）</font></h2></td></tr>  
+  <tr><td colspan="2"><font size=2>
+您可以修改用户名和密码。
+    </tr>
+  </td>
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+<table  border=0 width="500" cellspacing=4 cellpadding=0>
+ 
+
+
+
+</table>
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+
+
+    <tr>
+      <td width="20%"><font size=2><b>用户名:</b></td>
+      <td width="50%"><font size=2><input type="text" name="username" id="username" class="txt1"  size="20" maxlength="30" value="<%getInfo("userName");%>" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>新密码:</b></td>
+      <td width="50%"><font size=2><input type="password" name="newpass" id="newpass" class="txt1"  size="20" maxlength="30" value="<%getInfo("userPassword");%>" onblur="checkASC(this,'user name')"></td>
+    </tr>
+
+  </table>
+<div>  
+<table border=0 width="500" cellspacing=4 cellpadding=0>  
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='saveClick_password(0)' >
+		  <input type="button" value="  下一步>>" name="next" onClick='saveClick_password(1)'>
+  	</td> </tr>
+</table>
+</div>
+</span>
+<!-- ntp page -->
+
+<span id = "ntp_div" class = "off" >
+  <tr><td colspan="2"><h2><font color="#0000FF">快速设置（2/6）</font></h2></td></tr>
+  <tr><td colspan="2"><font size=2>
+设置网关时间。
+    </td>
+  </tr>
+
+
+
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+
+<table  border="0" width="600" cellspacing=4 cellpadding=0>
+
+
+
+	<tr>
+	<td width ="30%">
+	<font size=2> <b>设置方式:</b> </font>
+	</td>
+
+			<td width ="70%" style=" ">
+				<select id="ntp_flag_Sel" name="ntp_flag_Sel" onChange="ntpflagchange();">
+					<option value='1'>自动设置</option>
+					<option value='0'>手动设置</option>
+				</select>
+				</td>
+ 
+	</tr>
+	<tr id="lc_time1_span">
+	<td width ="30%">
+	<font size=2> <b>手动设置时间:</b> </font>
+	</td>
+	<td width ="70%">
+                <font size =2> <b>
+                 <input type="text" name="year" id="year" value="<% getInfo("year"); %>" size="4" maxlength="4">年
+                 <input type="text" name="month" id="month" value="<% getInfo("month"); %>" size="2" maxlength="2">月
+                 <input type="text" name="day" id="day" value="<% getInfo("day"); %>" size="2" maxlength="2">日
+                 <input type="text" name="hour" id="hour" value="<% getInfo("hour"); %>" size="2" maxlength="2">时
+                 <input type="text" name="minute" id="minute" value="<% getInfo("minute"); %>" size="2" maxlength="2">分
+                 <input type="text" name="second" id="second" value="<% getInfo("second"); %>" size="2" maxlength="2">秒
+                </b> </font>
+        </td>
+	</tr>
+
+
+
+	<tr style="display:none" id="timeZone_tr"><td width="30%"><font size=2> <b>时区选择: </b> </font></td>
+	    <td width="70%">
+            <select name="timeZone" id="timeZone">
+            	<script language="javascript">
+            	var i;
+            	for(i=0;i<ntp_zone_chn_array.length;i++){
+			if (i == ntp_zone_index)
+				document.write('<option value="',ntp_zone_chn_array[i].value,'" selected>',ntp_zone_chn_array[i].name,'</option>');
+			else
+				document.write('<option value="',ntp_zone_chn_array[i].value,'">',ntp_zone_chn_array[i].name,'</option>');
+            	}
+		</script>
+            </select>
+	    </td>
+	</tr>	
+
+	<tr id="timezone_server">
+	<td width ="30%">
+	<font size=2> <b> NTP服务器: </b> </font>
+	</td>
+	<td width ="70%">
+		<input type="radio" value="0" name="ntpServerId" id="ntpServerId_radio1"></input>
+		<select name="ntpServerIp1" id="ntpServerIp1">
+			<option value="131.188.3.220">131.188.3.220  - 欧洲</option>
+			<option value="130.149.17.8">130.149.17.8   - 欧洲</option>
+			<option value="203.117.180.36"> 203.117.180.36 - 亚太</option>
+			</select>
+		</td>
+</tr>
+
+<tr id="timezone_server1">
+	<td width ="30%"> <font size=2><b> </b></font>
+	</td>
+	<td width ="70%">
+	<input type="radio" value="1" name="ntpServerId" id="ntpServerId_radio2"></input>
+	<input type="text" name="ntpServerIp2" id="ntpServerIp2" size="15" maxlength="15" value=<% getInfo("ntpServerIp2"); %>> <font size=2> (手动设置) </font>
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+<div>  
+<table border=0 width="600" cellspacing=4 cellpadding=0>  
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='saveClick_ntp(0)' >
+		  <input type="button" value="  下一步>>" name="next" onClick='saveClick_ntp(1)'>
+  	</td> </tr>
+</table>
+</div>
+</span>
+ 
+
+
+
+
+<!-- lan page -->
+<span id = "lan_div" class = "off" >
+<tr><td colspan="2"><h2><font color="#0000FF">快速设置（3/6）</font></h2></td></tr>
+  <tr><td colspan="2"><font size=2>
+局域网DHCP配置。
+    </td>
+  </tr>
+<table  border=0 width="500" cellspacing=4 cellpadding=0>
+
+
+<tr><hr size=1 noshade align=top></tr>
+
+
+  <tr>
+      <td width="30%"><font size=2><b>网关IP地址:</b></td>
+      <td width="70%"><input type="text" name="lan_ip" id="lan_ip" size="15" maxlength="15" value=<% getInfo("ip-rom"); %>></td>
+  </tr>
+
+  <tr>
+      <td width="30%"><font size=2><b>DHCP地址范围:</b></td>
+      <td width="70%"><input type="text" name="dhcpRangeStart" id="dhcpRangeStart" size="12" maxlength="15" value="<% getInfo("dhcpRangeStart"); %>">
+      <font face="Arial" size="5">-</font> <input type="text" name="dhcpRangeEnd" id="dhcpRangeEnd" size="12" maxlength="15" value="<% getInfo("dhcpRangeEnd"); %>">&nbsp;
+  
+      </td>
+  </tr>
+  <!--tr><td colspan="2" height="135"></td></tr-->
+  </table>
+<div>  
+   <table border=0 width="500" >  
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='return saveClick_lan(0)' >
+		  <input type="button" value="  下一步>>" name="next"  onClick='return saveClick_lan(1)'>
+  	</td> </tr>
+  </table>
+</div>
+</span> 
+<!-- wan page -->
+
+
+   <span id = "wan_div" class = "off" >
+  <tr><td colspan="2"><h2><font color="#0000FF">快速设置（4/6）</font></h2></td></tr>
+  <tr><td colspan="2"><font size=2>
+此页面用于配置WAN口。
+    </td>
+  </tr>
+<table  border=0 width="500" cellspacing=4 cellpadding=0>
+
+  <tr><hr size=1 noshade align=top></tr>
+  <tr>
+</table>
+ <input type="hidden" value="pptp" name="ipMode">
+ <input type="hidden" value="pppoeNumber" name="pppoeNumber">
+
+		<tr><table>
+			<tbody><tr><th width="300"> 
+				<div align="left" class="radio" onclick="" ><input type="radio"  id="wan_mode0" name="wan_mode" value="0"><label for="wan_mode0">移动网络做WAN口</label> </div>				  				
+			</th></tr></tbody>
+		</table></tr>
+		
+		<tr><table>
+			<tbody><tr><th width="300"> 
+				<div align="left" class="radio" onclick=""><input type="radio"  id="wan_mode1" name="wan_mode" value="1"><label for="wan_mode1">Station做WAN口</label></div>				  				
+			</th></tr></tbody>
+		</table></tr>
+		
+		<tr><table>
+			<tbody><tr><th width="300"> 
+				<div align="left" class="radio" onclick=""><input type="radio" id="wan_mode2" name="wan_mode" value="2"><label for="wan_mode2">RJ45做WAN口</label></div>			  				
+			</th></tr></tbody>
+		</table></tr>  
+
+  </table>
+
+
+<div id="wan_btn">  
+    <table border="0" width=500>
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='return saveClick_wan(0)' >
+      <input type="button" value="  下一步>>" name="back" onClick='return saveClick_wan(1)' >
+
+		  
+  	</td> </tr>
+    </table>
+</div>
+  
+</span>   
+
+
+<!-- apn page -->
+<span id = "apn_div" class = "off" >
+ <tr><td colspan="2"><h2><font color="#0000FF">快速设置（5/6）</font></h2></td></tr>  
+  <tr><td colspan="2"><font size=2>
+移动网络APN配置。
+    </tr>
+  </td>
+<table  border=0 width="500" cellspacing=4 cellpadding=0>
+ 
+
+
+<tr><hr size=1 noshade align=top></tr>
+</table>
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+
+
+    <tr>
+      <td width="20%"><font size=2><b>选择APN配置:</b></td>
+      <td width="50%"><font size=2><span id="apn_con"></span></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>配置文件名称:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_profile_name" id="apn_profile_name" class="txt1"  size="15" maxlength="15" value="" onblur="checkASC(this,'user name')"></td>
+    </tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>PDP类型:</b></td>
+      <td width="50%"><font size=2>
+						<select name="apn_type" id="apn_type" class="txt1">
+							<option value="0">IPv4</option>
+							<option value="1">IPv6</option>
+              <option value="2">IPv4 & IPv6</option>
+						</select>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td width="20%"><font size=2><b>APN:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_name" id="apn_name" class="txt1"  size="15" maxlength="15" value="" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>用户名:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_user" id="apn_user" class="txt1"  size="15" maxlength="15" onblur="checkASC(this,'user name')"></td>
+    </tr>
+    <tr>
+      <td width="20%"><font size=2><b>密码:</b></td>
+      <td width="50%"><font size=2><input type="text" name="apn_pass"  id="apn_pass" class="txt1"  size="15" maxlength="15" onblur="checkASC(this,'user name')"></td>
+    </tr>
+
+
+  </table>
+<div>  
+<table border=0 width="500" cellspacing=4 cellpadding=0>  
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='saveClick_apn(0)' >
+		  <input type="button" value="  下一步>>" name="next" onClick='saveClick_apn(1)'>
+  	</td> </tr>
+</table>
+</div>
+</span>
+
+<!-- leadcorewlan page -->
+<span id = "leadcorewlan_div" class = "off" >
+ <tr><td colspan="2"><h2><font color="#0000FF">快速设置（6/6）</font></h2></td></tr>  
+  <tr><td colspan="2"><font size=2>
+WLAN安全设置。
+    </tr>
+  </td>
+<table  border=0 width="500" cellspacing=4 cellpadding=0>
+ 
+
+
+<tr><hr size=1 noshade align=top></tr>
+</table>
+ <table border="0" cellspacing="4" width="500">
+		<tr>                    
+			<td width="26%"><font size=2><b>SSID:
+      </b></td>
+     <td width="74%"><font size=2><input type="text" id="lc_wifi_ssid" name="lc_wifi_ssid" size="33" maxlength="32" value="<% getInfo("ssid"); %>" onblur="";>
+		</tr>
+
+		<tr>                    
+			<td width="26%"><font size=2><b>SSID广播:
+      </b></td>
+     <td width="74%"><font size=2>				
+       <select name="lc_wifi_ssid_broadcast" id="lc_wifi_ssid_broadcast"  value="">
+					<option value='0'>开启</option>
+					<option value='1'>关闭</option>
+				</select></td>
+		</tr>
+
+		<tr>                    
+			<td width="26%"><font size=2><b>安全类型:
+      </b></td>
+     <td width="74%"><font size=2>
+                        <select name="lc_wifi_security_type" id="lc_wifi_security_type" onchange="lc_wifi_security_type_change();" >
+                            <option value='0'>无密码</option>
+                            <option value='1'>WEP(开放系统/ASCII/64)</option>
+                            <option value='2'>WEP(开放系统/ASCII/128)</option>
+                            <option value='3'>WEP(开放系统/十六进制/64)</option>
+                            <option value='4'>WEP(开放系统/十六进制/128)</option>
+                            <option value='5'>WEP(共享密钥/ASCII/64)</option>
+                            <option value='6'>WEP(共享密钥/ASCII/128)</option>
+                            <option value='7'>WEP(共享密钥/十六进制/64)</option>
+                            <option value='8'>WEP(共享密钥/十六进制/128)</option>
+                            <option value='9'>WPA-PSK(TKIP)</option>
+                            <option value='10'>WPA-PSK(AES)</option>
+                            <option value='11'>WPA2-PSK(TKIP)</option>
+                            <option value='12'>WPA2-PSK(AES)</option>
+                            <option value='13'>WPA/WPA2-PSK</option>
+                            <option value='14'>WPA/WPA2-PSK(TKIP)</option>
+                            <option value='15'>WPA/WPA2-PSK(AES)</option>
+                            <option value='16'>WAPI-PSK</option>
+                        </select></td>
+		</tr>
+
+		<tr>                    
+			<td width="26%"><font size=2><b>密码:
+      </b></td>
+     <td width="74%"><font size=2>
+          <input type="text"  id="lc_wifi_password" name="lc_wifi_password" maxlength="64" size="30" onblur="checkASC(this,'user name')"; >
+		</tr>
+
+
+  </table>
+<div>  
+<table border=0 width="500" cellspacing=4 cellpadding=0>  
+	<tr> <td colspan="2" align=right>
+		  <input type="button" value="  取消  " name="cancel" onClick='cancelClick();'>
+		  <input type="button" value="<<上一步  " name="back" onClick='saveleadcorewlan_apn(0)' >
+		  <input type="button" value="  应用  " name="next" onClick='saveleadcorewlan_apn(1)'>
+  	</td> </tr>
+</table>
+</div>
+</span>
+
+
+
+</script> 
+</blockquote>
+
+
+<!--	
+	<input type="hidden" value="" name="preAuth">
+-->	
+
+	<!-- wlan2 page -->
+</form>
+
+
+<blockquote>
+
+
+</body>
+
+</html>

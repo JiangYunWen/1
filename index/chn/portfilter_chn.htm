@@ -1,0 +1,162 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>Port Filtering</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script>
+function addClick()
+{
+  if (!document.formFilterAdd.enabled.checked)
+  	return true;
+
+  if (document.formFilterAdd.fromPort.value=="" && document.formFilterAdd.toPort.value==""
+  		&& document.formFilterAdd.comment.value=="" )
+	return true;
+
+  if (document.formFilterAdd.fromPort.value=="") {
+  	alert("端口号不能为空！");
+	document.formFilterAdd.fromPort.focus();
+	return false;
+  }
+  if ( validateKey( document.formFilterAdd.fromPort.value ) == 0 ) {
+	alert("无效端口号!必须是数字。");
+	document.formFilterAdd.fromPort.focus();
+	return false;
+  }
+  d1 = getDigit(document.formFilterAdd.fromPort.value, 1);
+  if (d1 > 65535 || d1 < 1) {
+	alert("无效端口号! 端口值必须在 1-65535范围内。");
+	document.formFilterAdd.fromPort.focus();
+	return false;
+  }
+  if (document.formFilterAdd.toPort.value!="") {
+  	if ( validateKey( document.formFilterAdd.toPort.value ) == 0 ) {
+		alert("无效端口号!必须是数字。");
+		document.formFilterAdd.toPort.focus();
+		return false;
+  	}
+	d2 = getDigit(document.formFilterAdd.toPort.value, 1);
+ 	if (d2 > 65535 || d2 < 1) {
+		alert("无效端口号! 端口值必须在 1-65535范围内。");
+		document.formFilterAdd.toPort.focus();
+		return false;
+  	}
+	if (d1 > d2 ) {
+		alert("无效端口范围! 起始端口值必须小于结束端口值。");
+		document.formFilterAdd.fromPort.focus();
+		return false;
+
+	}
+   }
+   return true;
+}
+
+
+function deleteClick()
+{
+  if ( !confirm('确定删除已选中的条目?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+function deleteAllClick()
+{
+   if ( !confirm('确定删除吗?') ) {
+	return false;
+  }
+  else
+	return true;
+}
+
+function disableDelButton()
+{
+	disableButton(document.formFilterDel.deleteSelFilterPort);
+	disableButton(document.formFilterDel.deleteAllFilterPort);
+}
+
+function updateState()
+{
+  if (document.formFilterAdd.enabled.checked) {
+ 	enableTextField(document.formFilterAdd.fromPort);
+ 	enableTextField(document.formFilterAdd.toPort);
+	enableTextField(document.formFilterAdd.protocol);
+ 	enableTextField(document.formFilterAdd.comment);
+  }
+  else {
+ 	disableTextField(document.formFilterAdd.fromPort);
+ 	disableTextField(document.formFilterAdd.toPort);
+ 	disableTextField(document.formFilterAdd.protocol);
+	disableTextField(document.formFilterAdd.comment);
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("portFilterEnabled"); %> )
+		document.formFilterAdd.enabled.checked = true;
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">端口过滤</font></h2>
+
+<table border=0 width="500" cellspacing=4 cellpadding=0>
+<tr><td><font size=2>
+
+</font></td></tr>
+
+<tr><td><hr size=1 noshade align=top></td></tr>
+
+<form action=/boafrm/formFilter method=POST name="formFilterAdd">
+<tr><td><font size=2><b>
+	<input type="checkbox" name="enabled" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;开启端口过滤</b><br>
+    </td>
+</tr>
+
+<tr><td>
+     <p><b><font size=2>端口范围: </b></font>
+  		<input type="text" name="起始端口" size="4"><b>-</b>
+      		<input type="text" name="结束端口" size="4"></font>&nbsp;&nbsp;
+  	<b><font size=2>Protocol:</b> <select name="protocol">
+    		<option select value="0">Both</option>
+    		<option value="1">TCP</option>
+    		<option value="2">UDP</option>
+    		</select></font>&nbsp;&nbsp
+  	<b><font size=2>说明: </b> <input type="text" name="comment" size="16" maxlength="20"></font>
+     </p>
+     <p><input type="submit" value="提交修改" name="addFilterPort" onClick="return addClick()">&nbsp;&nbsp;
+        <input type="reset" value="重设" name="reset">
+        <input type="hidden" value="/chn/portfilter_chn.htm" name="submit-url">
+     </p>
+<script> updateState(); </script>
+</td><tr>
+</form>
+</table>
+
+<br>
+<form action=/boafrm/formFilter method=POST name="formFilterDel">
+  <table border="0" width=500>
+  <tr><font size=2><b>当前过滤列表:</b></font></tr>
+  <% portFilterList(); %>
+  </table>
+  <br>
+  <input type="submit" value="删除已选中" name="deleteSelFilterPort" onClick="return deleteClick()">&nbsp;&nbsp;
+  <input type="submit" value="全部删除" name="deleteAllFilterPort" onClick="return deleteAllClick()">&nbsp;&nbsp;&nbsp;
+  <input type="reset" value="重设" name="reset">
+  <input type="hidden" value="/chn/portfilter_chn.htm" name="submit-url">
+ <script>
+	if ( <% getIndex("portFilterNum"); %> == 0 )
+		disableDelButton();
+ </script>
+</form>
+
+</blockquote>
+</body>
+</html>

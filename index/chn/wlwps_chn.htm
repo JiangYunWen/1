@@ -1,0 +1,708 @@
+
+
+<html>
+<head>
+<title>360随身WiFi 4G</title>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=gbk">
+<!--link rel="stylesheet" href="style/normal_ws.css" type="text/css"-->
+<!--link rel="stylesheet" href="p/css/iframe.css" type="text/css"-->
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+
+
+
+<style type="text/css">
+#tag_notice
+{
+	font-family: 微软雅黑,Arial, Helvetica, sans-serif;
+	font-size:14px;	
+	width:540px;
+	border:solid 1px gray;
+	border-left:solid 1px gray;
+	padding:8px;
+	margin:8px auto;
+	background-color:#ccc;
+	align:left;
+	colspan:4;
+}
+
+#tag_input_pin
+{
+	font-family:微软雅黑,Arial, Helvetica, sans-serif;
+	font-size:12px;	
+	width:540px;
+	padding:8px;
+	margin:8px auto;
+	align:left;
+}
+tbody{
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	color:#333;
+
+}
+</style>
+
+<script type="text/javascript">
+var sercurity_key;
+var isconnect=0;
+var timer_count=0;
+var debug=0;
+
+var timer_wps;
+var wps_session_status;
+var wps_tag1 = "PBC模式,请点击“连接”按钮连接WPS设备。";
+var wps_tag2 = "PIN模式（AP）,请将上栏显示的PIN码输入到无线设备客户端（STA侧）中。";
+var wps_tag3 = "PIN模式（STA）,请输入无线设备客户端（AP侧）上产生的PIN码。";
+
+var wps_tag4 = "当前加密类型不支持WPS.";
+var wps_tag5 = "设备连接中...请稍后.";
+var wps_tag6 = "设备连接失败,请稍后重试.";
+var wps_tag7 = "设备连接成功.";
+
+function init()
+{	
+
+var isRptConfig=<% getIndex("wscRptConfig"); %>;
+var wpsRpt_auth=<% getIndex("wpsRpt_auth"); %>;
+var wpsRpt_enc=<% getIndex("wpsRpt_enc"); %>;
+var wpsRpt_key="<%getInfo("wpsRpt_key");%>";
+
+var encrypt_rpt=<% getIndex("encrypt_rpt");%>; //ENCRYPT_DISABLED=0, ENCRYPT_WEP=1, ENCRYPT_WPA=2, ENCRYPT_WPA2=4, ENCRYPT_WPA2_MIXED=6 ,ENCRYPT_WAPI=7				
+var enable1x_rpt=<% getIndex("enable1x_rpt");%>;
+var wpa_auth_rpt=<% getIndex("wpa_auth_rpt");%>; //WPA_AUTH_AUTO=1, WPA_AUTH_PSK=2
+
+
+var wpsRpt_key="<%getInfo("meshPskValue");%>";//meshPskValue
+var wpsRpt_key="<%getInfo("pskValue");%>";//pskValue
+
+
+var value="<% getIndex("wlanDisabled"); %>";
+ //var lc_wifi_security_type_switch="<% getVirtualIndex("encrypt", "0") %>";
+var value1="<% getIndex("hiddenSSID"); %>";
+
+		mode = <% getVirtualIndex("encrypt", "0") %>;
+		enable_1x = <% getVirtualIndex("enable1X", "0") %>;
+		wlan_auth = <% getVirtualIndex("authType", "0") %>;
+		wpa_auth = <% getVirtualIndex("wpaAuth", "0") %>;
+		wapi_auth = <% getVirtualIndex("wapiAuth", "0") %>;
+		wepmode = <% getVirtualIndex("wep", "0") %>;
+		wep_key_fmt = <% getVirtualIndex("keyType", "0") %>;
+		wpa_cipher = <% getVirtualIndex("wpaCipher", "0") %>;
+		wpa2_cipher = <% getVirtualIndex("wpa2Cipher", "0") %>;
+		psk_fmt = <% getVirtualIndex("pskFormat", "0") %>;
+		wapi_psk_fmt = <% getVirtualIndex("wapiPskFormat", "0") %>;
+		
+		tmp_eap_type = <% getVirtualIndex("eapType", "0") %>;
+		tmp_eap_inside_type = <% getVirtualIndex("eapInsideType", "0") %>;
+
+
+if(mode==7)
+{
+  sercurity_key=16;
+}else if(mode==6)
+{
+   if(wpa_cipher==1&&wpa2_cipher==2)
+   {
+     sercurity_key=15;
+   }
+
+
+   if(wpa_cipher==2&&wpa2_cipher==1)
+   {
+     sercurity_key=13;
+   }
+}else if(mode==4)
+{
+   if(wpa2_cipher==2)
+   {
+     sercurity_key=12;
+   }
+
+
+}else if(mode==2)
+{
+
+     sercurity_key=1;
+
+}else if(mode==0)
+{
+    sercurity_key=0;
+}else if(mode==1)
+{
+    sercurity_key=1;
+    
+}
+//------------------------------------
+	var wps_pin = "<% getInfo("wscLoocalPin");%>";
+		
+	if(!isNaN(wps_pin))
+	{
+		lc_wps_pin.innerHTML = wps_pin;
+	}
+	else
+	{
+		lc_wps_pin.innerHTML = "";
+	}
+	
+	//initWpsMode();
+	
+	//open_wps_timer();
+
+//wps_div
+var value1="<% getInfo("lc_wifi_security_type"); %>";
+
+value1=parseInt(value1);
+
+textDiv("tag_notice",wps_tag1);
+
+if(!("12" != sercurity_key && "13" != sercurity_key && "15" != sercurity_key))
+{
+ document.getElementById("wps_div").style.display="block";
+document.getElementById("wps_div_info").style.display="none";
+
+document.getElementById("wps_div_top").style.display="block";
+}
+
+}
+
+function wps_update_session_status(session_status)
+{
+	var index = 0;
+	var wpsMode = document.system_add_wps_form.wps_mode;	
+	var wifi_sec_type = "12";//需要改成"<% getInfo("lc_wifi_security_type"); %>";
+	
+	if("12" != wifi_sec_type && "13" != wifi_sec_type && "15" != wifi_sec_type)
+	{
+		/*the sec type not support WPS.*/			
+		for(index=0;index<2;index++)
+		{
+			disableTextField(wpsMode[index]);
+		}
+		
+		textDiv("tag_notice",wps_tag4);	
+			
+		//document.getElementById("tag_input_pin").style.display = "none"; 
+			$("#tag_input_pin").hide();
+		disableTextField(document.getElementById("connection"));
+		
+		return;
+	}
+
+	if("0" == session_status)
+	{
+if(debug==1)
+{
+
+console.warn( "wps_update_session_status ==0" );
+}
+
+
+	 //   var wpsType;
+	 //   var wpsMode = document.system_add_wps_form.wps_mode;
+   //  textDiv("tag_notice",wps_tag1);
+   //  
+   //  close_wps_timer();
+		//  for(index=0;index<2;index++)
+		//  {
+		//  	enableTextField(wpsMode[index]);
+		//  }		
+		//  if(wpsMode[0].checked)
+		//  {			
+		//  	textDiv("tag_notice",wps_tag1);		
+		//  	//document.getElementById("tag_input_pin").style.display = "none";
+		//  	$("#tag_input_pin").hide();
+		//  	enableTextField(document.getElementById("connection"));	 
+		//  }  
+		//  else if(wpsMode[1].checked)
+		//  {  	
+		//  	textDiv("tag_notice",wps_tag3);		
+		//  	//document.getElementById("tag_input_pin").style.display = "block";
+		//  	$("#tag_input_pin").show();
+		//  	enableTextField(document.getElementById("connection"));						
+		//  }
+		//  else
+		//  {
+		//  	//document.getElementById("tag_notice").style.display = "none";
+		//  	//document.getElementById("tag_input_pin").style.display = "none";	 
+		//  	$("#tag_notice").hide();
+		//  	$("#tag_input_pin").hide();
+		//  	disableTextField(document.getElementById("connection"));     
+		//  }	
+			
+		//document.getElementById("tag_input_pin").style.display = "none"; 
+	//		$("#tag_input_pin").hide();
+	//	enableTextField(document.getElementById("connection"));
+    alert("设备连接成功!");
+    textDiv("tag_notice",wps_tag7);	
+    isconnect=1;
+		 close_wps_timer();
+    location.reload();
+	}
+	else
+	{
+ if(debug==1)
+{
+
+console.warn( "wps_update_session_status !=0" );
+}
+
+	}
+}
+
+function wps_fresh()
+{
+	$.ajax({
+		url: "../wps_status.asp",
+		cache: false,
+
+		// ajax请求成功
+		success: function(result) {
+			allmsg = result.split('*');
+			session_status = allmsg[0];
+     if(timer_count>60)
+     {
+	     var wpsType;
+	     var wpsMode = document.system_add_wps_form.wps_mode;
+      textDiv("tag_notice",wps_tag1);
+      
+      close_wps_timer();
+		  for(index=0;index<2;index++)
+		  {
+		  	enableTextField(wpsMode[index]);
+		  }		
+		  if(wpsMode[0].checked)
+		  {			
+		  	textDiv("tag_notice",wps_tag1);		
+		  	//document.getElementById("tag_input_pin").style.display = "none";
+		  	$("#tag_input_pin").hide();
+		  	enableTextField(document.getElementById("connection"));	 
+		  }  
+		  else if(wpsMode[1].checked)
+		  {  	
+		  	textDiv("tag_notice",wps_tag3);		
+		  	//document.getElementById("tag_input_pin").style.display = "block";
+		  	$("#tag_input_pin").show();
+		  	enableTextField(document.getElementById("connection"));						
+		  }
+		  else
+		  {
+		  	//document.getElementById("tag_notice").style.display = "none";
+		  	//document.getElementById("tag_input_pin").style.display = "none";	 
+		  	$("#tag_notice").hide();
+		  	$("#tag_input_pin").hide();
+		  	disableTextField(document.getElementById("connection"));     
+		  }	
+      alert("设备连接失败,请稍后重试.");
+
+     }else
+     {
+       if(isconnect!=1)
+       {
+if(debug==1)
+{
+
+console.warn( "open_wps_timer" );
+}
+       isconnect=0;
+			 wps_update_session_status(session_status);
+			 open_wps_timer();
+       timer_count++;
+       }
+
+     }
+		},
+		
+		error: function(jqXHR, textStatus, errorThrown) {
+		 	
+		},
+		  
+		// ajax请求完成（在success或error之后调用）
+		complete: function(xmlHttpHeader, textStatus) {
+			// 置空以使之能够释放，避免内存占用持续增长
+			xmlHttpHeader = null;
+		}
+	});
+
+}
+
+//open timer
+function open_wps_timer()
+{
+//if(isconnect!=1)
+//{
+ // isconnect=0;
+	if (timer_wps == null || timer_wps=="")
+	{
+		timer_wps = setInterval('wps_fresh()',2000);
+	}
+//}
+}
+ //close timer
+function close_wps_timer()
+{
+	clearInterval(timer_wps);
+	timer_wps = null;
+}
+
+function wps_pin_reset()
+{
+	param = "";
+	param += "lc_wifi_wps_reset_pin=1";
+	
+
+    	$.ajax({
+    type: "POST",
+    
+    		url: "/boafrm/formWscpin",
+    		cache: false,
+        data:param,
+    
+    
+		// ajax请求成功
+		success: function(result) {
+			location.reload();
+		},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+}
+
+function wps_pin_new()
+{
+	param = "";
+	param += "lc_wifi_wps_new_pin=1";
+	
+
+
+    	$.ajax({
+    type: "POST",
+    
+    		url: "/boafrm/formWscpin",
+    		cache: false,
+        data:param,
+    
+    
+		// ajax请求成功
+		success: function(result) {
+			location.reload();
+		},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+}
+
+function pinCheck()
+{
+	var wpsPin = document.system_add_wps_form.wps_pin;
+	var check_num = wpsPin.value;
+	var check_len = check_num.length;
+	
+	if (!checkIsNull(wpsPin,'PIN码不能为空!'))
+	{
+		wpsPin.focus();
+		return false;
+	}
+	
+	if(!checkLength(wpsPin,8,'请输入8位的PIN码!'))
+	{
+		wpsPin.focus();
+		return false;
+	}
+	
+	if (!isdigit(check_num))
+	{
+		alert("输入的PIN码应为数字！");
+		wpsPin.focus();
+		return false;
+	}
+		
+	return true;
+}
+
+function wps_connect_device()
+{
+	var wpsType;
+	var wpsMode = document.system_add_wps_form.wps_mode;
+  var temp="/boafrm/formWsc";
+
+isconnect=0;
+timer_count=0;
+
+	if(wpsMode[0].checked)
+	{
+		//PBC mode.
+		param = "";
+		param += "submit-url=/wlwps.htm&SSID_Setting=0&resetUnCfg=0&targetAPMac=&targetAPSsid=&triggerPBC=Start+PBC&peerPin=&configVxd=off&resetRptUnCfg=0&peerRptPin=";
+		
+    	$.ajax({
+    type: "POST",
+    
+    		url: temp,
+    		cache: false,
+        data:param,
+    
+    
+    			success: function(result) {
+    				disableTextField(document.getElementById("connection"));
+    				//location.reload();
+             textDiv("tag_notice",wps_tag5);
+            // isconnect=1;
+             open_wps_timer();
+    			},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+	}
+	else if(wpsMode[1].checked)
+	{
+		//PIN(sta) mode.
+		param = "";
+		param += "submit-url=/wlwps.htm&SSID_Setting=0&resetUnCfg=0&targetAPMac=&targetAPSsid=&peerPin=";
+    param += document.system_add_wps_form.wps_pin.value;
+    param +="&setPIN=Start+PIN&configVxd=off&resetRptUnCfg=0&peerRptPin=";
+
+ if(pinCheck())
+{
+		
+    	$.ajax({
+    type: "POST",
+    
+    		url: temp,
+    		cache: false,
+        data:param,
+    
+    
+    			success: function(result) {
+    				disableTextField(document.getElementById("connection"));
+            textDiv("tag_notice",wps_tag5);
+    				//location.reload();
+            //isconnect=1;
+            open_wps_timer();
+    			},
+    		  
+    		complete: function(xmlHttpHeader, textStatus) {
+    			xmlHttpHeader = null;
+    		  	
+    
+    		}
+    
+    });
+}
+	}
+	else
+	{
+		alert("WPS类型错误!");
+	}
+
+}
+
+function textDiv(id,str)
+{
+	//document.getElementById(id).style.display = "block";
+	//document.getElementById(id).innerHTML = str;
+	$("#"+id).show();
+	$("#"+id).html(str);
+}
+
+function initWpsMode()
+{	  		
+	/*get session status*/
+	var session_status = "0";
+	
+	wps_update_session_status(session_status);
+}
+
+function changeWpsMode()
+{
+	var wpsMode = document.system_add_wps_form.wps_mode;
+
+if(isconnect==0)
+{
+	
+	if (wpsMode[0].checked)
+	{
+		textDiv("tag_notice",wps_tag1);
+		//document.getElementById("tag_input_pin").style.display = "none"; 
+		$("#tag_input_pin").hide();
+		enableTextField(document.getElementById("connection"));	          
+	}  
+	else if (wpsMode[1].checked)
+	{  	
+		textDiv("tag_notice",wps_tag3);
+		//document.getElementById("tag_input_pin").style.display = "block";
+		$("#tag_input_pin").show();
+		enableTextField(document.getElementById("connection"));	
+	}
+	else
+	{
+		//document.getElementById("tag_notice").style.display = "none";
+		//document.getElementById("tag_input_pin").style.display = "none";
+		$("#tag_notice").hide();
+		$("#tag_input_pin").hide();
+	}
+}
+}
+
+</script>
+<style type="text/css">
+label {  
+    display: inline-block;  
+    cursor: pointer;  
+    position: relative;  
+    padding-left: 25px;  
+    margin-right: 15px;  
+    font-size: 13px;  
+}  
+input[type=radio] {  
+    display: none;  
+}  
+
+label:before {  
+    content: "";  
+    display: inline-block;  
+  
+    width: 16px;  
+    height: 16px;  
+  
+    margin-right: 10px;  
+    position: absolute;  
+    left: 0;  
+    bottom: 1px;  
+	background-image: url("../graphics/radio0.png");
+	background-repeat: no-repeat;
+
+}  
+.radio label:before {  
+    border-radius: 8px;  
+}  
+input[type=radio]:checked + label:before {  
+    content: "";  
+    color: #000;  
+    font-size: 30px;  
+    text-align: center;  
+    line-height: 18px;  
+	background-image: url("../graphics/radio1.png");
+	background-repeat: no-repeat;
+}  
+</style>
+
+</head>
+
+<body onload = init()>
+<blockquote>
+<!--h2>当前>WPS设置</h2-->
+<!--   ===================================== wps form  ===================================== -->
+
+<h2><font color="#0000FF">WPS</font></h2>
+ <table border="0" cellspacing="4" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+<div id="wps_div_info" name="wps_div_info" style="display:block">
+
+<form name="system_wps_form" action=/goform/formSyWebCfg method=POST>
+<input type="hidden" name="oem_cfg" value="changed" >
+<table>
+		<tr>
+			<td colspan="2" >
+			<span style="color: #FF0B34; font-size:18px;font-family:微软雅黑;">
+		    当前加密类型不支持WPS，只有当加密类型是WPA2(AES)、WPA/WPA2-PSK或WPA/WPA2-PSK(AES)时WPS才能使用。</span>
+				</td>
+		</tr>
+
+</table>
+</form>
+</div>
+
+<div id="wps_div_top" name="wps_div_top" style="display:none">
+<form name="system_wps_form" action=/goform/formSyWebCfg method=POST>
+<input type="hidden" name="oem_cfg" value="changed" >
+<table>
+  <tr>
+    <th >当前PIN码: </th>
+    <td >
+    	<span id = 'lc_wps_pin'>
+    	</span>
+    </td>
+  </tr>
+  <tr>
+    <th> </th>
+    <td >
+    <input type="button" name="lc_wps_pin_reset" id="lc_wps_pin_reset" value="恢复初始PIN码" onClick="wps_pin_reset()">
+	    <input type="button" name="lc_wps_pin_new" id="lc_wps_pin_new" value="产生新的PIN码" onClick="wps_pin_new()">
+	</td>
+  </tr>
+</table>
+</form>
+</div>
+
+<div id="wps_div" name="wps_div" style="display:none">
+<br>
+<h2>选择WPS方式</h2>
+
+
+<!--   ===================================== Add wps device ===================================== -->
+
+<form name="system_add_wps_form" id="system_add_wps_form" action="/goform/formSyWebCfg" method="POST">
+<input type="hidden" name="oem_cfg" value="changed" >
+	<table>
+	<tbody>				
+		<tr><table>
+			<tbody><tr><th width="200"> 
+				<div align="left" class="radio" onclick="changeWpsMode()" ><input type="radio" id="wps_mode0" name="wps_mode" value="0"checked><label for="wps_mode0"><b>PBC模式</b></label> </div>				  				
+			</th></tr></tbody>
+		</table></tr>
+		
+		<!--tr><table>
+			<tbody><tr><th width="200"> 
+				<div align="left" class="radio" onclick="changeWpsMode()"><input type="radio" id="wps_mode1" name="wps_mode" value="1"><label for="wps_mode1"><b>PIN码模式(AP)</b></label></div>				  				
+			</th></tr></tbody>
+		</table></tr-->
+		
+		<tr><table>
+			<tbody><tr><th width="200"> 
+				<div align="left" class="radio" onclick="changeWpsMode()"><input type="radio" id="wps_mode1" name="wps_mode" value="1"><label for="wps_mode1"><b>PIN码模式(STA)</b></label></div>			  				
+			</th></tr></tbody>
+		</table></tr>
+			
+		<tr><table>
+				<tbody><tr><th> 
+				<div id="tag_notice">					
+				&nbsp;
+				</div></th></tr>
+				<tr><th><div id="tag_input_pin" style="display:none;">
+					输入PIN码:<input name="wps_pin" maxlength="10" id="wps_pin" value="" onblur="checkASC(this,'user name')";>
+				</div></th></tr>
+				<tr><th><div style="width:560px;border:0px solid red;" align="right">
+					<input type="button" name="connection" id="connection" value="连接" onclick="wps_connect_device();"/>		      
+				</div></th></tr></tbody>				
+		</table></tr>
+		
+	</tbody></table>									    
+</form> 
+</div>
+
+</body>
+<blockquote>
+</html>
+

@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
+<title>modify</title>
+<link rel="stylesheet" href="lx.css">
+</head>
+<body onload="setCodeValuelogin()">
+<div class="box">
+<h2>修改密码</h2>
+<div id="content">
+<div><br></div>
+<p align="center">账  号:
+<input id="uname" type="text" name="user">
+</p>
+<div><br></div>
+<p align="center">旧密码:
+<input id="upass_old" type="password" name="psw_old">
+</p>
+<div><br></div>
+<p align="center">新密码:
+<input id="upass" type="password" name="psw">
+</p>
+<div id="error_box"><br></div>
+<div id="text1">用户名请输入6-20位字符</div>
+<div id="text2">用户名首字符必须为字母</div>
+<div id="text3">用户名必须为字母跟数字组成</div>
+<div id="text4">密码请输入6-20位字符</div>
+<div id="text5">当前浏览器不支持ActiveXObject</div>
+<div id="text6">用户名或密码不正确，请重试</div>
+<div id="text7">请求未发出去，请重试</div>
+<style>
+#text1{display: none;}
+#text2{display: none;}
+#text3{display: none;}
+#text4{display: none;}
+#text5{display: none;}
+#text6{display: none;}
+#text7{display: none;}
+</style>
+<div id="error_box"><br></div>
+<div id="resText"></div>
+<br>
+<button onclick="button_modify()" class="btn btn-info">修改密码</button>
+</div>
+<div><br></div>
+<i>Powered by @2024</i>
+<!-- top -->
+<tr>
+<td align="center" valign="middle">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td valign="middle" align="center" width="930" height="30"> 
+<!-- 繁简体转换 -->       
+<script language='javascript' src='zh.js'></script>
+<script type="text/javascript" src="load_login.js"></script>
+<div align="center" valign="middle">
+<p style="text-align:center;">
+<a href="javascript:zh_tran('s');" class="zh_click" id="zh_click_s" onclick="setCookieValuemodify('s')">简体</a>
+<a href="javascript:zh_tran('t');" class="zh_click" id="zh_click_t" onclick="setCookieValuemodify('t')">繁體</a>
+<a href="javascript:englishrefresh();" class="zh_click" id="zh_click_s" onclick="setEngilshmodify()">Engilsh</a>
+</p>
+</div>
+<!-- 繁简体转换 --> 
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<!-- end top -->
+</div>
+</div>
+</body>
+</html>
+<script>
+function button_modify(){
+    var oUname = document.getElementById("uname");
+    var oUpass_old = document.getElementById("upass_old");
+    var oUpass = document.getElementById("upass");
+    var oError = document.getElementById("error_box");
+    var isError = true;
+    if (oUname.value.length > 20 || oUname.value.length < 6) {
+        //oError.innerHTML = "用户名请输入6-20位字符";
+        document.getElementById("text1").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text1").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+        }else if((oUname.value.charCodeAt(0)>=48) && (oUname.value.charCodeAt(0)<=57)){
+        //oError.innerHTML = "用户名首字符必须为字母";
+        document.getElementById("text2").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text2").style.display = "none";
+        }, 3000);
+        return;
+    }else for(var i=0;i<oUname.value.charCodeAt(i);i++){
+        if((oUname.value.charCodeAt(i)<48)||(oUname.value.charCodeAt(i)>57) && (oUname.value.charCodeAt(i)<97)||(oUname.value.charCodeAt(i)>122)){
+        //oError.innerHTML = "用户名必须为字母跟数字组成";
+        document.getElementById("text3").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text3").style.display = "none";
+        }, 3000);
+        return;
+        }
+    } 
+    if (oUpass.value.length > 20 || oUpass.value.length < 6) {
+        //oError.innerHTML = "密码请输入6-20位字符";
+        document.getElementById("text4").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text4").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+    }
+    var fso;
+        try {
+        fso=new ActiveXObject("Scripting.FileSystemObject");
+        } catch (e) { 
+        //alert("当前浏览器不支持ActiveXObject");
+        document.getElementById("text5").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text5").style.display = "none";
+        }, 3000);
+        return;
+    }
+    var url=document.location.toString();
+        if(url.indexOf("/")!=-1){
+        url=url.substring(0,url.lastIndexOf("/"));
+        url+="/webui_user.txt";    
+    }
+       
+    var pram=oUname.value+"&&"+oUpass_old.value+"&&"+oUpass.value;
+    if((oUname.value != null)&&(oUpass.value != null)){
+        var ajax = ajaxObject();
+        ajax.open("POST",url,true);//"/webui_user.txt"
+        ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
+        ajax.send(pram);
+        ajax.onreadystatechange = function () {
+            if( ajax.readyState == 4 ) {
+                if( ajax.status == 200 ) {
+                    setCookie('user_choose', user_choose, zh_expires);
+                    self.location.href="index/index.htm";
+                }
+                else {
+                    document.getElementById("text6").style.display = "block";
+                    setTimeout(function(){ 
+                        document.getElementById("text6").style.display = "none";
+                    }, 3000);
+                    isError = false;
+                    return;
+                }
+            }
+            else {
+                fnLoading();
+                document.getElementById("text6").style.display = "block";
+                setTimeout(function(){ 
+                    document.getElementById("text6").style.display = "none";
+                }, 3000);
+                isError = false;
+                return;
+            }
+        }
+        //alert( "HTTP请求码："+ajax.status );
+    }else{
+        document.getElementById("text7").style.display = "block";
+        setTimeout(function(){ 
+            document.getElementById("text7").style.display = "none";
+        }, 3000);
+        isError = false;
+        return;
+    }
+}
+
+// ajax 对象
+function ajaxObject() {
+    var xmlHttp;
+    try {
+        // Firefox, Opera 8.0+, Safari
+        xmlHttp = new XMLHttpRequest();
+        } 
+    catch (e) {
+        // Internet Explorer
+        try {
+                xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+            try {
+                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                alert("您的浏览器不支持AJAX！");
+                return false;
+            }
+        }
+    }
+    return xmlHttp;
+}
+ 
+// ajax post请求：
+function ajaxPost ( url , data , fnSucceed , fnFail , fnLoading ) {
+    var ajax = ajaxObject();
+    ajax.open( "post" , url , true );
+    ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
+    ajax.onreadystatechange = function () {
+        if( ajax.readyState == 4 ) {
+            if( ajax.status == 200 ) {
+                fnSucceed( ajax.responseText );
+            }
+            else {
+                fnFail( "HTTP请求错误！错误码："+ajax.status );
+            }
+        }
+        else {
+            fnLoading();
+        }
+    }
+    ajax.send( data );
+ 
+}
+</script>

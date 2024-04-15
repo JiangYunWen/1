@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset="utf-8" />
+<title>modify</title>
+<link rel="stylesheet" href="lx.css">
+</head>
+<body onload="setCodeValuelogin()">
+<div class="box">
+<h2>Modify</h2>
+<div id="content">
+<div><br></div>
+<p align="center">User Name:
+<input id="uname" type="text" name="user" placeholder="Please Enter User Name">
+</p>
+<div><br></div>
+<p align="center">Old Password:
+<input id="upass_old" type="password" name="psw_old" placeholder="Please Enter Old Password">
+</p>
+<div><br></div>
+<p align="center">New Password:
+<input id="upass" type="password" name="psw" placeholder="Please Enter New Password">
+</p>
+<div id="error_box"><br></div>
+<div id="resText"></div>
+<br>
+<button onclick="button_modify()" class="btn btn-info">Modify</button>
+</div>
+<div><br></div>
+<i>Powered by @2024</i>
+<!-- top -->
+<tr>
+<td align="center" valign="middle">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td valign="middle" align="center" width="930" height="30"> 
+<!-- ·±¼òÌå×ª»» -->       
+<script language='javascript' src='zh.js'></script>
+<script type="text/javascript" src="load_login.js"></script>
+<div align="center" valign="middle">
+<p style="text-align:center;">
+<a href="javascript:zh_tran('s');" class="zh_click" id="zh_click_s" onclick="setCookieValuemodify('s')">¼òÌå</a>
+<a href="javascript:zh_tran('t');" class="zh_click" id="zh_click_t" onclick="setCookieValuemodify('t')">·±ów</a>
+<a href="javascript:englishrefresh();" class="zh_click" id="zh_click_s" onclick="setEngilshmodify()">Engilsh</a>
+</p>
+</div>
+<!-- ·±¼òÌå×ª»» --> 
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<!-- end top -->
+</div>
+</div>
+</body>
+</html>
+<script>
+function button_modify(){
+    var oUname = document.getElementById("uname");
+    var oUpass_old = document.getElementById("upass_old");
+    var oUpass = document.getElementById("upass");
+    var oError = document.getElementById("error_box");
+    var isError = true;
+    if (oUname.value.length > 20 || oUname.value.length < 6) {
+        oError.innerHTML = "Please enter 6-20 characters for the username.";
+        isError = false;
+        return;
+        }else if((oUname.value.charCodeAt(0)>=48) && (oUname.value.charCodeAt(0)<=57)){
+        oError.innerHTML = "User first character must be a letter.";
+        return;
+    }else for(var i=0;i<oUname.value.charCodeAt(i);i++){
+        if((oUname.value.charCodeAt(i)<48)||(oUname.value.charCodeAt(i)>57) && (oUname.value.charCodeAt(i)<97)||(oUname.value.charCodeAt(i)>122)){
+        oError.innerHTML = "Username must be composed of letters and numbers.";
+        return;
+        }
+    } 
+    if (oUpass.value.length > 20 || oUpass.value.length < 6) {
+        oError.innerHTML = "Please enter 6-20 characters for the password.";
+        isError = false;
+        return;
+    }
+    var fso;
+        try {
+        fso=new ActiveXObject("Scripting.FileSystemObject");
+        } catch (e) { 
+        alert("Current browser does not support ActiveXObject");
+        return;
+    }
+    var url=document.location.toString();
+        if(url.indexOf("/")!=-1){
+        url=url.substring(0,url.lastIndexOf("/"));
+        url+="/webui_user.txt";    
+    }
+       
+    var pram=oUname.value+"&&"+oUpass_old.value+"&&"+oUpass.value;
+    if((oUname.value != null)&&(oUpass.value != null)){
+        var ajax = ajaxObject();
+        ajax.open("POST",url,true);//"/webui_user.txt"
+        ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
+        ajax.send(pram);
+        ajax.onreadystatechange = function () {
+            if( ajax.readyState == 4 ) {
+                if( ajax.status == 200 ) {
+                    //window.alert("OK");
+                    setCookie('user_choose', user_choose, zh_expires);
+                    self.location.href="index/index_english.htm";
+                }else{
+                    oError.innerHTML = "ERROR";
+                    isError = false;
+                    return;
+                }
+            }
+            else {
+                fnLoading();
+                oError.innerHTML = "ERROR";
+                isError = false;
+                return;
+            }
+        }
+        //alert( "HTTPÇëÇóÂë£º"+ajax.status );
+    }else{
+        oError.innerHTML = "ERROR";
+        isError = false;
+        return;
+    }
+}
+
+// ajax ¶ÔÏó
+function ajaxObject() {
+    var xmlHttp;
+    try {
+        // Firefox, Opera 8.0+, Safari
+        xmlHttp = new XMLHttpRequest();
+        } 
+    catch (e) {
+        // Internet Explorer
+        try {
+                xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+            try {
+                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                alert("Current browser does not support AJAX£¡");
+                return false;
+            }
+        }
+    }
+    return xmlHttp;
+}
+ 
+// ajax postÇëÇó£º
+function ajaxPost ( url , data , fnSucceed , fnFail , fnLoading ) {
+    var ajax = ajaxObject();
+    ajax.open( "post" , url , true );
+    ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
+    ajax.onreadystatechange = function () {
+        if( ajax.readyState == 4 ) {
+            if( ajax.status == 200 ) {
+                fnSucceed( ajax.responseText );
+            }
+            else {
+                fnFail( "HTTPÇëÇó´íÎó£¡´íÎóÂë£º"+ajax.status );
+            }
+        }
+        else {
+            fnLoading();
+        }
+    }
+    ajax.send( data );
+ 
+}
+</script>

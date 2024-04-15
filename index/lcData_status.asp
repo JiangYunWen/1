@@ -1,0 +1,1 @@
+﻿<% getInfo("lc_pdp_activate_status"); %>*<% getInfo("lc_network_status"); %>*<% getInfo("lc_network_operator"); %>*<% getInfo("lc_query_signalstrength"); %>*<% getInfo("lc_pdp_info"); %>*<% getInfo("lc_sms_status"); %>*<% getstatusInfo("statusInfo"); %>

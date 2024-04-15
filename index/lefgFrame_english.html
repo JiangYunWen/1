@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html" />
+<title>left</title>
+<script src="prototype.lite.js" type="text/javascript"></script>
+<script src="moo.fx.js" type="text/javascript"></script>
+<script src="moo.fx.pack.js" type="text/javascript"></script>
+
+<script language='javascript' src='zh.js'></script>
+<script type="text/javascript" src="load.js"></script>
+
+<style>
+body {
+	font:12px Arial, Helvetica, sans-serif;
+	color: #000;
+}
+#container {
+	width: 500px;
+}
+H1 {
+	font-size: 11px;
+	margin: 0px;
+	width: 500px;
+	cursor: pointer;
+	height: 22px;
+	line-height: 20px;	
+}
+H1 a {
+	display: block;
+	padding-top: 1px;
+	padding-right: 8px;
+	padding-bottom: 0px;
+	padding-left: 8px;	
+	width: 500px;
+	color: #000;
+	height: 22px;
+	text-decoration: none;	
+	moz-outline-style: none;
+	background-image: url(img/title.gif);
+	background-repeat: repeat-x;
+}
+.content{
+	padding-left: 8px;
+}
+</style>
+</head>
+
+<body onload="setCodeValue()">
+	<div id="container">
+		<H1 class="title"><A href="javascript:void(0)">Switch</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_debugswitch_english.htm" target="mainFrame">Open/Close Device</a>
+			<br/>
+			<a href="chn/modem_reset_english.htm" target="mainFrame">Restart Device</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="title"><a href="javascript:void(0)">Key Setting</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_dapikeyset_english.htm?param1=1" target="mainFrame">Key Setting</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="title"><A href="javascript:void(0)">Master-Slave Setting</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_ddtcset_english.htm" target="mainFrame">Master-Slave Setting</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="title"><A href="javascript:void(0)">Wireless Setting</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_daocndiset_english.htm" target="mainFrame">Frequency Band</a>
+			<br/>
+			<a href="chn/modem_dfhcset_english.htm" target="mainFrame">Frequency Hopping</a>
+			<br/>			
+			<a href="chn/modem_drpsset_english.htm" target="mainFrame">Bandwidth</a>
+			<br/>
+			<a href="chn/modem_drpcset_english.htm" target="mainFrame">Building Chain</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="title"><A href="javascript:void(0)">Network Parameter Setting</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_netifcfg_english.htm" target="mainFrame">IP Setting</a>
+			<!--
+			<br/>
+			<a href="chn/modem_dhcp_english.htm" target="mainFrame">DHCP Setting</a>
+			-->	
+			<br/>
+			<br/>
+		</div>			
+		<H1 class="title"><A href="javascript:void(0)">UP-DOWN Setting</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_dstcset_english.htm" target="mainFrame">UP-DOWN Setting</a>
+			<br/>
+			<br/>
+		</div>
+		<!--
+		<H1 class="title"><A href="javascript:void(0)">White List</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_whitelist_english.htm" target="mainFrame">White List</a>
+			<br/>
+			<br/>			
+		</div>				
+		-->
+		<H1 class="title"><A href="javascript:void(0)">VCOM Function</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_vcomswitch_english.htm" target="mainFrame">VCOM Function</a>
+			<br/>
+			<br/>
+		</div>		
+		<H1 class="title"><A href="javascript:void(0)">Debug Interface</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_reports_monitor_english.htm" target="mainFrame">Active Escalation Check</a>
+			<br/>
+			<a href="chn/modem_DRPR_monitor_english.htm" target="mainFrame">DRPR Interface</a>
+			<br/>
+			<a href="chn/modem_shell_debug_english.htm" target="mainFrame">Shell Debug Interface</a>
+			<br/>
+			<a href="chn/modem_at_debug_english.htm" target="mainFrame">AT Debug Interface</a>
+			<br/>
+			<br/>
+		</div>			
+		<H1 class="title"><A href="javascript:void(0)">Equipment Information</a></H1>
+		<div class="content">
+			<br/>
+			<a href="chn/modem_version_english.htm" target="mainFrame">Equipment Information</a>
+			<br/>
+			<br/>			
+		</div>		
+	</div>
+	<div id="containerUser">
+		<H1 class="titleUser"><A href="javascript:void(0)">Switch</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_debugswitch_english.htm" target="mainFrame">Open/Close Device</a>
+			<br/>
+			<a href="chn/modem_reset_english.htm" target="mainFrame">Restart Device</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="titleUser"><a href="javascript:void(0)">Key Setting</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_dapikeyset_english.htm?param1=1" target="mainFrame">Key Setting</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="titleUser"><A href="javascript:void(0)">Master-Slave Setting</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_ddtcset_english.htm" target="mainFrame">Master-Slave Setting</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="titleUser"><A href="javascript:void(0)">Wireless Setting</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_daocndiset_english.htm" target="mainFrame">Frequency Band</a>
+			<br/>
+			<a href="chn/modem_dfhcset_english.htm" target="mainFrame">Frequency Hopping</a>
+			<br/>			
+			<a href="chn/modem_drpsset_english.htm" target="mainFrame">Bandwidth</a>
+			<br/>
+			<a href="chn/modem_drpcset_english.htm" target="mainFrame">Building Chain</a>
+			<br/>
+			<br/>
+		</div>
+		<H1 class="titleUser"><A href="javascript:void(0)">Network Parameter Setting</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_netifcfg_english.htm" target="mainFrame">IP Setting</a>
+			<br/>
+			<!--
+			<a href="chn/modem_dhcp_english.htm" target="mainFrame">DHCP Setting</a>
+			<br/>
+			-->
+			<br/>
+		</div>			
+		<H1 class="titleUser"><A href="javascript:void(0)">VCOM Function</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_vcomswitch_english.htm" target="mainFrame">VCOM Function</a>
+			<br/>
+			<br/>
+		</div>		
+		<H1 class="titleUser"><A href="javascript:void(0)">Debug Interface</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_reports_monitor_english.htm" target="mainFrame">Active Escalation Check</a>
+			<br/>
+			<a href="chn/modem_DRPR_monitor_english.htm" target="mainFrame">DRPR Interface</a>
+			<br/>
+			<br/>
+		</div>			
+		<H1 class="titleUser"><A href="javascript:void(0)">Equipment Information</a></H1>
+		<div class="contentUser">
+			<br/>
+			<a href="chn/modem_version_english.htm" target="mainFrame">Equipment Information</a>
+			<br/>
+			<br/>			
+		</div>		
+	</div>
+	
+	<script type="text/javascript">
+    if("none" == getCookie('user_choose'))
+    {
+        //alert("user_choose:" + getCookie('user_choose'));
+        document.getElementById("containerUser").style.display = "block";
+        document.getElementById("container").style.display = "none";
+		var contentsUser = document.getElementsByClassName('contentUser');
+		var togglesUser = document.getElementsByClassName('titleUser');
+		var myAccordionUser = new fx.Accordion(
+			togglesUser, contentsUser, {opacity: true, duration: 400}
+		);
+		myAccordionUser.showThisHideOpen(contentsUser[0]);
+    }
+    if("block" == getCookie('user_choose'))
+    {
+        //alert("user_choose:" + getCookie('user_choose'));
+        document.getElementById("containerUser").style.display = "none";
+        document.getElementById("container").style.display = "block";
+        var contents = document.getElementsByClassName('content');
+		var toggles = document.getElementsByClassName('title');
+		var myAccordion = new fx.Accordion(
+			toggles, contents, {opacity: true, duration: 400}
+		);
+		myAccordion.showThisHideOpen(contents[0]);
+    }
+	</script>
+</body>
+</html>

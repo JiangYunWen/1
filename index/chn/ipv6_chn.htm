@@ -1,0 +1,294 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>IPV6 ≈‰÷√</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+<style type="text/css">
+.txt1{
+	
+ display: block;
+ position: absolute;
+ top: 110px;
+ left: 188px;
+
+
+}
+.txt2{
+	
+ display: block;
+ position: absolute;
+ top: 200px;
+ left: 230px;
+
+
+}
+
+
+
+.tb1{
+
+ display: block;
+ position: absolute;
+ top: 140px;
+ left: 188px;
+
+
+}
+</style>
+<script>
+function ShowModalDialog(pageUrl, pageArgs)
+{
+    var url = pageUrl;
+    url += (pageUrl.indexOf("?") > 0) ? "&amp;" : "?";
+    url += "placeValuesBeforeTB_=savedValues&amp;TB_iframe=true&amp;TB_iniframe=true&amp;height=100&amp;width=230&amp;modal=true";
+
+    window.top.tb_show("", url, null);
+}
+
+function send_reboot()
+{
+   ShowModalDialog("/chn/info.htm","");
+    $.ajax({
+  type: "POST",
+
+        url: "/boafrm/formreboot",
+        cache: false,
+    data:"formreboot=1",
+
+        success: function(result) {
+            if (result != null && result.length !== 0)
+            {
+        
+       // send_security();
+          
+            }
+        },
+          
+        complete: function(xmlHttpHeader, textStatus) {
+            xmlHttpHeader = null;
+            
+
+        }
+
+  });
+
+}
+
+function mtu_check()
+{
+
+    var oNum = document.all("ipv6mtu");
+    var sec_val=0;
+
+if(oNum.value.length==0)
+{
+	alert("≤ªƒ‹Œ™ø’«Î ‰»Î1280 -- 1500");
+	return false;
+}
+if(oNum.value.length<4)
+{
+	alert("«Î ‰»Î1280 -- 1500");
+	return false;
+}
+
+    var Input=document.getElementById("ipv6mtu").value;
+    for(var i=0;i<Input.length;i++)
+   {
+
+            var top=parseInt(Input.split("")[i].charCodeAt(0),10);
+            var s=48;
+            var l=57;
+	         
+            if(i == 0)
+	    {
+		if((top == 48)	|| (top <48) || (top >57))
+		{
+			alert("«Î ‰»Î 1280 -- 1500");
+			return false;
+		}
+		
+	    }
+	    else
+	    {
+		if((top < 48) || (top > 57))
+		{
+			alert("«Î ‰»Î 1280 -- 1500");
+			return false;
+		} 
+	    }
+	 if(i==0)
+	 {
+	 	if(top!=49)
+	 	{
+	 		alert("«Î ‰»Î 1280 -- 1500");
+			return false;
+	 	}
+	}
+	if(i==1)
+	{
+		sec_val =top;
+		if(top<50 || top >53)
+	 	{
+	 		alert("«Î ‰»Î 1280 -- 1500");
+			return false;
+	 	}
+	}
+	if(i ==2)
+	{
+		if(sec_val ==50)
+		{
+			if(top< 56)
+			{
+				alert("«Î ‰»Î 1280 -- 1500");
+				return false;
+			}
+			
+		}
+	}
+
+	    
+    }
+   //   var bottom_check_v=parseInt(Input.split("")[0].charCodeAt(0),10);
+      //console.warn( bottom_check_v );
+      
+     // if(bottom_check_v==45)
+      //{
+      
+        //alert("SSIDÈ¶ñÂ≠óÁ¨¶‰∏çËÉΩ‰∏∫'-',ËØ∑ÈáçÊñ∞ËæìÂÖ•.");
+        //return false;
+      //}
+
+      return true; 
+              
+}
+
+
+function saveClick(){
+
+	param="ip_conf="+document.getElementById("ipv6_conf").value+"&";
+	param+="ipv6mtu="+document.getElementById("ipv6mtu").value+"&";
+        if(mtu_check() == false)
+	{
+		return;
+	}
+	if(document.getElementById("ipv6mtu").value >1500)
+	{		
+		alert("Please Enter 1 -- 1500");
+		return;
+	}
+	$.ajax({
+type: "POST",
+
+		url: "/boafrm/formIPV6Set",
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         alert("≈‰÷√≥…π¶");
+		send_reboot();         
+        // location.reload();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+}
+
+function updateState()
+{
+	
+}
+
+
+function Load_Setting()
+{
+	if ( <% getIndex("ipv6_conf"); %> )
+	{		
+		document.getElementById("ipv6_conf").value = 1;
+	}else
+	{
+		document.getElementById("ipv6_conf").value = 0;
+	}
+	var  err_info = "<font style=\"color: red ;font-family:Œ¢»Ì—≈∫⁄\">MTU: 1280 -1500</font>";
+
+        document.getElementById("input_stat_warring").innerHTML =err_info;
+       // document.getElementById("input_stat_warring").style.display = "block";
+       // document.getElementById("input_stat_warring_tr").style.top = "10px";
+
+
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">IPV6 ≈‰÷√</font></h2>
+
+
+
+<form action=/boafrm/formIPV6Set method=POST name="formIPV6Set">
+
+
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>IPV6 µÿ÷∑◊‘∂Ø≈‰÷√:</b></td>
+      <td width="50%"><font size=2><font size=2><select size="1" name="ipv6_conf" id="ipv6_conf" >
+<script type="text/javascript">
+	      	  	document.write( "<option selected value=\"0\">Œﬁ◊¥Ã¨</option>" );
+    	   	  	document.write( "<option value=\"1\">”–◊¥Ã¨</option>" );
+</script>
+        </select></td>
+    </tr>
+
+  </table>
+
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+
+      <td width="20%"><font size=2><b>IPV6 MTU:</b></td>
+	<tr>
+      <td width="50%"><font size=2><input type="text" name="ipv6mtu" id="ipv6mtu" class="txt1"  size="20" maxlength="30" value="<% getInfo("ipv6mtu"); %>" ></td>
+    </tr>
+
+ </tr>
+
+
+  </table>
+
+            <table width="400px" border=0 cellPadding=0 cellSpacing=0 class="tb1">
+                <tr><td  align="left"><span id="input_stat_warring" style="display:block" width="100%" > </span></td></tr>
+            </table>
+ 
+
+
+   
+     <input type="button" class="txt2" value="»∑∂®" name="save" onClick="return saveClick()">&nbsp;&nbsp;
+     
+
+</td></tr>
+     
+</form>
+
+</blockquote>
+</body>
+</html>

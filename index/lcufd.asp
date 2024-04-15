@@ -1,0 +1,1 @@
+<% getInfo("lc_sys_update_get_size_header"); %>,<% getInfo("lc_sys_update_get_size_count"); %>

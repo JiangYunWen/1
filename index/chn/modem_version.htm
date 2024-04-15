@@ -1,0 +1,122 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var objTimeOut = "";
+var WebModemGetInfoAllSystemVersion;
+var WebModemGetInfoHLSystemVersion;
+var WebModemGetInfoPHYSystemVersion;
+
+function SetLabelText(Labelid,Text)
+{
+//obj_label= document.getElementById(Labid).innerHTML;
+//obj_label.innerHTML=Text;
+document.getElementById(Labelid).innerHTML=(Text);
+}
+
+function init()
+{
+	var TmpString="";
+	/*全系统版本*/
+	TmpString =<%getInfo("AllSystemVersion");%>;
+	WebModemGetInfoAllSystemVersion =<%getInfo("AllSystemVersion");%>;
+//	SetLabelText("LB_FormVersion_Param_AllSystemVersion",WebModemGetInfoAllSystemVersion);	
+	SetLabelText("outAllSystemVersion",WebModemGetInfoAllSystemVersion);	
+	WebModemGetInfoHLSystemVersion =<%getInfo("HLSystemVersion");%>;
+	//SetLabelText("LB_FormVersion_Param_HLSystemVersion",WebModemGetInfoHLSystemVersion);	
+	SetLabelText("outHLSystemVersion",WebModemGetInfoHLSystemVersion);	
+
+	WebModemGetInfoPHYSystemVersion =<%getInfo("PHYSystemVersion");%>;
+//	SetLabelText("LB_FormVersion_Param_PHYSystemVersion",WebModemGetInfoPHYSystemVersion);	
+	SetLabelText("outPHYSystemVersion",WebModemGetInfoPHYSystemVersion);	
+}
+</script>
+</head>
+<blockquote>
+<h3><font color="#0000FF">版本信息查询</font></h3>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<body  onLoad="setCodeValue();init()">
+
+ <table border="0" cellspacing="0" width="550">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="550" cellspacing=0 cellpadding=0>
+
+<form id="FormVersion" name="FormCfun" >
+  <table>
+	<td ><font size="2" weight="bold" ><b>全系统版本:</b></font>
+	<div >
+	<pre  id='outAllSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
+	</div>
+	<script>
+	//[<label width ="100px" singleLine = "false" style="word-break:break-all;word-wrap:break-word" id="LB_FormVersion_Param_AllSystemVersion">LB_FormVersion_Param_AllSystemVersion</label>]
+	</script>		
+	</td>        
+    </tr>
+    <tr> 
+	<td ><font size="2" weight="bold" ><b>高层版本:</b></font>
+	<div >
+	<pre id='outHLSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
+	</div>	
+	<script>
+	//[<label id="LB_FormVersion_Param_HLSystemVersion">LB_FormVersion_Param_HLSystemVersion</label>]
+	</script>
+	</td>        
+    </tr>
+	<td ><font size="2" weight="bold" ><b>物理层版本:</b></font>
+	<div >
+	<pre id='outPHYSystemVersion' style="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word"></pre>
+	</div>	
+	<script>
+	//[<labelstyle="width:500px;overflow:auto;word-break:break-all;word-wrap:break-word" id="LB_FormVersion_Param_PHYSystemVersion">LB_FormVersion_Param_PHYSystemVersion</label>]
+	</script>	
+	</td>        
+    </tr>
+  </table>
+</form>
+
+
+</table>
+
+
+</body>
+</blockquote>
+</html>
+
+

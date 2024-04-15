@@ -1,0 +1,1155 @@
+
+<html>
+<head>
+<title></title>
+<!-- eavoo add begin -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<!-- eavoo add end -->
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<META HTTP-EQUIV="Cache-Control"  CONTENT="no-cache"> 
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--link rel="stylesheet" href="style/normal_ws.css" type="text/css"-->
+<script type="text/javascript" src="../res/sychip.js"></script>
+<!-- eavoo add begin -->
+<!--[if lt IE 9]>
+	<script src="p/js/html5.js"></script>
+	<script src="p/js/css3-mediaqueries.js"></script>
+<![endif]-->
+<script language="JavaScript" src="../res/jquery.js"></script>
+<!--link rel="stylesheet" href="p/css/iframe.css" type="text/css"-->
+<!-- eavoo add end -->
+
+
+<style type="text/css">
+textarea{
+resize:none;
+font-family: 微软雅黑;
+}
+
+html, body {
+ height: 100%;
+ width: 100%;
+ 
+}
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 3%;
+ width: 90%;
+ height: 70%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.8;
+ opacity:.80;
+ filter: alpha(opacity=90);
+}
+.close {
+ float:right;
+ clear:both;
+ width:100%;
+ text-align:right;
+ margin:0 0 0px 0
+}
+.close a {
+ color:#333;
+ text-decoration:none;
+ font-size:14px;
+ font-weight:700
+}
+table {
+	font-family:微软雅黑;
+	font-size:12px;
+	font-weight:normal;
+	color:#88899a;
+}
+
+</style>
+<script type="text/javascript" src="../res/ui.js"></script>
+<script type="text/javascript" src="../res/sms_1860.js" charset="gb2312"></script>
+<script language="JavaScript" type="text/javascript">
+var ie_version = 0;
+$(function(){
+	var isIE =(!!window.ActiveXObject || "ActiveXObject" in window);
+    if(isIE){
+		if(document.documentMode > 10){
+			ie_version = 11;
+		}else if(document.documentMode == 10){
+			ie_version = 10;
+		}else if(document.documentMode == 9){
+			ie_version = 9;
+		}else if(window.postMessage){
+			ie_version = 8;
+		}else if(window.XMLHttpRequest){
+			ie_version = 7;
+		}else if(document.compatMode){
+			ie_version = 6;
+		}
+		if(ie_version>=6 && ie_version <= 10){
+			$(".txt1").css("width","180px");
+		}
+	}
+	if(ie_version==6|| ie_version==7){
+		$('input[type="button"]').each(function(){
+			if(!$(this).hasClass('btn_huge')&&!$(this).hasClass('btn_large')){
+				$(this).addClass('ie6button');
+			}
+		});
+		$('input[type="submit"]').each(function(){
+			if(!$(this).hasClass('btn_huge')&&!$(this).hasClass('btn_large')){
+				$(this).addClass('ie6button');
+			}
+		});
+	}
+});
+
+var debug=0;
+var smsdel_flag=0;
+var GSM_7BIT_NUM = 128;
+var SMS_TEXT_MODE_UCS2 =  0;
+var SMS_TEXT_MODE_7BIT =  1;
+var SMS_TEXT_MODE_8BIT =  2;
+var g_content = null;
+var g_ucs2_num = 0;
+var g_text_mode = SMS_TEXT_MODE_7BIT;
+var g_SMS_UCS2_MAX_SIZE;
+var g_SMS_8BIT_MAX_SIZE;
+var g_SMS_7BIT_MAX_SIZE;
+var g_isCDMA = false;
+var arrayGSM_7ExtTable =
+[
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0x000A, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x005E, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0x0020, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0x007B, 0x007D, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x005C,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x005B, 0x007E, 0x005D, 0xFFFF,
+0x007C, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x20AC, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
+0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF
+];
+var arrayGSM_7DefaultTable =
+[
+0x0040, 0x00A3, 0x0024, 0x00A5, 0x00E8, 0x00E9, 0x00F9, 0x00EC, 0x00F2, 0x00C7, 0x000A, 0x00D8, 0x00F8, 0x000D, 0x00C5, 0x00E5,
+0x0394, 0x005F, 0x03A6, 0x0393, 0x039B, 0x03A9, 0x03A0, 0x03A8, 0x03A3, 0x0398, 0x039E, 0x001B, 0x00C6, 0x00E6, 0x00DF, 0x00C9,
+0x0020, 0x0021, 0x0022, 0x0023, 0x00A4, 0x0025, 0x0026, 0x0027, 0x0028, 0x0029, 0x002A, 0x002B, 0x002C, 0x002D, 0x002E, 0x002F,
+0x0030, 0x0031, 0x0032, 0x0033, 0x0034, 0x0035, 0x0036, 0x0037, 0x0038, 0x0039, 0x003A, 0x003B, 0x003C, 0x003D, 0x003E, 0x003F,
+0x00A1, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048, 0x0049, 0x004A, 0x004B, 0x004C, 0x004D, 0x004E, 0x004F,
+0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057, 0x0058, 0x0059, 0x005A, 0x00C4, 0x00D6, 0x00D1, 0x00DC, 0x00A7,
+0x00BF, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 0x0068, 0x0069, 0x006A, 0x006B, 0x006C, 0x006D, 0x006E, 0x006F,
+0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077, 0x0078, 0x0079, 0x007A, 0x00E4, 0x00F6, 0x00F1, 0x00FC, 0x00E0
+];
+var g_ext_7bit_tab = [
+[20, 0x005E], [40, 0x007B], [41, 0x007D],
+[47, 0x005C], [60, 0x005B], [61, 0x007E],
+[62, 0x005D], [64, 0x007C], [101, 0x20AC]
+];
+function sms_numberCheck(str) {
+	var N_or_Y_isCDMA_sms_hint_max_ucs2_characters_268=0;
+	var N_or_Y_isCDMA_sms_hint_max_8bit_characters_532=0;
+	var N_or_Y_isCDMA_sms_hint_max_ascii_characters_612=0;
+
+	{
+	    g_SMS_UCS2_MAX_SIZE = 402;//70+64+67+67+67+67;  67*6
+            g_SMS_8BIT_MAX_SIZE = 798;//140+126+133+133+133+133; 133*6
+            g_SMS_7BIT_MAX_SIZE = 918;//160+146+153+153+153+153; 153*6
+	     N_or_Y_isCDMA_sms_hint_max_ucs2_characters_268 = 402;//不确定
+	     N_or_Y_isCDMA_sms_hint_max_8bit_characters_532 = 798;//不确定
+	     N_or_Y_isCDMA_sms_hint_max_ascii_characters_612 = 918;//不确定
+	}
+
+	var sms_left_length;
+	var sms_num;
+	var temp_length;
+	var temp_enter_number;
+	var normal_max_len = 160;
+	var long_max_len = 153;
+	var err_info = null;
+
+	temp_length = str.length;
+	//temp_enter_number = check_enter_number_in_sms_content(str);
+	//temp_length += temp_enter_number;
+	if(SMS_TEXT_MODE_UCS2 == g_text_mode) {
+
+                normal_max_len = 70;
+	        long_max_len = 67;
+	
+
+	    if(temp_length > g_SMS_UCS2_MAX_SIZE) {
+		err_info = "<font style=\"color: red ;font-family:微软雅黑\">短信最多支持402个UCS2编码的字符。</font>";//N_or_Y_isCDMA_sms_hint_max_ucs2_characters_268;
+	    }
+	} 
+	else if (SMS_TEXT_MODE_8BIT == g_text_mode) {
+
+
+	}
+	else if (SMS_TEXT_MODE_7BIT == g_text_mode && !g_isCDMA )//GSM 7bit;
+	{
+		temp_length = check_extension_ascii_for_char_number(str);
+
+
+			normal_max_len = 160;
+			long_max_len = 153;
+			if(temp_length > g_SMS_7BIT_MAX_SIZE) {
+				err_info = "<font style=\"color: red ;font-family:微软雅黑\">短信最多支持918个ASCII编码的字符。</font>";//N_or_Y_isCDMA_sms_hint_max_ascii_characters_612;
+			}
+
+
+	}
+	else if(SMS_TEXT_MODE_7BIT == g_text_mode && g_isCDMA) {
+
+	}
+
+	if( null != err_info ) {
+
+	    document.getElementById("btn_send").disabled=1;
+	    document.getElementById("btn_save").disabled=1;
+		
+		document.getElementById("input_stat_warring").innerHTML =err_info;
+		document.getElementById("input_stat_warring").style.display = "block";
+	} else {
+
+		document.getElementById("input_stat_warring").innerHTML ="";
+		document.getElementById("input_stat_warring").style.display = "none";	
+      document.getElementById("btn_send").disabled=0;
+	    document.getElementById("btn_save").disabled=0;
+	}
+
+	if( temp_length <= normal_max_len ) {
+	    //document.getElementById("sms_count").innerHTML = normal_max_len - temp_length + "(" + 1 + ")";
+	    var temp=normal_max_len - temp_length + "(" + 1 + ")";
+	    document.getElementById("input_stat").innerHTML = temp;
+	    if(debug==1)
+	    {
+	       console.warn( "sms==1 sms length:" +temp);
+	     }
+		sms_num = 1;
+		if(temp_length <= 0) {
+			g_content = str.substring(0);
+		}
+	} else if( (temp_length > normal_max_len ) && (temp_length <= long_max_len*6) ) {
+		sms_num = parseInt(temp_length/long_max_len, 10)+1;
+
+		if( 0 == (temp_length%long_max_len) ) {
+			sms_num -= 1;
+		}
+
+		
+		var temp=long_max_len*sms_num - temp_length + "(" + sms_num + ")";
+		document.getElementById("input_stat").innerHTML = temp;
+			    if(debug==1)
+	    {
+	       console.warn( "sms!=1 sms length:" +temp);
+	     }
+	} else {
+		var tmp =  parseInt((temp_length - long_max_len*6)/long_max_len, 10);
+		var tmp2 = Math.floor(tmp);
+		var tmp3 = (long_max_len*6 +(tmp2+1)*long_max_len) - temp_length;
+		
+		var temp=tmp3 + "(" + (tmp2+6+1)+ ")";
+		document.getElementById("input_stat").innerHTML = temp;
+			if(debug==1)
+	    {
+	       console.warn( "sms>4 sms length:" +temp);
+	     }
+		
+	}
+
+	g_sms_num = sms_num;
+	g_sms_length = temp_length;
+}
+function sms_contentChange(str) {
+
+        if (/msie/i.test(navigator.userAgent))
+        {
+
+              sms_contentDiffUCS2Num( str );
+
+        }
+        else
+        {
+            g_ucs2_num =  ucs2_number_check(str);
+        }
+        
+        if (g_ucs2_num >0) {
+            g_text_mode = SMS_TEXT_MODE_UCS2;
+        } else {
+            g_text_mode = SMS_TEXT_MODE_7BIT;
+        }
+   
+
+	sms_numberCheck(str);
+	g_content = str;
+
+}
+function dec2hex(textString) {
+	return (textString + 0).toString(16).toUpperCase();
+}
+function encodeMessage(textString) {
+	var haut = 0;
+	var result = '';
+    if (!textString) return result;
+	for ( var i = 0; i < textString.length; i++) {
+		var b = textString.charCodeAt(i);
+		if (haut != 0) {
+			if (0xDC00 <= b && b <= 0xDFFF) {
+				result += dec2hex(0x10000 + ((haut - 0xD800) << 10) + (b - 0xDC00));
+				haut = 0;
+				continue;
+			} else {
+				haut = 0;
+			}
+		}
+		if (0xD800 <= b && b <= 0xDBFF) {
+			haut = b;
+		} else {
+			cp = dec2hex(b);
+			while (cp.length < 4) {
+				cp = '0' + cp;
+			}
+			result += cp;
+		}
+	}
+	return result;
+}
+function sms_contentDiffUCS2Num( str ) {
+	var idx        = 0;
+	var oldEndPos    = 0;
+	var newEndPos  = 0;
+	var minLen  = 0;
+	var diffLen  = 0;
+	var diffPos  = 0;
+	var diffNum = 0;
+	var diffOldNum   = 0;
+	var diffNewNum = 0;
+
+	//if input some char at first time
+	if ( null == g_content  || 0 == g_content.length  ) {
+		g_ucs2_num =  ucs2_number_check(str);
+		return;
+	}
+
+	//if delete all content, reset g_ucs2_num
+	if ( null == str || 0 == str.length ) {
+		g_ucs2_num =0;
+		return;
+	}
+
+	minLen = Math.min( str.length, g_content.length );
+	
+
+	//find different char position
+	for( diffPos = 0; diffPos < minLen; ++diffPos ) {
+		if( str.charAt( diffPos ).charCodeAt() != g_content.charAt( diffPos ).charCodeAt() ) {
+			break;
+		}
+	}
+
+
+	if( diffPos == minLen ) //add or delete char at tail of sms content
+	{
+		diffLen = str.length - g_content.length;
+		if( diffLen > 0 ) //add
+		{
+			diffNum = ucs2_number_check( str.substring( diffPos ) );
+		} else if( diffLen < 0 )// delete
+		{
+			diffNum = (-1) * ucs2_number_check( g_content.substring( diffPos ) );
+		} else {
+		}
+	} else // add or delete char at middle or header of sms content
+	{
+		for( idx = 0, oldEndPos = g_content.length-1,newEndPos = str.length-1; idx < minLen && oldEndPos > diffPos && newEndPos > diffPos; ++idx, --oldEndPos,--newEndPos )
+		{
+		    if( str.charAt( newEndPos ).charCodeAt() != g_content.charAt( oldEndPos ).charCodeAt() )
+		    {
+		        break;
+		    }
+		}
+		
+		diffOldNum = ucs2_number_check( g_content.substring( diffPos, oldEndPos+1 ) );    
+		diffNewNum = ucs2_number_check( str.substring( diffPos, newEndPos+1 ) );    
+		
+		diffNum = diffNewNum - diffOldNum;
+	}
+
+	g_ucs2_num += diffNum;
+}
+
+function ucs2_number_check(str) {
+	var i = 0;
+	var char_i;
+	var num_char_i;
+
+	var j = 0;
+	var flag;
+	var ucs2_num_temp=0;
+	var ext_Table = arrayGSM_7ExtTable;
+
+	if (str.length ==0) {
+		return 0;
+	}
+
+
+			ext_Table = arrayGSM_7ExtTable;
+
+
+	for(i=0; i<str.length; i++) {
+		flag = 0;
+		char_i = str.charAt(i);
+		num_char_i = char_i.charCodeAt();
+		for(j = 0; j < GSM_7BIT_NUM; j++) {
+			if( num_char_i == arrayGSM_7DefaultTable[j]
+			||( num_char_i == ext_Table[j] )
+			) {
+				flag = 1;
+				break;
+			}
+		}
+		if(0 == flag) {
+			ucs2_num_temp++;
+		}
+	}
+
+	return ucs2_num_temp;
+}
+function check_extension_ascii_for_char_number(str) {
+	var i = 0;
+	var char_i;
+	var char_i_code;
+	var k = 0;
+	var extension_ascii_num = 0;
+	var charLenAtFirstSMSEnd = 1;
+
+	var ext_tab = g_ext_7bit_tab;
+	var normal_max_len = 160;
+	var long_max_len = 153;
+
+
+
+
+
+	for(i=0; i<str.length; i++) {
+		var charLen = 1;
+		char_i = str.charAt(i);
+		char_i_code = char_i.charCodeAt();
+		for(charLen=1,k = 0;k< ext_tab.length;k++) {
+			if(char_i_code == ext_tab[k][1]) {
+				charLen = 2;
+				break;
+			}
+		}
+		if(1 == charLen) {
+			extension_ascii_num++;
+		} else {
+			if(1 == charLenAtFirstSMSEnd) {
+				if( (long_max_len-1) == extension_ascii_num ) {
+					extension_ascii_num+=2;
+					charLenAtFirstSMSEnd=2;
+				} else if(( (long_max_len*2-1) == extension_ascii_num)
+				|| ( (long_max_len*3-1) == extension_ascii_num )
+				|| ( (long_max_len*4-1) == extension_ascii_num)) {
+					extension_ascii_num+=3;
+				} else {
+					extension_ascii_num+=2;
+				}
+			} else {
+				if(( (long_max_len-1)*2 == extension_ascii_num)
+				|| (((long_max_len-1)*3+1) == extension_ascii_num)
+				|| (((long_max_len-1)*4+2) == extension_ascii_num)) {
+					extension_ascii_num+=3;
+				} else {
+					extension_ascii_num+=2;
+				}
+			}
+		}
+	}
+	if(extension_ascii_num > normal_max_len && 2 == charLenAtFirstSMSEnd) {
+		extension_ascii_num++;
+	}
+	return extension_ascii_num;
+}
+var timerSmsSending = null;
+var isSmsSending = false;
+var retryCount = 0;
+var smsSendFailCnt = 0;
+
+var alertDupNumbers = "发现重复号码，多余的相同号码已被移除";
+
+var dest_phonenumber = null;
+var dest_phonenumbertem = new Array("","","","","","","","","","","","","","","","","","","","");
+var all_number_count=0;
+var all_number=null;
+var send_click_flag=0;
+
+// 打开定时器
+function openTimer(millisec) {
+	if (timerSmsSending != null)
+	{
+		clearTimeout(timerSmsSending);
+		timerSmsSending = null;
+	}
+	timerSmsSending = setTimeout('checkSmsSendStatus();', millisec);
+}
+
+//关闭定时器
+function closeTimer() {
+	clearTimeout(timerSmsSending);
+	timerSmsSending = null;
+}
+
+//===========================================================================
+
+//屏蔽F5  
+document.onkeydown = mykeydown;
+function mykeydown() {
+    if (event.keyCode == 116) 	//屏蔽F5刷新键
+    {
+        window.event.keyCode = 0;
+        return false;
+    }
+}
+
+//===========================================================================
+
+function confirmCancelSending() {
+	if (window.confirm("确定要取消发送？","系统提示"))
+	{
+		isSmsSending = false;
+		cancelSmsSending();
+		closeWaitDlg();
+		enableSendButton(true);
+		
+		return true;
+	}
+	
+	return false;
+}
+
+var msgSendAlert = "";
+function checkSmsSendStatus() {
+	// 检查短信是否正在发送
+	//var sms_status_set = ajaxSendRequestSync("/chn/sms_status.asp");
+	ajaxSendRequestAsync(
+		"/chn/sms_status.asp",
+		
+		// Ajax success
+		function(sms_status_set) {
+			var sms_status = (sms_status_set != null) ? sms_status_set[0] : 1;
+	
+			retryCount = 0;
+			openTimer(2500);
+			
+			if (sms_status == 2)				// SMMS_MIFI_SMS_RETRYING
+			{
+				changeWaitDlgMsg("短信发送失败，正在重试...");
+			}
+			else if (sms_status == 3)		// SMMS_MIFI_SMS_SEND_SUCC
+			{
+				msgSendAlert = "短信发送成功！";
+				closeTimer();
+				changeWaitDlgMsg("短信发送成功！");
+				closeWaitDlg();
+				enableSendButton(true);
+				setTimeout(function() {
+					alert(msgSendAlert);
+					document.getElementById('sending_window').contentWindow.del_time();
+					smsHideModalDialog();
+				}, 50);
+			}
+			else if (sms_status == 4)		// SMMS_MIFI_SMS_SEND_FAIL
+			{
+				msgSendAlert = "短信发送失败，请到发件箱中查看";
+				closeTimer();
+				changeWaitDlgMsg("短信发送失败！");
+				closeWaitDlg();
+				enableSendButton(true);
+				setTimeout(function() {
+					alert(msgSendAlert);
+					document.getElementById('sending_window').contentWindow.del_time();
+					smsHideModalDialog();
+				}, 50);
+			}
+		},
+		
+		// Ajax error
+		function(error) {
+			if (retryCount < 2)
+			{
+				openTimer(5000);
+				retryCount++;
+			}
+			else
+			{
+				closeWaitDlg();
+				enableSendButton(true);
+				if (error == 12029)
+					alert("连接失败，请检查设备连接是否正常或稍后再试");
+				else
+					alert("连接错误：" + error);
+				
+				
+				document.getElementById('sending_window').contentWindow.del_time();	
+				smsHideModalDialog();
+			}
+		}
+	);
+}
+
+function cancelSmsSending() {
+	closeTimer();
+	
+	param ="lc_sms_cancel_sending=";
+	$.ajax({
+		url: "/goform/formSyWebCfg?oem_cfg=changed&action=Apply&" + param,
+		cache: false,
+
+		success: function(result) {
+			closeWaitDlg();
+			enableSendButton(true);
+		},
+		
+		error: function(jqXHR, textStatus, errorThrown) {
+			if (retryCount < 2)
+		 		deferredTimerCall("cancelSmsSending();", 500);
+		 	else
+		 		alert("与设备连接出现问题，取消发送短信失败");
+		 	retryCount++;
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		}
+	});
+}
+var lc_sms_msg_id="";
+function initSms()
+{
+	var k = share.data("dialogArgs");
+	if (k != null)
+	{
+		//document.all.lc_sms_index.value  = k.document.getElementById("lc_sms_index").value;
+		lc_sms_msg_id  = k.document.getElementById("lc_sms_msg_id").value;
+		document.all.lc_telephone.value  = k.document.getElementById("lc_sms_phone_number").value;
+		document.all.lc_msg.value  = k.document.getElementById("lc_sms_message").value;
+	}
+}
+
+function enableEdit(bEnable)
+{
+	var objPhone = document.getElementById("lc_telephone");
+	var objMsg = document.getElementById("lc_msg");
+	if (objPhone != null && objMsg != null)
+	{
+		objPhone.setAttribute("readOnly", !bEnable);
+		objMsg.setAttribute("readOnly", !bEnable);
+		if (bEnable)
+		{
+			objPhone.removeAttribute("readOnly");
+			objMsg.removeAttribute("readOnly");
+		}
+	}
+	
+	enableEditMode = bEnable;
+}
+
+// 获取手机剩余短信空间
+function getRemainSmsStorage()
+{
+}
+
+function checkStorage(isSaving)
+{
+}
+function saveCheck()
+{
+	onFocusPhoneEdit();
+	
+	if (makeNumbersUnique(document.getElementById("lc_telephone")))
+	{
+		alert(alertDupNumbers);
+	}
+
+	if (!checkIsNull(document.all.sms_send_form.lc_msg,'不能保存为空消息!'))
+	{
+		return false;
+	}
+
+//	if (!checkStorage(true))
+//	{
+//		alert("当前本地短信剩余空间不足，无法保存到草稿箱");
+//		return false;
+//	}
+
+	return true;
+}
+
+function saveClick()
+{
+	if (saveCheck())
+	{
+var param = "";
+param += "lc_sms_msg_id="+lc_sms_msg_id + "&";
+param += "lc_telephone="+document.all.sms_send_form.lc_telephone.value+"&";
+param += "lc_msg="+encodeMessage(document.all.sms_send_form.lc_msg.value);
+var temp="/boafrm/formsmssave";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        					document.getElementById('sending_window').contentWindow.del_time();
+					smsHideModalDialog();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+	}
+
+
+}
+
+// 获取手机剩余短信空间
+function getRemainSmsStorage()
+{
+}
+
+function checkStorage(isSaving)
+{
+}
+
+function sendCheck()
+{
+	onFocusPhoneEdit();
+	
+	var errorCode = validatePhoneNum(document.all.sms_send_form.lc_telephone.value);
+	if (PhoneError.NO_ERROR != errorCode)
+	{
+		alert(getErrorMessage(errorCode));
+		document.all.sms_send_form.lc_telephone.focus();
+		return false;
+	}
+	
+	if (makeNumbersUnique(document.getElementById("lc_telephone")))
+	{
+		alert(alertDupNumbers);
+	}
+
+	if (!checkIsNull(document.all.sms_send_form.lc_msg,'不能发送为空消息!'))
+	{
+		return false;
+	}
+
+
+	
+	//if (!checkStorage(false))
+	//{
+	//	alert("当前本地短信剩余空间不足，无法发送短信，请删除部分本地短信再试");
+	//	return false;
+//	}
+	
+	return true;
+}
+
+function sendClick()
+{
+	send_click_flag=1;
+	enableSendButton(false);
+	dest_phonenumber=document.all.sms_send_form.lc_telephone.value;
+
+var t=dest_phonenumber;
+
+if(debug==1)
+{
+console.warn(parent.dest_phonenumber);
+console.warn(String(t).length);
+}
+
+
+var Inputt=String(t);
+
+
+ for(var j=0;j<Inputt.length;j++){
+            	if(Inputt.split("")[j].charCodeAt(0)==59)
+			        {
+			        	if(debug==1)
+			        	{
+			        	window.console.warn("last char is  59 ';'"+j+"|Inputt.length:"+Inputt.length);
+			          }
+			        	if(j==Inputt.length-1)
+			        	{
+			        	if(debug==1)
+			        	{
+			        		window.console.warn("last char is befor ';' j "+Inputt+"J:"+j);
+			        	}
+			        		Inputt=Inputt.substring(0,j);
+	                 if(debug==1)
+	                {
+			        		window.console.warn("last char is after';'"+Inputt);
+			        	  }
+			        	}
+			        	
+			        }
+ 	
+}
+
+  var temp=1; 
+       for(var i=0;i<Inputt.length;i++){
+             // temp=1;
+				      if(Inputt.split("")[i].charCodeAt(0)==59)
+			        {
+			        	
+                    if(i<(Inputt.length-1))
+                    {
+                    	temp=0;
+                    	if(debug==1)
+                    	{
+                    	window.console.warn("i<Inputt.length");
+                      }
+                    	all_number_count=String(Inputt).replace(/\s/gm, "").split(';').length;
+                    	dest_phonenumbertem=String(Inputt).replace(/\s/gm, "").split(';');
+                    	if(debug==1)
+                    	{
+                      window.console.warn(dest_phonenumbertem[0]+"|"+dest_phonenumbertem[1]+"all_number_count:"+all_number_count);
+                      }
+                    	
+                    }else
+                    	{
+                    		temp=0;
+                    		all_number_count=1;
+                    		all_number=String(Inputt);
+                    	if(debug==1)
+                    	{                    	
+                    			
+                    		 window.console.warn(all_number+"|"+all_number_count);
+                    		}
+                    		
+                    	}
+			        }
+			        
+			 } 
+			 if(temp==1)
+			 {
+			 	
+			 	   all_number_count=1;
+           all_number=String(Inputt);
+			}
+if (sendCheck())
+	{
+
+
+
+
+		closeTimer();
+		retryCount = 0;
+		smsSendFailCnt = 0;
+		share.data("sms_sending","sending");
+
+		var param="";
+		//param += "0[,]";
+    param += "lc_sms_msg_id="+lc_sms_msg_id + "&";
+		param += "lc_telephone="+document.all.sms_send_form.lc_telephone.value;
+
+$.ajax({
+type: "POST",
+
+		url: "/boafrm/formsms_send_telephone",
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+			param="";
+			param+=encodeMessage(document.all.sms_send_form.lc_msg.value);
+      		setTimeout(function() {
+			     sendClick_part2(param);
+		    }, 1000);
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+	});
+	}
+	else
+		enableSendButton(true);
+}
+
+
+function sendClick_part2(param)
+{
+			$.post('/boafrm/formsms_send_msg',{oem_cfg:'changed',action:'Apply',lc_msg:param},
+			function(r) {
+				if (r.toLowerCase().indexOf("success") >= 0)
+				{
+		       if (/msie/i.test(navigator.userAgent))
+	         {
+		          // For IE
+     	        var fade=document.getElementById('fade');
+	            fade.style.width="105%";
+	            var white=document.getElementById('light');
+	           // white.style.left="1%";
+	         }
+	         else
+	         {
+		          // for Non-IE
+		
+	         }
+	         show("light");
+           		setTimeout(function() {
+			document.getElementById('sending_window').contentWindow.checksmssendresult_pre();
+		}, 1000);
+				}
+				else
+				{
+					alert("短信发送失败！");
+					enableSendButton(true);
+				}
+			});
+
+}
+function show(tag){
+ var light=document.getElementById(tag);
+ var fade=document.getElementById('fade');
+ light.style.display='block';
+ fade.style.display='block';
+ }
+function hide(tag){
+ var light=document.getElementById(tag);
+ var fade=document.getElementById('fade');
+ light.style.display='none';
+ fade.style.display='none';
+}
+function enableSendButton(enable)
+{
+	var send_btn = document.getElementById("btn_send");
+	send_btn.disabled = !enable;
+}
+
+var bPhoneInputHasFocus = false;
+var strPhoneInputRules = "最多可输5个号码，每个最大长度20，用\";\"号隔开";
+function onFocusPhoneEdit()
+{
+	document.all.sms_send_form.lc_telephone.style.color = "#000000";
+	if (document.all.sms_send_form.lc_telephone.value == strPhoneInputRules)
+	{
+		document.all.sms_send_form.lc_telephone.value = "";
+	}
+	bPhoneInputHasFocus = true;
+}
+
+function onBlurPhoneEdit()
+{
+	bPhoneInputHasFocus = false;
+	if (document.all.sms_send_form.lc_telephone.value.length == 0)
+	{
+		document.all.sms_send_form.lc_telephone.style.color = "#888888";
+		//document.all.sms_send_form.lc_telephone.value = strPhoneInputRules;
+	}
+	else
+	{
+		document.all.sms_send_form.lc_telephone.style.color = "#000000";
+		if (
+			makeNumbersUnique(document.all.sms_send_form.lc_telephone))
+		{
+			alert(alertDupNumbers);
+		}
+	}
+}
+
+function checkMessageInput()
+{
+	//document.getElementById("input_stat").innerHTML = checkMessageText(document.getElementById("lc_msg"));
+	if (share.data("gServerMode") != "SmsEdit" && document.getElementById("lc_msg").value.length > 0)
+	{	
+		share.data("gServerMode", "SmsEdit");
+		share.data("sms_sending","");
+	}
+	//sms_numberCheck(document.getElementById("lc_msg").value);
+	sms_contentChange(document.getElementById("lc_msg").value);
+}
+
+function checkPhoneInput()
+{
+	if (bPhoneInputHasFocus)
+	{
+		checkPhoneNumber(document.getElementById("lc_telephone"));
+		if (share.data("gServerMode") != "SmsEdit" && document.getElementById("lc_telephone").value.length > 0)
+		{
+				share.data("gServerMode", "SmsEdit");
+				share.data("sms_sending","");
+			}
+	}
+}
+function setCookie(name, value, hours, path) {
+
+}
+		
+		
+function get_cookie(name) {
+
+}
+function init()
+{
+	//share.data("gServerMode", "SmsEdit");
+	
+	onBlurPhoneEdit();
+
+			share.data("gServerMode", "");
+		share.data("sms_sending","");
+
+initSms();
+
+	var iNum1 = "";//清空发送结果数组
+	if (/msie/i.test(navigator.userAgent))
+	{
+		// For IE
+	//	document.getElementById("lc_msg").onpropertychange = checkMessageInput;
+	//	document.getElementById("lc_telephone").onpropertychange = checkPhoneInput;
+
+    document.getElementById('lc_msg').attachEvent("onpropertychange",checkMessageInput); 
+    document.getElementById('lc_telephone').attachEvent("onpropertychange",checkPhoneInput);
+	}
+	else
+	{
+		// for Non-IE
+		document.getElementById("lc_msg").addEventListener("input", checkMessageInput, false);
+		document.getElementById("lc_telephone").addEventListener("input", checkPhoneInput, false);
+	}
+
+
+}
+function setexpires()
+{
+
+
+
+
+}
+function closeWindow()
+{
+	if (share.data("gServerMode") == "SmsEdit")
+	{
+		if (confirm("如果关闭，正在编辑的短信内容将会丢失，是否继续？"))
+		{
+			 //document.getElementById('sending_window').contentWindow.del_time();
+				window.top.tb_remove();
+		}
+	}
+	else
+	{
+		//document.getElementById('sending_window').contentWindow.del_time();
+		window.top.tb_remove();
+	}
+	
+}
+
+
+window.onunload = function() {
+	share.data("gServerMode", "");
+}
+
+</script>
+</head>
+
+<body style="overflow:hidden" onload="init();">
+
+<form name="sms_send_form" id="sms_send_form" action="/goform/formSyWebCfg" method="POST" onsubmit="javascript:return false;">
+<input type="hidden" name="wl_cfg" value="changed">
+<input type="hidden" name="syfi_test" value="changed">
+<input type="hidden" name="oem_cfg" value="changed">
+
+<h2>查看信息</h2>
+
+<table width="400px" border="0" cellspacing="0" cellpadding="0" style="word-break:break-all">
+	<tr>
+		<td align="right">
+			<input type="button" id="btn_send" name="btn_send" value=" 发送 " onclick="sendClick();">
+			<input type="button" id="btn_save" name="btn_save" value=" 保存 " onclick="saveClick();">
+			<input type="button" id="btn_close" name="btn_close" value=" 关闭 " onclick="closeWindow();">
+		</td>
+	</tr>
+	<tr>
+		<td align="right"><hr color="#0033CC" width="400px" ></td>
+	</tr>
+	<br>
+	<tr>
+		<td>
+			<div style="width:400px;overflow:visible">
+				<table  width="400px" border="1" bordercolor="#dddddd" style="border-collapse:collapse;" cellPadding=0 cellSpacing=0>
+					<tr>
+						<td  bgcolor="#CCCCCC" width="72px" nowrap>手机号码</td>
+						<td class="even" nowrap width="328px" >
+							<input name="lc_telephone" type="text" maxLength="420" id="lc_telephone" value=""  style="width:328px;word-wrap:break-word;word-break:break-all" onFocus="onFocusPhoneEdit()" onBlur="onBlurPhoneEdit()">
+						</td>
+					</tr>
+					<tr>
+						<td bgcolor="#CCCCCC" width="72px" nowrap>信息</td>
+						<td class="even" nowrap width="328px" >
+							<textarea name="lc_msg" id="lc_msg" cols="3" rows="5" style="width:328px"></textarea>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table width="400px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="right"><span id="input_stat" width="100%" align="right">160(1)</span></td></tr>
+			</table>
+		</td>
+	</tr>
+		<tr>
+		<td>
+			<table width="400px" border=0 cellPadding=0 cellSpacing=0>
+				<tr><td  align="right"><span id="input_stat_warring" style="display:none" width="100%" align="right"></span></td></tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+</form>
+<div id="light" class="white_content" >
+      <div class="close"><a href="javascript:void(0)" > </a></div>
+      <div class="con"> 
+				<iframe border="0" id="sending_window" name="sending_window" src="sms_sending.asp" marginwidth="1" marginheight="1"  frameborder="0" style="z-index: 1; visibility: inherit; width: 100%; height: 100%" scrolling="no"></iframe>	
+      </div>
+</div>
+<div id="fade" class="black_overlay"></div>
+</body>
+</html>

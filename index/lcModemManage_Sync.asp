@@ -1,0 +1,1 @@
+<% getInfo("ModemVarsSynchResult"); %>*<% getInfo("ModemVarsSynched"); %>

@@ -1,0 +1,233 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<% getIndex("no-cache"); %>
+<title>Samba Server</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+
+<style type="text/css">
+.txt1{
+	
+ display: block;
+ position: absolute;
+ top: 130px;
+ left: 200px;
+
+
+}
+.txt2{
+	
+ display: block;
+ position: absolute;
+ top: 230px;
+ left: 200px;
+
+
+}
+
+.checkbox1{
+	
+ display: block;
+ position: absolute;
+top: 130px;
+ left: 160px;
+
+
+}
+.checkbox2{
+
+ display: block;
+ position: absolute;
+top: 160px;
+ left: 160px;
+
+
+}
+</style>
+<script>
+function saveClick()
+{
+ var smb_enable;
+var  tcard_enable;
+var  usb_enable;
+if(document.getElementById("smb_enable").value==0)
+{
+smb_enable="ON";
+}else
+{
+smb_enable="OFF";
+}
+
+if(document.getElementById("tcard_enable").checked)
+{
+tcard_enable="ON";
+}else
+{
+tcard_enable="OFF";
+}
+
+
+if(document.getElementById("usb_enable").checked)
+{
+usb_enable="ON";
+}else
+{
+usb_enable="OFF";
+}
+
+if(smb_enable=="ON")
+{
+    if(tcard_enable!="ON"&&usb_enable!="ON")
+    {
+
+				alert("当无线网盘功能选择打开时，共享T卡和共享U盘必须选择其中一个或者共享T卡和共享U盘同时选择!");
+				return false;
+    }
+
+}
+
+var temp="/boafrm/formSambaSet";
+param="";
+param="smb_enable="+smb_enable+"&tcard_enable="+tcard_enable+"&usb_enable="+usb_enable+"&save=Apply+Changes&submit-url=%2Fsmb.htm";
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+        //send_security();
+         alert("设置成功！");
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+		return true;
+}
+
+function updateState1()
+{
+}
+function updateState()
+{
+  if (document.getElementById("smb_enable").value==0) {
+ 	enableTextField(document.getElementById("tcard_enable"));
+ 	enableTextField(document.getElementById("usb_enable"));
+ 	
+  }
+  else {
+ 	disableTextField(document.getElementById("tcard_enable"));
+ 	disableTextField(document.getElementById("usb_enable"));
+ 	
+  }
+}
+
+function Load_Setting()
+{
+	if ( <% getIndex("smb_enable"); %> )
+{		
+document.getElementById("smb_enable").value = 0;
+}else
+{
+document.getElementById("smb_enable").value = 1;
+}
+		
+	if ( <% getIndex("tcard_enable"); %> )
+		document.getElementById("tcard_enable").checked = true;
+		
+		
+			if ( <% getIndex("usb_enable"); %> )
+		document.getElementById("usb_enable").checked = true;
+	
+document.getElementById("usb_enable").checked=false;
+	
+	updateState();
+}
+</script>
+</head>
+
+<body onload="Load_Setting();">
+<blockquote>
+<h2><font color="#0000FF">无线网盘配置</font></h2>
+
+
+
+<form action=/boafrm/formSambaSet method=POST name="formSambaSet">
+<!--tr><td><font size=2><b>
+   	<input type="checkbox" name="smb_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;开启Samba</b>
+    </td>
+</tr>
+<tr><td><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="tcard_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;共享Tcard</b>
+    </td>
+</tr>
+
+<tr><td><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="usb_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;共享usbstorage</b>
+    </td>
+</tr>
+
+
+<tr><td-->
+
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>无线网盘功能:</b></td>
+      <td width="50%"><font size=2><font size=2><select size="1" name="smb_enable" id="smb_enable" onChange="updateState()">
+<script type="text/javascript">
+	      	  	document.write( "<option selected value=\"0\">打开</option>" );
+    	   	  	document.write( "<option value=\"1\">关闭</option>" );
+</script>
+        </select></td>
+    </tr>
+
+  </table>
+
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+
+      <td width="20%"><font size=2><b>无线网盘配置:</b></td>
+<tr><td class="checkbox1"><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input  type="checkbox" name="tcard_enable" id="tcard_enable" value="ON" ONCLICK=updateState()>&nbsp;&nbsp;共享T卡</b>
+    </td>
+</tr>
+
+
+ <tr style="display: none"><td class="checkbox2"><br><font size=2><b>
+   	&nbsp;&nbsp;&nbsp;&nbsp;<input  type="checkbox" name="usb_enable" id="usb_enable" value="OFF" ONCLICK=updateState()>&nbsp;&nbsp;共享U盘</b>
+    </td>
+</tr>  
+
+
+    </tr>
+
+  </table>
+   <br>
+     <input type="button" class="txt2" value="确定" name="save" onClick="return saveClick()">&nbsp;&nbsp;
+</td></tr>
+     
+</form>
+
+</blockquote>
+</body>
+</html>

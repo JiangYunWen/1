@@ -1,0 +1,155 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+<script type="text/javascript" src="/res/jquery.js"></script>
+<% getIndex("no-cache"); %>
+<style type="text/css">
+.txt1{
+	
+ display: block;
+ position: absolute;
+ top: 130px;
+ left: 300px;
+
+
+}
+</style>
+<title>WAN Interface Setup</title>
+<% language=javascript %>
+<script language="JavaScript" type="text/javascript">
+
+function init()
+{
+
+document.getElementById("leadcorewantype").value="<% getInfo("leadcorewantype"); %>";
+}
+
+function sclick_send()
+{
+if(confirm('Modify the operation mode will immediately restart.  Sure?'))
+{
+if(1)
+{
+saveChanges();
+return true;
+}else
+{
+return false;
+}
+}
+}
+function send_opmode()
+{
+var param=document.getElementById("leadcorewantype").value;
+var temp="/boafrm/formOpMode";
+if(param=="1")
+{
+param="opMode=2&submit-url=%2Fopmode.htm&apply=Apply+Change";
+}else
+{
+param="opMode=0&submit-url=%2Fopmode.htm&apply=Apply+Change";
+}
+
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        // document.body.innerHTML=result;
+         alert("set success!");
+          window.parent.open('','_self');
+          window.parent.close();
+
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+ return true;
+
+}
+function saveChanges()
+{
+var param="leadcorewantype="+document.getElementById("leadcorewantype").value;
+var temp="/boafrm/formleadcorewanSetup";
+	$.ajax({
+type: "POST",
+
+		url: temp,
+		cache: false,
+    data:param,
+
+		success: function(result) {
+			if (result != null && result.length !== 0)
+			{
+        
+send_opmode();
+			}
+		},
+		  
+		complete: function(xmlHttpHeader, textStatus) {
+			xmlHttpHeader = null;
+		  	
+
+		}
+
+});
+
+ return true;
+}
+
+</script>
+</head>
+
+<BODY onload="init()">
+<blockquote>
+<h2><font color="#0000FF">WAN Interface Setup</font></h2>
+<table border=0 width="550" cellspacing=0 cellpadding=0>
+  <tr><font size=2>
+    This page is used to configure the parameters for Internet network which
+    connects to the WAN port of your Access Point. 
+  </tr>
+
+</table>
+<form action=/boafrm/formleadcorewanSetup method=POST name="password">
+ <table border="0" cellspacing="4" width="500">
+  <tr><font size=2>
+
+  </tr>
+  <tr><hr size=1 noshade align=top></tr>
+
+    <tr>
+      <td width="20%"><font size=2><b>WAN Interface:</b></td>
+      <td width="50%"><font size=2><font size=2><select size="1" name="leadcorewantype" id="leadcorewantype" onChange="">
+<script type="text/javascript">
+
+	      	  	document.write( "<option selected value=\"0\">4G as WAN Interface</option>" );
+    	   	  	document.write( "<option value=\"1\">Station as WAN Interface</option>" );
+    		  	document.write( "<option value=\"2\">RJ45 as WAN Interface</option>" );
+
+
+</script>
+        </select></td>
+    </tr>
+    
+  </table>
+   <input type="hidden" value="/chn/leadcorewan_chn.htm" name="submit-url">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p><input type="button" class="txt1" value=" submit " name="save" onClick="return sclick_send()">
+</form>
+<blockquote>
+</body>
+</html>
+
+

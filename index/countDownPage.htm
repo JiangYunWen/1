@@ -1,0 +1,144 @@
+<html>
+<head>
+	<script type="text/javascript" src="mtmcode.js"></script>
+	<script type="text/javascript" src="util_gw.js"></script>
+	<style>
+	.on {display:on}
+	.off {display:none}
+	</style>
+	<script language=JavaScript>
+		var count = 40;
+		var pocketRouter_Mode=2; /* 1:client 2:AP */
+		var waitcount = 40;
+		var seconds_word=" seconds ";
+		var is_ulinker="<% getInfo("is_ulinker"); %>"*1;
+		
+
+			
+		function get_by_id(id)
+		{
+			with(document)
+			{
+				return getElementById(id);
+			}
+		}
+		
+		function change_state(istate)
+		{
+
+
+			if(pocketRouter_Mode == 1){
+
+				
+			}else
+      {
+          get_by_id("show_msg").innerHTML = "请不要关闭或重启设备。 ";
+
+         
+      }
+ get_by_id("show_msg_top").innerHTML = "更改设置成功。 ";
+
+ get_by_id("please_wait").innerHTML = "请耐心等待。 ";
+
+ get_by_id("show_seconds").innerHTML = "秒。";
+
+      
+		}
+		
+		
+		function closeBrowser()
+		{
+			parent.window.close();			
+		}
+		
+		function do_count_down()
+		{
+			show_div(false, "close_button");
+			
+		
+			get_by_id("show_sec").innerHTML = count;
+			
+			if(count == 0) 
+			{
+				var browser=eval ( '"' + top.location + '"' );
+				var domainName ;
+				var connect_url;
+				var redirect_ip = "<% getInfo("redirect_ip"); %>";
+				change_state('normal');
+				
+				if(pocketRouter_Mode != 0)
+				{
+					if (is_ulinker == 0) 
+					{
+					if((pocketRouter_Mode == 2) || (pocketRouter_Mode == 3))
+						domainName = domainName+"ap";
+					else
+						domainName = domainName+"cl";
+					}
+						
+//alert("browser="+browser);
+					domainName = domainName.toLowerCase();
+//alert("domainName="+domainName);
+
+				if (is_ulinker == 0) {
+					if (browser.indexOf(redirect_ip) > -1 )
+					{
+						connect_url=redirect_ip;
+						
+					}
+
+				}
+				else {
+					if (browser.indexOf(redirect_ip) > -1 )
+					{
+						connect_url=redirect_ip;
+						
+					}
+
+				}
+					
+				}
+				else
+				{
+					connect_url=redirect_ip;
+				}
+				
+				var lastUrl="<% getInfo("lastUrl"); %>";
+				
+				if(lastUrl == "/status.htm")
+				{
+					parent.location.href = 'http://'+connect_url;
+				}
+				else
+				{
+					
+//alert("connect_url="+connect_url);
+					var location_href = 'http://'+connect_url+lastUrl+'?t='+new Date().getTime();				
+//alert("location_href="+location_href);				
+					parent.location.href = 'http://'+connect_url;
+					//parent.frames[3].location.href=location_href;
+				}
+				
+				return false;
+			}
+			
+			if (count > 0) 
+			{
+				
+				count--;
+				setTimeout('do_count_down()',1000);
+			}
+		}
+	</script>
+</head>
+<body onload="change_state('normal');do_count_down();">
+
+	  <SPAN id=show_msg_top>Change setting successfully!</span><br>
+			<SPAN id=show_msg>Do not turn off or reboot the Device during this time.</span><br>
+			<SPAN id=please_wait>Please wait </span><B><SPAN id=show_sec></SPAN></B>&nbsp;<SPAN id=show_seconds>seconds ...</SPAN>
+		<span id = "close_button" class = "off" >
+			<input type="button" value="  OK  " name="cancel" onClick='closeBrowser();'>
+		</span>
+
+</body>
+</html>

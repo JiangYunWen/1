@@ -1,0 +1,172 @@
+@charset "utf-8";
+
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section {
+    display: block;
+}
+
+
+
+html {
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#confirm {
+    display: none;
+}
+
+/* Overlay */
+#confirm-overlay {
+    background-color: #000;
+    cursor: wait;
+}
+
+/* Container */
+#confirm-container {
+    width: 420px;
+    text-align: left;
+    /*background: url("../img/bodybg.jpg") 50%;
+    border: 2px solid #336699;*/
+}
+
+#confirm-container .header {
+    height: 30px;
+    line-height: 30px;
+    width: 100%;
+    color: #AFDAFF;
+    background: #07323B;
+    font-weight: bold;
+}
+
+#confirm-container .header span {
+    padding-left: 8px;
+}
+
+#confirm-container .icon {
+    padding: 10px 5px 5px 10px;
+    float: left
+}
+
+#confirm-container .message {
+    color: #fff;
+    font-size: 14px;
+    margin: 0;
+    padding: 20px 5px 5px 5px;
+}
+
+#confirm-container .buttons {
+    padding: 10px 8px 0;
+    text-align: right;
+}
+
+#confirm-container .buttons input {
+    margin-left: 4px;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+#buttom-bubble{
+	width: 230px;
+	height: auto;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+
+	margin-right: 10px;
+	z-index: 100;
+}
+#buttom-bubble .bubbleItem{
+	margin-top: 8px;
+	border-radius: 10px 10px 0 0;
+	position: relative;
+}
+#buttom-bubble h3{
+	padding: 8px 30px 8px 8px;
+	background-color: #AFBCC0;
+	border: 2px solid #AFBCC0;
+	border-bottom: 0;
+	border-radius: 8px 8px 0 0;
+	text-shadow: 0 -1px 2px #2063AB !important;
+	margin-bottom: 0;
+	font-size: 14px;
+}
+#buttom-bubble .bubbleItem.report h3{
+	color: #E47602;
+}
+#buttom-bubble h3 a.bubbleCloseBtn{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	border: 1px solid #E2E2E2;
+	-moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+	-webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+#buttom-bubble h3 a.bubbleCloseBtn:hover{
+	border: 1px solid #2063AB;
+}
+#buttom-bubble .bubbleCloseBtn{
+	background: url("../img/delete.png");
+	width: 14px;
+	height: 12px;
+	display: block;
+}
+#buttom-bubble .bubbleContainer{
+	border: 2px solid #E2E2E2;
+	padding: 2px 8px 8px 8px;
+	line-height: 150%;
+	max-height: 70px;
+	overflow: hidden;
+	border-top: 0;
+    font-size: 12px;
+	background: #FFFFFF;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(white), to(#D2D2D2) );
+    background: -ms-linear-gradient(top, white, #D2D2D2);
+	background: -moz-linear-gradient(top, white, #D2D2D2);
+	background: -o-linear-gradient(top, white,#D2D2D2);
+    filter: progid:dximagetransform.microsoft.gradient(startColorstr=white, endColorstr='#D2D2D2', GradientType=0);
+}
+#buttom-bubble .bubbleContent{
+	max-height: 55px;
+	overflow: hidden;
+	line-height: 18px;
+}
+#buttom-bubble .bubbleDatetime{
+	text-align: right;
+	font-size: 10px;
+	padding-right: 10px;
+}
+
+
+
+

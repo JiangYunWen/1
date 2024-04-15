@@ -1,0 +1,374 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html">
+
+<title>System Command</title>
+<script type="text/javascript" src="../util_gw.js"> </script>
+<script type="text/javascript" src="../res/jquery.js"></script>
+<script type="text/javascript" src="../res/sychip.js"></script>
+<script type="text/javascript" src="../util_web.js"></script>
+
+<style type="text/css">
+.white_content {
+ display: none;
+ position: absolute;
+ top: 15%;
+ left: 10%;
+ width: 20%;
+ height: 20%;
+ border: 10px solid #808080;
+ z-index:1002;
+}
+.black_overlay {
+ display: none;
+ position: absolute;
+ top: 0%;
+ left: 0%;
+ width: 100%;
+ height: 100%;
+ background-color:#f5f5f5;
+ z-index:1001;
+ -moz-opacity: 0.6;
+ opacity:.80;
+ filter: alpha(opacity=100);
+}
+
+</style>
+<script>
+var objTimeOut = "";
+var WebModemGetInfoDdtcParamType =<%getInfo("ModemGetInfoDdtcParamType");%>; 
+var WebModemGetInfoDhcpsetParamX;
+var WebModemGetInfoDhdrsetParamIprange;
+var WebModemGetInfoDsonswlsParamMode;
+
+
+//屏蔽F5   
+document.onkeydown = mykeydown;  
+
+function mykeydown() {  
+    if (event.keyCode == 116) //屏蔽F5刷新键      
+    {  
+        window.event.keyCode = 0;  
+        return false;  
+    }  
+}   
+
+function SetLabelText(Labelid,Text)
+{
+//obj_label= document.getElementById(Labid).innerHTML;
+//obj_label.innerHTML=Text;
+document.getElementById(Labelid).innerHTML=(Text);
+}
+
+
+function FormDhcpSwitch_Button_Submit()
+{
+    var zh_str = zh_Lang_ex();
+	if("255"==document.all.FormDhcpSwitch.FormDhcpSwitch_Param_Switch.value)
+	{
+        if(zh_Lang_now == 't'){
+    	    showdiv("請選擇操作類型",DivCloseMode_Alert);
+    	}else{
+    	    showdiv("请选择操作类型",DivCloseMode_Alert);
+    	}
+		document.all.FormDhcpSwitch.FormDhcpSwitch_Param_Switch.focus();
+		return false;
+	}
+	param = "";
+    param +="FormDhcpsetSwitch_Param_Switch=";
+	param += document.all.FormDhcpSwitch.FormDhcpSwitch_Param_Switch.value;
+    if(zh_Lang_now == 't'){	    
+	    showdiv("正在更改，請等待。。。",DivCloseMode_None);
+	}else{	
+	    showdiv("正在更改，请等待。。。",DivCloseMode_None);
+	}
+	WebPostProcess("/boafrm/formDhcpsetProcess",param,null);
+}
+
+function FormDhcpIprange_Button_Submit(mode)
+{
+	var param="";
+	var Ipv4Pattern = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+	var ipv4start_txt = document.all.FormDhcpIprange.FormDhcpIprange_Param_Start.value;
+	var ipv4end_txt = document.all.FormDhcpIprange.FormDhcpIprange_Param_End.value;
+	var ipv4start_arr;
+	var ipv4end_arr;
+
+	ipv4start_arr = ipv4start_txt.split('.');
+	ipv4end_arr = ipv4end_txt.split('.');
+	var zh_str = zh_Lang_ex();
+	if(zh_Lang_now == 't'){	    
+		if((false == Ipv4Pattern.test(ipv4start_txt))||(4!=ipv4start_arr.length))
+    	{
+    		showdiv("IP地址範圍不正確:起始地址錯誤",DivCloseMode_Alert);
+    		return;
+    	}
+    	if((false == Ipv4Pattern.test(ipv4end_txt))||(4!=ipv4end_arr.length))
+    	{
+    		showdiv("IP地址範圍不正確:結束地址錯誤",DivCloseMode_Alert);
+    		return;
+    	}
+    	
+    	for(var loopi=0;loopi<4;loopi++)
+    	{
+    		if(parseInt(ipv4start_arr[loopi])>parseInt(ipv4end_arr[loopi]))
+    		{
+    			showdiv("IP地址範圍不正確:起始地址不能大於結束地址",DivCloseMode_Alert);
+    			return;
+    		}
+    	}
+	}else{	
+		if((false == Ipv4Pattern.test(ipv4start_txt))||(4!=ipv4start_arr.length))
+    	{
+    		showdiv("IP地址范围不正确:起始地址错误",DivCloseMode_Alert);
+    		return;
+    	}
+    	if((false == Ipv4Pattern.test(ipv4end_txt))||(4!=ipv4end_arr.length))
+    	{
+    		showdiv("IP地址范围不正确:结束地址错误",DivCloseMode_Alert);
+    		return;
+    	}
+    	
+    	for(var loopi=0;loopi<4;loopi++)
+    	{
+    		if(parseInt(ipv4start_arr[loopi])>parseInt(ipv4end_arr[loopi]))
+    		{
+    			showdiv("IP地址范围不正确:起始地址不能大于结束地址",DivCloseMode_Alert);
+    			return;
+    		}
+    	}
+	}
+	param = "";
+	param +="FormDhdrset_Param_Iprange="+ipv4start_txt+":"+ipv4end_txt;	
+    if(zh_Lang_now == 't'){	    
+	    showdiv("正在更改，請等待。。。",DivCloseMode_None);
+	}else{	
+	    showdiv("正在更改，请等待。。。",DivCloseMode_None);
+	}
+	WebPostProcess("/boafrm/formDhdrsetProcess",param,null);
+}
+function GetRadioValueByName(RadioName)
+{
+	var item = null;
+	var obj = document.getElementsByName(RadioName);
+	for(var i=0;i<obj.length;i++)
+	{
+		if(obj[i].checked)
+		{
+			item =obj[i].value;
+		}
+	}
+	return item;
+}
+
+function isInteger(obj) {
+    return (parseInt(obj, 10) === obj)
+}
+
+function isNumber(name) //数值检测 
+{ 
+if(name.length == 0) 
+return false; 
+for(i = 0; i < name.length; i++) { 
+if(name.charAt(i) < "0" || name.charAt(i) > "9") 
+return false; 
+} 
+return true; 
+} 
+
+
+
+//关闭定时器
+function closeIntervals()
+{
+	clearInterval(objTimeOut);
+	objTimeOut=null;
+}
+
+function init()
+{
+	var TmpString="";
+	var zh_str = zh_Lang_ex();
+    if(zh_Lang_now == 't'){
+        /*调试开关at+cfun*/
+    	WebModemGetInfoDsonswlsParamMode =<%getInfo("ModemGetInfoDsonswlsParamMode");%>;
+    	if(0==WebModemGetInfoDsonswlsParamMode)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","關閉");
+    	}
+    	else if(1==WebModemGetInfoDsonswlsParamMode)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","開啟");	
+    	}
+    	else
+    	{
+    		alert("WebModemGetInfoDsonswlsParamMode 參數獲取錯誤! value = "+WebModemGetInfoDsonswlsParamMode );
+    	}
+    
+    	/*主从设置*/
+    //	WebModemGetInfoDdtcParamType=<%getInfo("ModemGetInfoDdtcParamType");%>; 
+    	TmpString ="";
+    	if(0 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="自動";	
+    	}
+    	else if (1 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="中心節點";
+    //		document.getElementById('FormDsnonunSn').style.display='none';		
+    	}
+    	else if (2 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="接入節點";
+    		document.getElementById('FormDhcpIprange').style.display='none';		
+    //		document.getElementById('FormWhilteList').style.display='none';
+    //		document.getElementById('FormWhilteListOp').style.display='none';		
+    	}
+    	else
+    	{
+    		TmpString ="不能識別 WebModemGetInfoDdtcParamType = "+WebModemGetInfoDdtcParamType;
+    	}
+    	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
+    	
+    	WebModemGetInfoDhcpsetParamX = <%getInfo("ModemGetInfoDhcpsetParamX");%>;
+    	if(0==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","關閉");
+    	}
+    	else if(1==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","動態DHCPServer(主控) or DHCPClient(非主控)");
+    	}
+    	else if(2==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","動態DHCPClient(主控/非主控)");   
+    	}	
+    	else
+    	{
+    		alert("WebModemGetInfoDhcpsetParamX 參數獲取錯誤! value = "+WebModemGetInfoDhcpsetParamX );
+    	}
+	}else{
+        /*调试开关at+cfun*/
+    	WebModemGetInfoDsonswlsParamMode =<%getInfo("ModemGetInfoDsonswlsParamMode");%>;
+    	if(0==WebModemGetInfoDsonswlsParamMode)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","关闭");
+    	}
+    	else if(1==WebModemGetInfoDsonswlsParamMode)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","开启");	
+    	}
+    	else
+    	{
+    		alert("WebModemGetInfoDsonswlsParamMode 参数获取错误! value = "+WebModemGetInfoDsonswlsParamMode );
+    	}
+    
+    	/*主从设置*/
+    //	WebModemGetInfoDdtcParamType=<%getInfo("ModemGetInfoDdtcParamType");%>; 
+    	TmpString ="";
+    	if(0 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="自动";	
+    	}
+    	else if (1 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="中心节点";
+    //		document.getElementById('FormDsnonunSn').style.display='none';		
+    	}
+    	else if (2 == WebModemGetInfoDdtcParamType)
+    	{
+    		TmpString ="接入节点";
+    		document.getElementById('FormDhcpIprange').style.display='none';		
+    //		document.getElementById('FormWhilteList').style.display='none';
+    //		document.getElementById('FormWhilteListOp').style.display='none';		
+    	}
+    	else
+    	{
+    		TmpString ="不能识别 WebModemGetInfoDdtcParamType = "+WebModemGetInfoDdtcParamType;
+    	}
+    	SetLabelText("LB_FormDdtc_Param_Type",TmpString);
+    	
+    	WebModemGetInfoDhcpsetParamX = <%getInfo("ModemGetInfoDhcpsetParamX");%>;
+    	if(0==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","关闭");
+    	}
+    	else if(1==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","动态DHCPServer(主控) or DHCPClient(非主控)");
+    	}
+    	else if(2==WebModemGetInfoDhcpsetParamX)
+    	{
+    		SetLabelText("LB_FormDhcpSwitch_Param_Switch","动态DHCPClient(主控/非主控)");  
+    	}	
+    	else
+    	{
+    		alert("WebModemGetInfoDhcpsetParamX 参数获取错误! value = "+WebModemGetInfoDhcpsetParamX );
+    	}
+	}
+	WebModemGetInfoDhdrsetParamIprange= <%getInfo("ModemGetInfoDhdrsetParamIprange");%>;
+	SetLabelText("LB_FormDhcpIprange_Param_Iprange",WebModemGetInfoDhdrsetParamIprange);
+
+}
+</script>
+</head>
+<blockquote>
+<h3><font color="#0000FF">DHCP配置管理(节点工作类型:[<label id="LB_FormDdtc_Param_Type">LB_FormDdtc_Param_Type</label>])</font></h3>
+<h5><font color="red" >Note:主从设置完成后，关联节点需要掉电重启生效</font><h5>
+<script language='javascript' src='../zh.js'></script>
+<script type="text/javascript" src="../load.js"></script>
+<body  onLoad="setCodeValue();init()">
+ <table border="0" cellspacing="0" width="500">
+ <tr><hr size=1 noshade align=top></tr>
+</table>
+
+<div id=idDivenglish style="display:block">
+  <table border=0 width="500" cellspacing=0 cellpadding=0>
+
+<form id="FormDhcpSwitch" name="FormDhcpSwitch" >
+  <table>
+  	<tr> 
+      <td ><font size="2" weight="bold" ><b>DHCP功能开关:</b></font></td>
+    </tr>   
+    <tr> 
+	<td ><font size="2">DHCP功能当前设置:[<label id="LB_FormDhcpSwitch_Param_Switch">LB_FormDhcpSwitch_Param_Switch</label>]</font></td>
+    </tr>   
+    <tr> 
+      <td ><font size="2" weight="bold" >
+	    <select name="FormDhcpSwitch_Param_Switch" id="FormDhcpSwitch_Param_Switch">
+        <option value='0'>关闭</option>
+		<script>
+    	   	document.write("<option value='1' >动态DHCPServer(主控) or DHCPClient(非主控)</option>");
+    	   	document.write("<option value='2' >动态DHCPClient(主控/非主控)</option>");
+		</script>          
+          <option value='255' selected ="selected">选择操作</option>
+        </select> </font>
+        
+		<input type="button" value="确定" id="FormDhcpSwitch_Button"  onClick="FormDhcpSwitch_Button_Submit();">  </td>
+    </tr>
+  </table>
+</form>
+
+<form id="FormDhcpIprange" name="FormDhcpIprange" >
+  <table>
+  	<tr> 
+      <td><font size="2" weight="bold" ><b>分配地址范围(格式:XXX.XXX.XXX.XXX:XXX.XXX.XXX.XXX):</b></font></td>
+    </tr>
+  	<tr> 
+      <td><font size="2" >当前设置值:[<label id="LB_FormDhcpIprange_Param_Iprange">LB_FormDhcpIprange_Param_Iprange</label>]</font></td>
+    </tr>     
+  	<tr> 
+      <td> <font size="2" weight="bold" >
+      		<input type="text"   name="FormDhcpIprange_Param_Start" maxlength="15" size="15" id="FormDhcpIprange_Param_Start" ></font>:
+			<input type="text"   name="FormDhcpIprange_Param_End" maxlength="15" size="15" id="FormDhcpIprange_Param_End" ></font>
+			<input type="button" value="确定" id="FormDhcpIprange_Button"  onClick="FormDhcpIprange_Button_Submit();"> 
+	</td>        
+    </tr>
+  </table>
+</form>
+</body>
+</blockquote>
+</html>
+
+
